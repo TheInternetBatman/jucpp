@@ -873,22 +873,21 @@ namespace ju{
 		int len = ::WideCharToMultiByte(codepage,0,_Handle,_Length,buffer,length,0,0);
 		return len;
 	}
-	uint String::ToMultiByte(Memory<char>* buffer,DWORD codepage){
+	uint String::ToMultiByte(Memory<char>& buffer,DWORD codepage){
 		if(!_Handle) return 0;
-		if(buffer==0) return 0;
 		if(codepage==1200){
 			uint len = _Length*2;
-			if(len>buffer->Length())
-				buffer->SetLength(len);
-			uint n = CopyTo((LPWSTR)buffer->Handle(),0,_Length);
+			if(len>buffer.Length())
+				buffer.SetLength(len);
+			uint n = CopyTo((LPWSTR)buffer.Handle(),0,_Length);
 			return len;
 		}
 		uint len = ::WideCharToMultiByte(codepage,0,_Handle,_Length,0,0,0,0);
 		if(len==0) return 0;
-		if(buffer->Length()<(len+1)){//为了保持末尾有一位null字符的空位。
-			if(!buffer->SetLength(len+1)) return 0;
+		if(buffer.Length()<(len+1)){//为了保持末尾有一位null字符的空位。
+			if(!buffer.SetLength(len+1)) return 0;
 		}
-		return ::WideCharToMultiByte(codepage,0,_Handle,_Length,buffer->Handle(),len,0,0);
+		return ::WideCharToMultiByte(codepage,0,_Handle,_Length,buffer.Handle(),len,0,0);
 	}
 	void String::operator = (LPCWSTR wstr){
 		uint len = WcsLength(wstr);

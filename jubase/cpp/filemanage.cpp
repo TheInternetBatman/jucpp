@@ -22,7 +22,7 @@ namespace ju{
 		buffer += iconfile;
 		buffer += L"\r\n";
 		Memory<char> buf;
-		buffer.ToMultiByte(&buf);
+		buffer.ToMultiByte(buf);
 		DWORD number;
 		::WriteFile(hfile,buf,buf.Length(),&number,0);
 		::CloseHandle(hfile);

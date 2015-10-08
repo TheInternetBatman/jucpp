@@ -2,6 +2,7 @@
 namespace ju{
 	//判断一个路径的类型,0：路径不存在，1：是一个文件，2：是一个文件夹。
 	JUBASE_API int GetFileType(LPCWSTR file);
+	inline boolean FileExist(LPCWSTR file){return GetFileType(file)!=0;}
 	//对应非法的目录名称，系统的 GetFileAttributes 可能返回一个错误的值。这个函数添加了检测目录合法性。
 	JUBASE_API DWORD GetFileAttributes(LPCWSTR path);
 	//生成一个文件夹，file=1表示path是一个文件，生成它的文件夹，否则，path是文件夹的的路径。
@@ -69,11 +70,16 @@ namespace ju{
 	//FileTree可以异步执行多个搜索，OnList 和 OnCompete 可以重新指定，而不会影响已经执行的搜索。但是，改变过滤器和搜索选项，
 	//会影响正在执行的搜索。
 	//Search（）函数的dir参数如果是一个含通配符的字串，或者是一个文件，搜索会返回符合通配符的文件（夹),或者文件本身。如果是一个目录，则执行的是搜索目录。
-	class JUBASE_API FileTree : public _class
-	{
+	class JUBASE_API FileTree : public _class{
 	protected:
-		Thread th;
+		enum{
+			FILTER_TYPE_DISABLE,
+			FILTER_TYPE_IN,
+			FILTER_TYPE_NOTIN
+		};
+		Thread _th;
 		StringMemList _Filter;
+		int _filterType;
 		bool _Sub,_Pre,_After;
 
 		Tree<String>* _Store(Tree<String>* files,LPCWSTR file,bool sub = 0);
@@ -84,20 +90,27 @@ namespace ju{
 	public:
 		//搜索回调函数。
 		Function<void,ListData*> OnList;
-		//异步调用时，搜索线程结束通知函数，同步调用不会调用这个函数。void* 是搜索时指定的 extra 或 tl 实例自身的指针，LPCWSTR 是搜索的文件夹。
+		//搜索结束通知函数，void* 是搜索时指定的 extra 或 tl 实例自身的指针，
+		//LPCWSTR 是搜索的文件夹，如果搜索失败，此参数为 NULL，因为异步调用即使
+		//Search 返回成功，也不代表搜索成功。
 		Function<void,void*,LPCWSTR> OnComplete;
 		//Function<void,void*,LPCWSTR,bool> OnStart;
 
 		FileTree();
 		//返回文件类型过滤器，它是一个字符串列表。成员是文件后缀名，不包含“.”和“*”字符如“jpg”而不是".jpg"和"*.jpg"，不支持通配符，不区分大小写。
 		StringMemList* GetFilter(){return &_Filter;}
+		//设置类型过滤方式：0-不使用，1-返回包含在类型中的文件，2-返回不包含在类型组中的文件。
+		void SetFilterType(int type){_filterType = type;if(_filterType>2||_filterType<0) _filterType = 0;}
 		//设置是否搜索子文件夹
 		void SetSearchSub(bool enable){_Sub = enable;}
 		//设置回调函数先返回一次子文件夹呼叫，再返回它包含的文件。
 		void SetPreCall(bool enable){_Pre = enable;}
 		//设置回调函数返回它包含的文件之后，才执行一次返回文件夹呼叫。
 		void SetAfterCall(bool enable){_After = enable;}
-		//dir是要搜索的目录,extra是用户设置的数据，可以在回调函数中接收.asyn指示调用是否是异步的。如果dir参数不是一个文件夹，而是一个文件，函数返回fasle。
+		//dir是要搜索的目录,extra是用户设置的数据，可以在回调函数中接收.
+		//asyn指示调用是否是异步的。如果dir参数不是一个文件夹，而是一个文件，
+		//函数返回fasle。异步调用返回成功，不代表搜索真的成功，只表示搜索线程
+		//启动成功，在 OnComplete 回调函数里检测第二个参数是否为 NULL，NULL表示失败。
 		bool Search(LPCWSTR dir,void* extra = 0,bool asyn = 0);
 		//dir是要搜索的目录,tl是用于存储文件名的树形数据结构.asyn指示调用是否是异步的。
 		bool Search(LPCWSTR dir,Tree<String>* tl,bool asyn = 0);

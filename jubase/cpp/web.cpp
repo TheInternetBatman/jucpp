@@ -31,7 +31,7 @@ namespace ju{
 	void EncodeURI(String& str,DWORD codePage)
 	{
 		Memory<char> buf;
-		int n = str.ToMultiByte(&buf,codePage);
+		int n = str.ToMultiByte(buf,codePage);
 		String num;
 		for(int i=0,j=0;i<n;i++)
 		{
@@ -76,7 +76,7 @@ namespace ju{
 			return;
 		}
 		Memory<char> mip;
-		int len = wip.ToMultiByte(&mip);
+		int len = wip.ToMultiByte(mip);
 		mip[len] = 0;
 		*this = mip;
 	}
@@ -120,7 +120,7 @@ namespace ju{
 	{
 		Memory<char> buf;
 		String n = name;
-		int len = n.ToMultiByte(&buf);
+		int len = n.ToMultiByte(buf);
 		if(buf.IsNull())
 			return Create("");
 		buf[len] = 0;

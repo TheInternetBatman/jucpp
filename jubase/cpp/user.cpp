@@ -25,7 +25,7 @@ namespace ju{
   </dependency>\r\n\
 </assembly>";
 		Memory<char> buf;
-		len = str.ToMultiByte(&buf,CP_UTF8);
+		len = str.ToMultiByte(buf,CP_UTF8);
 		uchar head[3];
 		head[0] = 0xef;
 		head[1] = 0xbb;

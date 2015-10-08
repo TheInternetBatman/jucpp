@@ -37,7 +37,7 @@ namespace ju{
 	uint Md5::GetFileDigest(void* digest16,LPCWSTR fn){
 		String str = fn;
 		char buf[MAX_PATH];
-		int len = str.ToMultiByte(buf,MAX_PATH);
+		int len = str.ToMultiByte(buf,MAX_PATH,CP_THREAD_ACP);
 		buf[len] = 0;
 		return md5_file(buf,(byte*)digest16)?0:16;
 	}
@@ -145,7 +145,7 @@ namespace ju{
 	uint Sha::GetFileDigest(void* digest,LPCWSTR fn,SHA_BITS bits){
 		String str = fn;
 		char buf[MAX_PATH];
-		int len = str.ToMultiByte(buf,MAX_PATH);
+		int len = str.ToMultiByte(buf,MAX_PATH,CP_THREAD_ACP);
 		buf[len] = 0;
 		int rst;
 		if(bits==sha_160){

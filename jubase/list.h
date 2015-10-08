@@ -267,7 +267,7 @@ namespace ju{
 			_Ptrs[index] = object;
 			return index;
 		}
-		//返回指定索引的元素。
+		//返回指定索引的元素，不进行越界检测。
 		inline T* Element(uint index){
 			_ASSERT(index<_Ptrs.Count());
 			return _Ptrs[index];
@@ -387,7 +387,7 @@ namespace ju{
 		}
 		bool Delete(T* obj){
 			for(First();;Move(1)){
-				T* elm = Element();
+				T* elm = GetElement();
 				if(elm==0) break;
 				if(elm==obj){
 					Delete();
@@ -505,7 +505,7 @@ namespace ju{
 			return _current==NULL;
 		} 
 		//返回当前元素，如果集合为空，返回 0 .
-		inline T* Element(){
+		inline T* GetElement(){
 			if(_current!=0)
 				return _current->handle;
 			else

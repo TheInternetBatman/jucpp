@@ -2,7 +2,7 @@
 #pragma once
 
 #include "jubase/macro.h"
-#include "jubase/basic.h"
+#include "jubase/base.h"
 #include "jubase/struct.h"
 #include "jubase/mem.h"
 #include "jubase/list.h"

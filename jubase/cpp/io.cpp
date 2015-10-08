@@ -285,24 +285,25 @@ namespace ju{
 		}
 		return 1;
 	}
-	bool IsFilter(StringMemList* filter,LPCWSTR file)
-	{
-		if(!filter->Count()) return 1;
+	//文件类型通过过滤，notin指示是过滤去掉还是过滤通过，无后缀总是通过。
+	bool IsFilter(StringMemList* filter,LPCWSTR file,int filterType){
+		if(filterType==0) return true;
+		bool notin = filterType==2;
+		if(!filter->Count()) return notin;
 		String ext = file;
 		FPToExt(ext);
-		if(!ext.Length()) return 0;
+		if(!ext.Length()) return notin;
 		for(uint i=0;i<filter->Count();i++){
-			if(WcsEqualNoCase(filter->Element(i),ext)) return 1;
+			if(WcsEqualNoCase(filter->Element(i),ext)) return !notin;
 		}
-		return 0;
+		return notin;
 	}
 	//FileTree使用的结构。
 #define LISTDATA_FLAG_ISFILE	0
 #define LISTDATA_FLAG_PRECALL	1
 #define LISTDATA_FLAG_AFTERCALL	2
 	//class FileTree
-	FileTree::FileTree():_Sub(0),_Pre(1),_After(0)
-	{
+	FileTree::FileTree():_Sub(0),_Pre(1),_After(0),_filterType(FILTER_TYPE_DISABLE){
 	}
 	Tree<String>* FileTree::_Store(Tree<String>* files,LPCWSTR file,bool sub)
 	{
@@ -316,32 +317,30 @@ namespace ju{
 		wchar_t* ps = (wchar_t*)MemoryAlloc(len);
 		memcpy(ps,dir,len);
 		if(asyn){
-			return th.Call<bool>(this,&FileTree::_searchStore,(LPCWSTR)ps,tl);
+			return _th.Call<bool>(this,&FileTree::_searchStore,(LPCWSTR)ps,tl);
 		}else{
 			tl->Handle = dir;
 			return _SearchStore(ps,L"",tl);
 		}
 	}
-	bool FileTree::Search(LPCWSTR dir,void* extra,bool asyn)
-	{
+	bool FileTree::Search(LPCWSTR dir,void* extra,bool asyn){
 		int len = WcsLength(dir)*2+2;
 		wchar_t* ps = (wchar_t*)MemoryAlloc(len);
 		memcpy(ps,dir,len);
-		if(asyn)
-		{
+		if(asyn){
 			Thread th;
 			return th.Call<bool>(this,&FileTree::_search,(LPCWSTR)ps,extra);
-		}
-		else
-		{
-			return _Search(dir,L"",extra);
+		}else{
+			bool rst = _Search(dir,L"",extra);
+			if(!rst) dir = 0;
+			OnComplete(extra,dir);
+			return rst;
 		}
 	}
 	bool FileTree::_searchStore(LPCWSTR dir,Tree<String>* tl)
 	{
 		bool b = _SearchStore(dir,L"",tl);
-		if(!OnComplete.IsNull())
-			OnComplete(tl,dir);
+		OnComplete(tl,dir);
 		MemoryFree((void*)dir);
 		return b;
 	}
@@ -379,7 +378,7 @@ namespace ju{
 				}
 				else
 				{
-					if(IsFilter(&_Filter,wfd.cFileName)) _Store(tl,wfd.cFileName,0);
+					if(IsFilter(&_Filter,wfd.cFileName,_filterType)) _Store(tl,wfd.cFileName,0);
 				}
 			}
 			find = FindNextFile(hFind,&wfd);
@@ -387,16 +386,13 @@ namespace ju{
 		FindClose(hFind);
 		return true;
 	}
-	bool FileTree::_search(LPCWSTR dir,void* extra)
-	{
+	bool FileTree::_search(LPCWSTR dir,void* extra){
 		bool b = _Search(dir,L"",extra);
-		if(!OnComplete.IsNull())
-			OnComplete(extra,dir);
+		OnComplete(extra,dir);
 		MemoryFree((void*)dir);
 		return b;
 	}
-	bool FileTree::_Search(LPCWSTR original,LPCWSTR relative,void* extra)
-	{
+	bool FileTree::_Search(LPCWSTR original,LPCWSTR relative,void* extra){
 		String sp;
 		String path = original;
 		DWORD atr = GetFileAttributes(original);
@@ -412,7 +408,10 @@ namespace ju{
 		}
 		WIN32_FIND_DATA wfd;
 		HANDLE hFind = FindFirstFile(sp,&wfd);
-		if(hFind==INVALID_HANDLE_VALUE) return 0;
+		if(hFind==INVALID_HANDLE_VALUE){
+			OnComplete(extra,0);
+			return 0;
+		}
 		int find = 1;
 		while(find){
 			if(!ValidFile(wfd.cFileName)){
@@ -427,16 +426,14 @@ namespace ju{
 			sd.Stop = 0;
 			sd.Skip = 0;
 			if(!IsDir(wfd.dwFileAttributes)){
-				if(IsFilter(&_Filter,wfd.cFileName)){
+				if(IsFilter(&_Filter,wfd.cFileName,_filterType)){
 					sd.Flag = 0;
-					if(!OnList.IsNull())
-						OnList(&sd);
+					OnList(&sd);
 				}
 			}else{
 				if(_Pre){
 						sd.Flag = 1;
-						if(!OnList.IsNull())
-							OnList(&sd);
+						OnList(&sd);
 				}
 				if(sd.Stop) break;
 				if(!sd.Skip&&_Sub){
@@ -446,8 +443,7 @@ namespace ju{
 				}
 				if(_After){
 					sd.Flag = 2;
-					if(!OnList.IsNull())
-						OnList(&sd);
+					OnList(&sd);
 				}
 			}
 			if(sd.Stop) break;
@@ -1051,12 +1047,12 @@ namespace ju{
 			Memory<char> str;
 			String ws;
 			ws.Attach((LPWSTR)wstr);
-			length = ws.ToMultiByte(&str,code);
+			length = ws.ToMultiByte(str,code);
 			ws.Detach();
 			wb = Write(str.Handle(),length);
 			if(affix){
 				ws.Attach((LPWSTR)affix);
-				length = ws.ToMultiByte(&str,code);
+				length = ws.ToMultiByte(str,code);
 				ws.Detach();
 				wb += Write(str.Handle(),length);
 			}

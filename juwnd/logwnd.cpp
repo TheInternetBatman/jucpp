@@ -33,7 +33,7 @@ namespace ju{
 				y = selIndex*lineH + margin.top;
 				lines.First();
 				lines.Move(selIndex);
-				LINE* line = lines.Element();
+				LINE* line = lines.GetElement();
 				selRect.SetValue(margin.left,y,line->width-margin.right,fontH+y);
 			}
 			Invalidate();
@@ -86,7 +86,7 @@ namespace ju{
 			dtp.cbSize = sizeof(dtp);
 			dtp.iTabLength = 4;
 			for(lines.First();;lines.Move(1)){
-				LINE* line = lines.Element();
+				LINE* line = lines.GetElement();
 				if(!line) break;
 				int y = margin.top + i*lineH - Scr().y;
 				if(y<-lineH){
@@ -211,7 +211,7 @@ namespace ju{
 				if(selIndex<0) return;
 				lines.First();
 				lines.Move(selIndex);
-				LINE* line = lines.Element();
+				LINE* line = lines.GetElement();
 				if(!line) return;
 
 				OpenClipboard(_Handle);

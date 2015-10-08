@@ -1,6 +1,8 @@
 #pragma once
 
 namespace ju{
+	//显示 Log 窗口，如果是第一次调用，内部会创建它，一个应用程序只能有一个 Log 窗口，
+	//后续调用这个函数，都返回同一个实例，
 	JUBASE_API void LogShowWindow(bool exit = true);
 	JUBASE_API void LogHideWindow();
 	JUBASE_API void LogSetFontSize(int size);

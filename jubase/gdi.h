@@ -433,10 +433,10 @@ namespace ju{
 			return _bmpList.Count();
 		}
 		HBITMAP GetBitmap(uint index){
-			return _bmpList.Element(index);
+			return _bmpList.GetElement(index);
 		}
 		bool Delete(uint index){
-			HBITMAP bmp = _bmpList.Element(index);
+			HBITMAP bmp = _bmpList.GetElement(index);
 			if(!bmp) return 0;
 			::DeleteObject(bmp);
 			return 1;
@@ -458,7 +458,7 @@ namespace ju{
 		//从资源加载图像，成功返回生成图像的句柄
 		HBITMAP Add(ResID res,ResID type,uint index = -1);
 		HBITMAP Remove(uint index){
-			HBITMAP bmp = _bmpList.Element(index);
+			HBITMAP bmp = _bmpList.GetElement(index);
 			if(!bmp) return 0;
 			_bmpList.Delete(index);
 			return bmp;
@@ -502,7 +502,8 @@ namespace ju{
 			// is not equal in size,especially last reason.
 		}
 		bool Draw(int index,HDC hdc,uchar alpha = 255,bool alphaChanel = false,int x = 0,int y = 0,int cx = 0,int cy = 0,int sx = 0,int sy = 0,int scx = 0,int scy = 0){
-			HBITMAP bmp = _bmpList.Element(index);
+			HBITMAP bmp = _bmpList.GetElement(index);
+			if(bmp==NULL) return false;
 			return Draw(bmp,hdc,alpha,alphaChanel,x,y,cx,cy,sx,sy,scx,scy);
 		}
 	};

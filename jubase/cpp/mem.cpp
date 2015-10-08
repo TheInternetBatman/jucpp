@@ -285,7 +285,7 @@ namespace ju{
 		}
 	}
 #endif*/
-	IMemory::IMemory():_cur(0),_length(0){
+	IMemory::IMemory():_cur(0),_length(0),_handle(0){
 	}
 	char* IMemory::_findSpaceForward(uint len){
 		char* p = 0,*pt;

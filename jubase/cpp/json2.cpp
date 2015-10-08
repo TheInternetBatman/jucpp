@@ -187,7 +187,7 @@ namespace ju{
 			if(jstr[i]=='\''){
 				bin.CopyFrom(jstr+pos,i-pos);
 				Memory<char> buf;
-				int len = bin.ToMultiByte(&buf);
+				int len = bin.ToMultiByte(buf);
 				Base64::Decode(*mbin,buf.Handle(),len);
 				return i+1;
 			}
@@ -377,7 +377,7 @@ namespace ju{
 			String sub;
 			ObjectList<Json>& a = *jsn->_arrayValue;
 			int i = 0;
-			Json* sjsn = a.Element(i);
+			Json* sjsn = a.GetElement(i);
 			if(sjsn){
 				if(readStyle)
 					tab += L"\t";
@@ -386,7 +386,7 @@ namespace ju{
 				str += sub;
 				while(true){
 					i++;
-					sjsn = a.Element(i);
+					sjsn = a.GetElement(i);
 					if(!sjsn) break;
 					_toString(sjsn,sub,tab,readStyle);
 					if(readStyle)
@@ -409,7 +409,7 @@ namespace ju{
 				str = L"{";
 			String sub;
 			ObjectList<Json::DICTION>& obj = *jsn->_objectValue;
-			Json::DICTION* dic = obj.Element(0);
+			Json::DICTION* dic = obj.GetElement(0);
 			if(dic){
 				if(readStyle){
 					tab += L"\t";
@@ -428,7 +428,7 @@ namespace ju{
 				int i = 0;
 				while(true){
 					i++;
-					dic = obj.Element(i);
+					dic = obj.GetElement(i);
 					if(!dic) break;
 					if(readStyle){
 						str += L",\r\n";
@@ -473,7 +473,7 @@ namespace ju{
 			_arrayValue = new ObjectList<Json>;
 			ObjectList<Json>& a = *val._arrayValue;
 			for(uint i=0;i<a.Count();i++){
-				Json* sjn = a.Element(i);
+				Json* sjn = a.GetElement(i);
 				if(!sjn) break;
 				Json* djn = _arrayValue->Add();
 				*djn = *sjn;
@@ -482,7 +482,7 @@ namespace ju{
 			_objectValue = new ObjectList<Json::DICTION>;
 			ObjectList<Json::DICTION>& a = *val._objectValue;
 			for(uint i=0;i<a.Count();i++){
-				Json::DICTION* sjn = a.Element(i);
+				Json::DICTION* sjn = a.GetElement(i);
 				if(!sjn) break;
 				Json::DICTION* djn = _objectValue->Add();
 				djn->key = sjn->key;
@@ -616,7 +616,7 @@ namespace ju{
 			}
 		}
 		for(uint i=0;i<_objectValue->Count();i++){
-			Json::DICTION* dic = _objectValue->Element(i);
+			Json::DICTION* dic = _objectValue->GetElement(i);
 			if(!dic) break;
 			if(dic->key==prop){
 				return dic->val;
@@ -636,7 +636,7 @@ namespace ju{
 		}else if(_type==json_object){
 		}else return 0;
 		for(uint i=0;i<_objectValue->Count();i++){
-			Json::DICTION* dic = _objectValue->Element(i);
+			Json::DICTION* dic = _objectValue->GetElement(i);
 			if(!dic) break;
 			if(dic->key==prop){
 				*dic->val = val;
@@ -650,7 +650,7 @@ namespace ju{
 	}
 	Json* Json::GetPropertyByIndex(int index,LPCWSTR* key){
 		if(_type!=json_object) return 0;
-		DICTION* dic = _objectValue->Element(index);
+		DICTION* dic = _objectValue->GetElement(index);
 		if(dic==NULL) return 0;
 		if(key) *key = dic->key;
 		return dic->val;
@@ -658,7 +658,7 @@ namespace ju{
 	bool Json::RemoveProperty(LPCWSTR prop){
 		if(_type!=json_object) return 0;
 		for(uint i=0;i<_objectValue->Count();i++){
-			DICTION* dic = _objectValue->Element(i);
+			DICTION* dic = _objectValue->GetElement(i);
 			if(!dic) break;
 			if(dic->key==prop){
 				return 1==_objectValue->Delete(i);

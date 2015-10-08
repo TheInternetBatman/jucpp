@@ -91,11 +91,11 @@ namespace ju{
 		bool FromMultiByte(LPCSTR str,uint length = -1,DWORD codepage = CP_THREAD_ACP);
 		//length是buffer的大小,输出并不包含结尾的NULL字符.如果函数失败，返回 0 .如果length太小不足以保持全部的字符（不含结尾的NULL字符），
 		//函数返回 0 ，但是，实际上转换是成功的，只不过只转换了前若干个字符，把buffer指定的长度填满。
-		//如果buffer是0, 返回转换整个字串所需的字节空间, 这个空间不包括结尾的NULL字符
-		uint ToMultiByte(LPSTR buffer,uint length,DWORD codepage = CP_THREAD_ACP);
+		//如果buffer是0, 返回转换整个字串所需的字节空间, 这个空间不包括结尾的NULL字符,codepade 缺省 = CP_THREAD_ACP（3）
+		uint ToMultiByte(LPSTR buffer,uint length,DWORD codepage);
 		//把字符转换为 Mulitybyte 字符，不包括结尾的NULL字符。如果buffer太小，不足以存放所有字符，会自动被增大。
 		//这个函数转换的字符并不包括结尾的NULL字符, 但是会保持 buffer 结尾有一个NULL字符的空位.
-		uint ToMultiByte(Memory<char>* buffer,DWORD codepage = CP_THREAD_ACP);//
+		uint ToMultiByte(Memory<char>& buffer,DWORD codepage = CP_THREAD_ACP);//
 		//把实例中的字符拷贝到wstr中,从start开始,num是要拷贝的数量.num=-1表示拷贝至末尾.
 		//wstr必须有足够的空间容纳字符,返回实际拷贝的字符数.
 		uint CopyTo(wchar_t* wstr,uint start = 0,uint num = -1);

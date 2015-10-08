@@ -337,12 +337,12 @@ namespace ju{
 		//返回数组的当前元素，如果当前链表为空，返回 NULL。
 		Json* GetArrayElm(int i){
 			if(_type!=json_array) return 0;
-			return _arrayValue->Element(i);
+			return _arrayValue->GetElement(i);
 		}
 		//设置数组的当前元素的值，并且返回这个元素，如果当前对象不是数组，返回 NULL。
 		Json* SetArrayElm(Json& val,int i){
 			if(_type!=json_array) return 0;
-			Json* elm = _arrayValue->Element(i);
+			Json* elm = _arrayValue->GetElement(i);
 			*elm = val;
 			return elm;
 		}
@@ -431,7 +431,7 @@ namespace ju{
 		Json& operator [] (int index){
 			if(_type==json_array){
 				if((int)_arrayValue->Count()>index){
-					return *_arrayValue->Element(index);
+					return *_arrayValue->GetElement(index);
 				}else{
 					Json* a;
 					for(int i=_arrayValue->Count();i<=index;i++)
