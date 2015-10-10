@@ -103,7 +103,7 @@ namespace ju{
 		mii.dwTypeData = (LPWSTR)text;
 		mii.dwItemData = (ULONG_PTR)image;
 		static int subMenuId = 0x10000;
-		mii.wID = subMenuId++;
+		mii.wID = subMenuId++; 
 		HMENU h = 0;
 		if(sub==0){
 			sub = h = ::CreatePopupMenu();
