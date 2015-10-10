@@ -18,6 +18,7 @@ namespace ju{
 		void Reset();
 		void SetDimen(int length,float weight);
 		void SetMargin(int left,int top,int right,int bottom);
+		void SetParam(int length,float weight = 1,int left = 0,int top = 0,int right = 0,int bottom = 0,bool hor = false);
 		LayoutParam();
 	};
 	/**布局系统规则如下：
@@ -96,6 +97,8 @@ namespace ju{
 		//调整位置的幅度，是上一个或下一个同级 Layout 的 Length 属性不小于 0 。
 		//返回实际调整的位置幅度。
 		int Move(int pix);
+		//快速设置 LayoutParam 参数
+		void SetParam(int length,float weight = 1,int left = 0,int top = 0,int right = 0,int bottom = 0,bool hor = false);
 	};
 	//TopLayout 会接收绑定窗口的 WM_SIZE 消息，从而对子 Layout 的布局进行调整，TopLayout 是顶级 Layout ，它不能是其它 Layout 的子 Layout。
 	class JUWND_API TopLayout : public Layout{

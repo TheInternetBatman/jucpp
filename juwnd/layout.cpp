@@ -68,6 +68,13 @@ namespace ju{
 	void LayoutParam::SetMargin(int left,int top,int right,int bottom){
 		Margin.SetValue(left,top,right,bottom);
 	}
+	void LayoutParam::SetParam(int length,float weight,int left,int top,int right,int bottom,bool hor){
+		if(hor) Style |= HORIZONTAL;
+		else BitRemove(Style,(int)HORIZONTAL);
+		Length = length;
+		Weight = weight;
+		Margin.SetValue(left,top,right,bottom);
+	}
 	LayoutParam::LayoutParam(){
 		::ZeroMemory(this,sizeof(*this));
 		Weight = 1;
@@ -85,6 +92,9 @@ namespace ju{
 			_createWnd->Close();
 			delete _createWnd;
 		}
+	}
+	void Layout::SetParam(int length,float weight,int left,int top,int right,int bottom,bool hor){
+		Param.SetParam(length,weight,left,top,right,bottom,hor);
 	}
 	Twin Layout::_calcMinSize(Layout* lay,bool parentHor){
 		Twin sz(0,0);
