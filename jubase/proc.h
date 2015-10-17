@@ -1,6 +1,8 @@
 namespace ju{
 	//下划线开头的函数和类, 一般是库的开发人员使用, 库的使用者不必使用这些对象.
+	//初始化或者释放一个可执行内存（10字节），如果 p = 0则分配，p！=0 则释放。
 	JUBASE_API void* _CProcedure(void* p = 0);
+	//设置一个可执行内存（10字节）的函数
 	JUBASE_API void _InitCProcdure(void* obj,void* func,void* pointer,int n = 0);
 	//这个函数实际上是 _InitCProcdure obj = NULL 的特殊情形。
 	JUBASE_API void _InitStdProcdure(void* func,void* pointer,int n = 0);
@@ -8,7 +10,7 @@ namespace ju{
 	//检查,你可以把任何类型的函数传递给它.迫于C++的语法,没有一个简单可行的方式进行类型检查.
 	class JUBASE_API _StdClassProc : public HandleType<void*>{
 	public:
-		_StdClassProc(){};
+		_StdClassProc();
 		_StdClassProc(_StdClassProc& scp){
 			*this = scp;
 		}

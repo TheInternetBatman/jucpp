@@ -87,6 +87,12 @@ namespace ju{
 	void _StdClassProc::Release(){
 		if(_Handle) _CProcedure(_Handle);
 	}
+	_StdClassProc::_StdClassProc(){
+		/*_Handle = _CProcedure();
+		if(_Handle){
+			((CProcToStdcall*)_Handle)->Bind(0,0);
+		}*/
+	};
 	bool _StdClassProc::IsEmpty(){
 		if(_Handle==NULL) return 0;
 		return ((*(char*)_Handle)==(char)0xc2)||((*(char*)_Handle)==(char)0xc3);

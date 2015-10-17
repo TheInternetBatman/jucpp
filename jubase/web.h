@@ -256,7 +256,7 @@ namespace ju{
 		void _Accept();
 	public:
 		//当客户端有链接请求时做出响应的回调函数。
-		Function<void,SOCKET> OnAccept;			
+		Function<void,SOCKET> OnAccept;
 
 		~TCPServer();
 		//返回绑定的 Socket 指针。

@@ -492,6 +492,10 @@ namespace ju{
 		LocalCriticalSection lcs(_outputCs);
 		::ShowWindow(*GetOutputFrame(),0);
 	}
+	void LogCloseWindow(){
+		LocalCriticalSection lcs(_outputCs);
+		GetOutputFrame()->Close();
+	}
 	void LogSet(int color,LPCWSTR app){
 		LocalCriticalSection lcs(_outputCs);
 		if((INT_PTR)app==-1) app = App::GetAppName();
@@ -514,7 +518,87 @@ namespace ju{
 		String logstr = str;
 		Log(logstr,color,app);
 	}
-	void LogFormat(LPCWSTR fms,...){
+	void logf(int color,LPCWSTR fms,va_list vaList){
+		int bufSize = _vscwprintf(fms,vaList);
+		if(bufSize==-1){
+			return;
+		}
+		Memory<wchar_t> buf;
+		buf.SetLength(bufSize+1);
+		int n = vswprintf_s(buf,bufSize+1,fms,vaList);
+		Log(buf,color);
+	}
+	void logf(int color,LPCSTR fms,va_list vaList){
+		int bufSize = _vscprintf(fms,vaList);
+		if(bufSize==-1){
+			return;
+		}
+		Memory<char> buf;
+		buf.SetLength(bufSize+1);
+		int n = vsprintf_s(buf,bufSize+1,fms,vaList);
+		Log(buf,color);
+	}
+	void Logf(int color,LPCWSTR fms,...){
+		va_list vaList;
+		va_start(vaList,fms);
+		logf(color,fms,vaList);
+		va_end(vaList);
+	}
+	void Logf(int color,LPCSTR fms,...){
+		va_list vaList;
+		va_start(vaList,fms);
+		logf(color,fms,vaList);
+		va_end(vaList);
+	}
+	void LogfD(LPCWSTR fms,...){
+		va_list vaList;
+		va_start(vaList,fms);
+		logf(0xffffff,fms,vaList);
+		va_end(vaList);
+	}
+	void LogfD(LPCSTR fms,...){
+		va_list vaList;
+		va_start(vaList,fms);
+		logf(0xffffff,fms,vaList);
+		va_end(vaList);
+	}
+	void LogfI(LPCWSTR fms,...){
+		va_list vaList;
+		va_start(vaList,fms);
+		logf(0xff00,fms,vaList);
+		va_end(vaList);
+	}
+	void LogfI(LPCSTR fms,...){
+		va_list vaList;
+		va_start(vaList,fms);
+		logf(0xff00,fms,vaList);
+		va_end(vaList);
+	}
+	void LogfE(LPCWSTR fms,...){
+		va_list vaList;
+		va_start(vaList,fms);
+		logf(0xff,fms,vaList);
+		va_end(vaList);
+	}
+	void LogfE(LPCSTR fms,...){
+		va_list vaList;
+		va_start(vaList,fms);
+		logf(0xff,fms,vaList);
+		va_end(vaList);
+	}
+	void LogfW(LPCSTR fms,...){
+		va_list vaList;
+		va_start(vaList,fms);
+		logf(0xffff,fms,vaList);
+		va_end(vaList);
+	}
+	void LogfW(LPCWSTR fms,...){
+		va_list vaList;
+		va_start(vaList,fms);
+		logf(0xffff,fms,vaList);
+		va_end(vaList);
+	}
+	void Logf(LPCWSTR fms,...){
 		Memory<wchar_t> buf;
 		va_list vaList;
 		va_start(vaList,fms);
@@ -529,7 +613,7 @@ namespace ju{
 		buf[bufSize] = 0;
 		Log(buf);
 	}
-	void LogFormat(LPCSTR fms,...){
+	void Logf(LPCSTR fms,...){
 		Memory<char> buf;
 		va_list vaList;
 		va_start(vaList,fms);

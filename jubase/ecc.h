@@ -2,17 +2,6 @@
 #pragma once
 
 namespace ju{
-	//type指Sha函数后面的数字, 不要传 160、224、256、384、512 以外的值。
-	/*JUBASE_API inline uint ShaSize(int type = 160){return type/8;}
-	//digest必须设置足够的大小
-	//JUBASE_API bool Sha(const void* src,int len,void* digest20);
-	JUBASE_API bool Sha1(const void* src,int len,void* digest20);
-	JUBASE_API bool Sha160(const void* src,int len,void* digest20);
-	JUBASE_API bool Sha224(const void* src,int len,void* digest28);
-	JUBASE_API bool Sha256(const void* src,int len,void* digest32);
-	JUBASE_API bool Sha384(const void* src,int len,void* digest48);
-	JUBASE_API bool Sha512(const void* src,int len,void* digest64);*/
-
 #define ECC_KEY_LEN		68
 #define ECC_SIGN_LEN	132
 	//签名验证

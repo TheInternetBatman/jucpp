@@ -3,7 +3,9 @@ namespace ju{
 	template<typename R,typename T1 = NullType,typename T2 = NullType,typename T3 = NullType,typename T4 = NullType,typename T5 = NullType,typename T6 = NullType,typename T7 = NullType,typename T8 = NullType,typename T9 = NullType,typename T10 = NullType> class JUBASETL_API Function : public _StdClassProc{
 	public:
 		typedef R (__stdcall* PROC)(T1,T2,T3,T4,T5,T6,T7,T8,T9,T10);
-		Function(){}
+		Function(){
+			Empty();
+		}
 		void Empty(){
 			uint dsp = GetAlignment<T1>() + GetAlignment<T2>() + GetAlignment<T3>() + GetAlignment<T4>() + GetAlignment<T5>() + GetAlignment<T6>() + GetAlignment<T7>() + GetAlignment<T8>() + GetAlignment<T9>() + GetAlignment<T10>();
 			_StdClassProc::Bind<PROC>(0,0,dsp);
@@ -28,7 +30,9 @@ namespace ju{
 	template<typename R,typename T1,typename T2,typename T3,typename T4,typename T5,typename T6,typename T7,typename T8,typename T9> class JUBASETL_API Function<R,T1,T2,T3,T4,T5,T6,T7,T8,T9> : public _StdClassProc{
 	public:
 		typedef R (__stdcall* PROC)(T1,T2,T3,T4,T5,T6,T7,T8,T9);
-		Function(){}
+		Function(){
+			Empty();
+		}
 		void Empty(){
 			uint dsp = GetAlignment<T1>() + GetAlignment<T2>() + GetAlignment<T3>() + GetAlignment<T4>() + GetAlignment<T5>() + GetAlignment<T6>() + GetAlignment<T7>() + GetAlignment<T8>() + GetAlignment<T9>();
 			_StdClassProc::Bind<PROC>(0,0,dsp);
@@ -53,7 +57,9 @@ namespace ju{
 	template<typename R,typename T1,typename T2,typename T3,typename T4,typename T5,typename T6,typename T7,typename T8> class JUBASETL_API Function<R,T1,T2,T3,T4,T5,T6,T7,T8> : public _StdClassProc{
 	public:
 		typedef R (__stdcall* PROC)(T1,T2,T3,T4,T5,T6,T7,T8);
-		Function(){}
+		Function(){
+			Empty();
+		}
 		void Empty(){
 			uint dsp = GetAlignment<T1>() + GetAlignment<T2>() + GetAlignment<T3>() + GetAlignment<T4>() + GetAlignment<T5>() + GetAlignment<T6>() + GetAlignment<T7>() + GetAlignment<T8>();
 			_StdClassProc::Bind<PROC>(0,0,dsp);
@@ -78,7 +84,9 @@ namespace ju{
 	template<typename R,typename T1,typename T2,typename T3,typename T4,typename T5,typename T6,typename T7> class JUBASETL_API Function<R,T1,T2,T3,T4,T5,T6,T7> : public _StdClassProc{
 	public:
 		typedef R (__stdcall* PROC)(T1,T2,T3,T4,T5,T6,T7);
-		Function(){}
+		Function(){
+			Empty();
+		}
 		void Empty(){
 			uint dsp = GetAlignment<T1>() + GetAlignment<T2>() + GetAlignment<T3>() + GetAlignment<T4>() + GetAlignment<T5>() + GetAlignment<T6>() + GetAlignment<T7>();
 			_StdClassProc::Bind<PROC>(0,0,dsp);
@@ -103,7 +111,9 @@ namespace ju{
 	template<typename R,typename T1,typename T2,typename T3,typename T4,typename T5,typename T6> class JUBASETL_API Function<R,T1,T2,T3,T4,T5,T6> : public _StdClassProc{
 	public:
 		typedef R (__stdcall* PROC)(T1,T2,T3,T4,T5,T6);
-		Function(){}
+		Function(){
+			Empty();
+		}
 		void Empty(){
 			uint dsp = GetAlignment<T1>() + GetAlignment<T2>() + GetAlignment<T3>() + GetAlignment<T4>() + GetAlignment<T5>() + GetAlignment<T6>();
 			_StdClassProc::Bind<PROC>(0,0,dsp);
@@ -128,7 +138,9 @@ namespace ju{
 	template<typename R,typename T1,typename T2,typename T3,typename T4,typename T5> class JUBASETL_API Function<R,T1,T2,T3,T4,T5> : public _StdClassProc{
 	public:
 		typedef R (__stdcall* PROC)(T1,T2,T3,T4,T5);
-		Function(){}
+		Function(){
+			Empty();
+		}
 		void Empty(){
 			uint dsp = GetAlignment<T1>() + GetAlignment<T2>() + GetAlignment<T3>() + GetAlignment<T4>() + GetAlignment<T5>();
 			_StdClassProc::Bind<PROC>(0,0,dsp);
@@ -153,7 +165,9 @@ namespace ju{
 	template<typename R,typename T1,typename T2,typename T3,typename T4> class JUBASETL_API Function<R,T1,T2,T3,T4> : public _StdClassProc{
 	public:
 		typedef R (__stdcall* PROC)(T1,T2,T3,T4);
-		Function(){}
+		Function(){
+			Empty();
+		}
 		void Empty(){
 			uint dsp = GetAlignment<T1>() + GetAlignment<T2>() + GetAlignment<T3>() + GetAlignment<T4>();
 			_StdClassProc::Bind<PROC>(0,0,dsp);
@@ -178,7 +192,9 @@ namespace ju{
 	template<typename R,typename T1,typename T2,typename T3> class JUBASETL_API Function<R,T1,T2,T3> : public _StdClassProc{
 	public:
 		typedef R (__stdcall* PROC)(T1,T2,T3);
-		Function(){}
+		Function(){
+			Empty();
+		}
 		void Empty(){
 			uint dsp = GetAlignment<T1>() + GetAlignment<T2>() + GetAlignment<T3>();
 			_StdClassProc::Bind<PROC>(0,0,dsp);
@@ -203,7 +219,9 @@ namespace ju{
 	template<typename R,typename T1,typename T2> class JUBASETL_API Function<R,T1,T2> : public _StdClassProc{
 	public:
 		typedef R (__stdcall* PROC)(T1,T2);
-		Function(){}
+		Function(){
+			Empty();
+		}
 		void Empty(){
 			uint dsp = GetAlignment<T1>() + GetAlignment<T2>();
 			_StdClassProc::Bind<PROC>(0,0,dsp);
@@ -228,7 +246,9 @@ namespace ju{
 	template<typename R,typename T1> class JUBASETL_API Function<R,T1> : public _StdClassProc{
 	public:
 		typedef R (__stdcall* PROC)(T1);
-		Function(){}
+		Function(){
+			Empty();
+		}
 		void Empty(){
 			uint dsp = GetAlignment<T1>();
 			_StdClassProc::Bind<PROC>(0,0,dsp);
@@ -253,7 +273,9 @@ namespace ju{
 	template<typename R> class JUBASETL_API Function<R> : public _StdClassProc{
 	public:
 		typedef R (__stdcall* PROC)();
-		Function(){}
+		Function(){
+			Empty();
+		}
 		void Empty(){
 			uint dsp = 0;
 			_StdClassProc::Bind<PROC>(0,0,dsp);

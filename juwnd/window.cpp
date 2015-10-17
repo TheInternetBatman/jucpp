@@ -222,6 +222,8 @@ namespace ju{
 			IWnd* wnd = GetIWnd((HWND)lParam);
 			OnCommand.Call(LOWORD(wParam),HIWORD(wParam),wnd);
 			if((lParam!=0)&&((HWND)lParam!=hWnd)){
+				//上面的OnCommand 里面，有可能会删除 wnd ，这时wnd就不能再调用
+				wnd = GetIWnd((HWND)lParam);
 				if(wnd){
 					wnd->OnCommand.Call(LOWORD(wParam),HIWORD(wParam),wnd);
 				}

@@ -73,7 +73,7 @@ namespace ju{
 			PrintLastError();
 			return 0;
 		}
-		_nis.RemoveValue(id);
+		_nis.DeleteValue(id);
 		return 1;
 	}
 	NotifyIcon::~NotifyIcon()

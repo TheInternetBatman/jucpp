@@ -165,7 +165,7 @@ namespace ju{
 			return index;
 		}
 		//删除搜索到的第一个值为 value 的元素,如果元素不存在,返回 0.
-		bool RemoveValue(T value,uint start = 0){
+		bool DeleteValue(T value,uint start = 0){
 			for(uint i=start;i<_Count;i++) if(value==_Handle[i]) return Delete(i,1)==1;
 			return 0;
 		}
@@ -250,8 +250,9 @@ namespace ju{
 		}
 		//删除特定的元素。
 		inline bool Delete(T* object){
+			bool r = _Ptrs.DeleteValue(object);
 			delete object;
-			return _Ptrs.RemoveValue(object);
+			return r;
 		}
 		//与Delete函数唯一不同的是,这个函数只移除元素,不从内存中删除实例.也就是说,你要自己手动删除实例.
 		uint RemoveOut(uint index,uint count = 1){

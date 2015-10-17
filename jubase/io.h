@@ -256,11 +256,13 @@ namespace ju{
 		HANDLE Detach();
 		//生成或打开一个文件.
 		bool Create(LPCWSTR name,DWORD create = OPEN_ALWAYS,DWORD share = FILE_SHARE_READ|FILE_SHARE_WRITE,DWORD access = FILE_GENERIC_READ|FILE_GENERIC_WRITE,DWORD attribute = FILE_ATTRIBUTE_NORMAL);
+		//打开一个存在的文件，如果文件不存在，不会创建它，而是返回 false
+		bool OpenExist(LPCWSTR name){return Create(name,OPEN_EXISTING,FILE_SHARE_READ|FILE_SHARE_WRITE,FILE_GENERIC_READ);}
 		//关闭文件.
 		bool Close();
 		//获取文件的大小.
 		unsigned __int64 GetLength();
-		//设置文件的长度(不能大于4G).
+		//设置文件的长度.
 		bool SetLength(uint64 length);
 		//设置当前指针位置为文件结尾.
 		bool EndOfFile(){return SetEndOfFile(_Handle)!=0;}

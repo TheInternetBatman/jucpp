@@ -5,6 +5,7 @@ namespace ju{
 	//后续调用这个函数，都返回同一个实例，
 	JUBASE_API void LogShowWindow(bool exit = true);
 	JUBASE_API void LogHideWindow();
+	JUBASE_API void LogCloseWindow();
 	JUBASE_API void LogSetFontSize(int size);
 	JUBASE_API void LogSetBkColor(int color);
 	JUBASE_API void LogSetMaxLine(int count);
@@ -13,7 +14,17 @@ namespace ju{
 	JUBASE_API void Log(LPCSTR str);
 	JUBASE_API void Log(LPCWSTR str,int color,LPCWSTR app = (LPCWSTR)INVALID_HANDLE_VALUE);
 	JUBASE_API void Log(LPCSTR str,int color,LPCWSTR app = (LPCWSTR)INVALID_HANDLE_VALUE);
-	JUBASE_API void LogFormat(LPCWSTR fms,...);
-	JUBASE_API void LogFormat(LPCSTR fms,...);
+	JUBASE_API void Logf(LPCWSTR fms,...);
+	JUBASE_API void Logf(LPCSTR fms,...);
+	JUBASE_API void LogfD(LPCWSTR fms,...);
+	JUBASE_API void LogfD(LPCSTR fms,...);
+	JUBASE_API void LogfI(LPCWSTR fms,...);
+	JUBASE_API void LogfI(LPCSTR fms,...);
+	JUBASE_API void LogfW(LPCWSTR fms,...);
+	JUBASE_API void LogfW(LPCSTR fms,...);
+	JUBASE_API void LogfE(LPCWSTR fms,...);
+	JUBASE_API void LogfE(LPCSTR fms,...);
+	JUBASE_API void Logf(int color,LPCWSTR fms,...);
+	JUBASE_API void Logf(int color,LPCSTR fms,...);
 	JUBASE_API void LogClear();
 }

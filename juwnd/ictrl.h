@@ -101,7 +101,9 @@ namespace ju{
 		HLOCAL LockTextBuffer(){return (HLOCAL)SendMessage(EM_GETHANDLE,0,0);}
 		//这个函数设置控件的字串缓存,它会清空UNDO操作和MODIFY标记.hMem可以是自己分配的内存(LocalLock),或者是前面的函数返回的内存.
 		void SetTextBuffer(HLOCAL hMem){SendMessage(EM_SETHANDLE,hMem,0);}
-		//设置控件是否有只读属性(ES_READONLY风格).
+		//设置控件为 PASSWORD 类型，直接修改属性(ES_PASSWORD)是无效的，属性起作用仅限控件生成前有效. 去除密码风格，设置 passchar = 0；
+		void SetPassword(WORD passchar = 9679){SendMessage(EM_SETPASSWORDCHAR,passchar,0);}
+		//设置控件是否有只读风格，直接修改属性(ES_READONLY)是无效的.
 		bool SetReadOnly(bool readonly){return SendMessage(EM_SETREADONLY,readonly,0)!=0;}
 		//滚动到光标位置.
 		void ScrollCaret(){SendMessage(EM_SCROLLCARET,0,0);}
