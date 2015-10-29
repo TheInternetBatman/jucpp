@@ -26,6 +26,6 @@ WINMAIN{
 
 工程配置如下
 
-![](https://github.com/pgmsoul/jucpp/blob/master/Example1_Hello/hello.png)
-![](https://github.com/pgmsoul/jucpp/blob/master/Example1_Hello/setlink.png)
-![](https://github.com/pgmsoul/jucpp/blob/master/Example1_Hello/setlinkr.png)
+![](https://github.com/pgmsoul/sotre/blob/master/hello.png)
+![](https://github.com/pgmsoul/sotre/blob/master/setlink.png)
+![](https://github.com/pgmsoul/sotre/blob/master/setlinkr.png)
