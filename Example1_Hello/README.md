@@ -1,4 +1,4 @@
-···CPP
+```CPP
 #include "../juwnd.h"
 
 class Main : public ju::Frame{
