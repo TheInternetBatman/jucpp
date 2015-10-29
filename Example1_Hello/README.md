@@ -39,13 +39,16 @@ WINMAIN{
 工程配置如下
 
 1. 创建工程：
-![](https://github.com/pgmsoul/store/blob/master/image/hello.jpg)
+
+![创建工程](https://github.com/pgmsoul/store/blob/master/image/hello.jpg)
 
 2. 配置工程的运行库链接为静态：
-![](https://github.com/pgmsoul/store/blob/master/image/setlink.jpg)
-![](https://github.com/pgmsoul/store/blob/master/image/setlinkr.jpg)
+
+![配置 Debug 版本的运行库链接方式](https://github.com/pgmsoul/store/blob/master/image/setlink.jpg)
+![配置 Release 版本的运行库链接方式](https://github.com/pgmsoul/store/blob/master/image/setlinkr.jpg)
 
 3. 程序运行结果：
+
 ![](https://github.com/pgmsoul/store/blob/master/image/example1.jpg)
 
 
