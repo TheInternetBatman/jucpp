@@ -333,14 +333,14 @@ namespace ju{
 		}else{
 			bool rst = _Search(dir,L"",extra);
 			if(!rst) dir = 0;
-			OnComplete(extra,dir);
+			if(!OnComplete.IsNull()) OnComplete(extra,dir);
 			return rst;
 		}
 	}
 	bool FileTree::_searchStore(LPCWSTR dir,Tree<String>* tl)
 	{
 		bool b = _SearchStore(dir,L"",tl);
-		OnComplete(tl,dir);
+		if(!OnComplete.IsNull()) OnComplete(tl,dir);
 		MemoryFree((void*)dir);
 		return b;
 	}
@@ -388,7 +388,7 @@ namespace ju{
 	}
 	bool FileTree::_search(LPCWSTR dir,void* extra){
 		bool b = _Search(dir,L"",extra);
-		OnComplete(extra,dir);
+		if(!OnComplete.IsNull()) OnComplete(extra,dir);
 		MemoryFree((void*)dir);
 		return b;
 	}
@@ -409,7 +409,7 @@ namespace ju{
 		WIN32_FIND_DATA wfd;
 		HANDLE hFind = FindFirstFile(sp,&wfd);
 		if(hFind==INVALID_HANDLE_VALUE){
-			OnComplete(extra,0);
+			if(!OnComplete.IsNull()) OnComplete(extra,0);
 			return 0;
 		}
 		int find = 1;
@@ -428,12 +428,12 @@ namespace ju{
 			if(!IsDir(wfd.dwFileAttributes)){
 				if(IsFilter(&_Filter,wfd.cFileName,_filterType)){
 					sd.Flag = 0;
-					OnList(&sd);
+					if(!OnList.IsNull()) OnList(&sd);
 				}
 			}else{
 				if(_Pre){
 						sd.Flag = 1;
-						OnList(&sd);
+						if(!OnList.IsNull()) OnList(&sd);
 				}
 				if(sd.Stop) break;
 				if(!sd.Skip&&_Sub){
@@ -443,7 +443,7 @@ namespace ju{
 				}
 				if(_After){
 					sd.Flag = 2;
-					OnList(&sd);
+					if(!OnList.IsNull()) OnList(&sd);
 				}
 			}
 			if(sd.Stop) break;
@@ -532,8 +532,7 @@ namespace ju{
 			offset += len;
 			left -= len;
 			bool stop = 0;
-			if(!OnProgress.IsNull())
-				OnProgress(offset,length,stop,UserData);
+			if(!OnProgress.IsNull()) OnProgress(offset,length,stop,UserData);
 			if(left==0){
 				dfm.SetLength(length);
 				if(check){
@@ -869,7 +868,7 @@ namespace ju{
 				fn.CopyFrom(pfni->FileName,pfni->FileNameLength/2);
 				fn.Insert('\\',0);
 				fn.Insert(dir,0);
-				OnChange(pfni->Action,fn);
+				if(!OnChange.IsNull()) OnChange(pfni->Action,fn);
 				if(0==pfni->NextEntryOffset) break;
 				pfni = (PFILE_NOTIFY_INFORMATION)(buffer + pfni->NextEntryOffset);
 			}

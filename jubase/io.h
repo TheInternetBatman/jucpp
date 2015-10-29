@@ -33,13 +33,11 @@ namespace ju{
 	JUBASE_API void FPLinkExt(String& ps,LPCWSTR ext);
 	//连接两个字串，中间保持一个反斜杠。
 	JUBASE_API void FPLinkPath(String& ps,LPCWSTR path);
-	typedef struct DRIVEINFO
-	{
+	typedef struct DRIVEINFO{
 		wchar_t Name[65],Path[3],FileSystemType[6];
 		DWORD Type,Flag,MaxPath;
 	}DRIVEINFO,*LPDRIVEINFO;
-	class JUBASE_API Drives
-	{
+	class JUBASE_API Drives{
 	public:
 		Drives();
 		~Drives();
@@ -50,8 +48,7 @@ namespace ju{
 		int _Count;
 		StringMemList Paths;
 	};
-	typedef struct ListData : public _struct
-	{
+	typedef struct ListData : public _struct{
 		WIN32_FIND_DATA*	FindData;		//文件的相关属性和信息。
 		LPCWSTR				Original;		//原始路径, 就是搜索的参数.
 		LPCWSTR				Relative;		//相对路径，这个路径包含一个末尾的反斜杠。

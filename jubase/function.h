@@ -4,7 +4,7 @@ namespace ju{
 	public:
 		typedef R (__stdcall* PROC)(T1,T2,T3,T4,T5,T6,T7,T8,T9,T10);
 		Function(){
-			Empty();
+			//Empty();
 		}
 		void Empty(){
 			uint dsp = GetAlignment<T1>() + GetAlignment<T2>() + GetAlignment<T3>() + GetAlignment<T4>() + GetAlignment<T5>() + GetAlignment<T6>() + GetAlignment<T7>() + GetAlignment<T8>() + GetAlignment<T9>() + GetAlignment<T10>();
@@ -31,7 +31,7 @@ namespace ju{
 	public:
 		typedef R (__stdcall* PROC)(T1,T2,T3,T4,T5,T6,T7,T8,T9);
 		Function(){
-			Empty();
+			//Empty();
 		}
 		void Empty(){
 			uint dsp = GetAlignment<T1>() + GetAlignment<T2>() + GetAlignment<T3>() + GetAlignment<T4>() + GetAlignment<T5>() + GetAlignment<T6>() + GetAlignment<T7>() + GetAlignment<T8>() + GetAlignment<T9>();
@@ -58,7 +58,7 @@ namespace ju{
 	public:
 		typedef R (__stdcall* PROC)(T1,T2,T3,T4,T5,T6,T7,T8);
 		Function(){
-			Empty();
+			//Empty();
 		}
 		void Empty(){
 			uint dsp = GetAlignment<T1>() + GetAlignment<T2>() + GetAlignment<T3>() + GetAlignment<T4>() + GetAlignment<T5>() + GetAlignment<T6>() + GetAlignment<T7>() + GetAlignment<T8>();
@@ -85,7 +85,7 @@ namespace ju{
 	public:
 		typedef R (__stdcall* PROC)(T1,T2,T3,T4,T5,T6,T7);
 		Function(){
-			Empty();
+			//Empty();
 		}
 		void Empty(){
 			uint dsp = GetAlignment<T1>() + GetAlignment<T2>() + GetAlignment<T3>() + GetAlignment<T4>() + GetAlignment<T5>() + GetAlignment<T6>() + GetAlignment<T7>();
@@ -112,7 +112,7 @@ namespace ju{
 	public:
 		typedef R (__stdcall* PROC)(T1,T2,T3,T4,T5,T6);
 		Function(){
-			Empty();
+			//Empty();
 		}
 		void Empty(){
 			uint dsp = GetAlignment<T1>() + GetAlignment<T2>() + GetAlignment<T3>() + GetAlignment<T4>() + GetAlignment<T5>() + GetAlignment<T6>();
@@ -139,7 +139,7 @@ namespace ju{
 	public:
 		typedef R (__stdcall* PROC)(T1,T2,T3,T4,T5);
 		Function(){
-			Empty();
+			//Empty();
 		}
 		void Empty(){
 			uint dsp = GetAlignment<T1>() + GetAlignment<T2>() + GetAlignment<T3>() + GetAlignment<T4>() + GetAlignment<T5>();
@@ -166,7 +166,7 @@ namespace ju{
 	public:
 		typedef R (__stdcall* PROC)(T1,T2,T3,T4);
 		Function(){
-			Empty();
+			//Empty();
 		}
 		void Empty(){
 			uint dsp = GetAlignment<T1>() + GetAlignment<T2>() + GetAlignment<T3>() + GetAlignment<T4>();
@@ -193,7 +193,7 @@ namespace ju{
 	public:
 		typedef R (__stdcall* PROC)(T1,T2,T3);
 		Function(){
-			Empty();
+			//Empty();
 		}
 		void Empty(){
 			uint dsp = GetAlignment<T1>() + GetAlignment<T2>() + GetAlignment<T3>();
@@ -220,7 +220,7 @@ namespace ju{
 	public:
 		typedef R (__stdcall* PROC)(T1,T2);
 		Function(){
-			Empty();
+			//Empty();
 		}
 		void Empty(){
 			uint dsp = GetAlignment<T1>() + GetAlignment<T2>();
@@ -247,7 +247,7 @@ namespace ju{
 	public:
 		typedef R (__stdcall* PROC)(T1);
 		Function(){
-			Empty();
+			//Empty();
 		}
 		void Empty(){
 			uint dsp = GetAlignment<T1>();
@@ -274,7 +274,7 @@ namespace ju{
 	public:
 		typedef R (__stdcall* PROC)();
 		Function(){
-			Empty();
+			//Empty();
 		}
 		void Empty(){
 			uint dsp = 0;
