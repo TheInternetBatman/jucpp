@@ -10,7 +10,7 @@
 1. jsuse 库是一个静态库，运行库必须使用静态链接方式，无论是 jsuse 库本身还是使用 jsuse 的工程。
 “C++ > 代码生成 > 运行库” 配置为静态链接，MT(release) 和 MTd(debug)，引用的工程一般也必须设置为静态链接。
 
-2. 使用 jsuse 库，工程必须字符集配置为 Unicode 字符集，不支持多字节字符。
+2. 使用 jsuse 库，工程字符集必须配置为 Unicode 字符集，不支持多字节字符。
 
 3. 工程使用 VS 2008 SP1 编译，在 jucpp 目录的 lib 文件夹下生成 6 个静态库文件: cryptlib.lib cryptlibD.lib jubase.lib jubaseD.lib juwnd.lib juwndD.lib。尾部带 D 的库文件是 Debug 版本。
 
