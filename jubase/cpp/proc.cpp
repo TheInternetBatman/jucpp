@@ -192,7 +192,7 @@ namespace ju{
 		//把 API 函数的首 10 个字节写入 _orgFunc，用来呼叫原函数。_orgFunc结构的有效
 		//大小是15字节，后5个字节完成一个跳转，跳到原函数的第11个字节。这样呼叫 _orgFunc
 		//和呼叫原函数，在汇编代码是一样的，只是第11个字节多了一个跳转，等于把连续的
-		//函数，分在两个地方执行。
+		//函数分在两个地方执行。
 		ReadProcessMemory(hProcess,api,_orgFunc,10,&size);
 		if(size==0) return 0;
 		//借助_StdClassProc把原函数的前10个字节改为Function结构，这样调用原函数（api）将会
