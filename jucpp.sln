@@ -15,11 +15,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cryptlib", "cryptlib\cryptlib.vcproj", "{3423EC9A-52E4-4A4D-9753-EDEBC38785EF}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Example1_Hello", "Example1_Hello\Example1_Hello.vcproj", "{719CA880-7DB6-4BDA-9AB8-C924DE2FB28D}"
-	ProjectSection(ProjectDependencies) = postProject
-		{3423EC9A-52E4-4A4D-9753-EDEBC38785EF} = {3423EC9A-52E4-4A4D-9753-EDEBC38785EF}
-		{747D10D7-6348-465E-92A3-9FDFF35D36F1} = {747D10D7-6348-465E-92A3-9FDFF35D36F1}
-		{E3EB03FF-C3DA-4F38-8340-2838927EE10E} = {E3EB03FF-C3DA-4F38-8340-2838927EE10E}
-	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Example2_Function", "Example2_Function\Example2_Function.vcproj", "{59F14EDB-19F9-46FB-A579-E000C604F641}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -55,6 +52,12 @@ Global
 		{719CA880-7DB6-4BDA-9AB8-C924DE2FB28D}.Release|Win32.ActiveCfg = Release|Win32
 		{719CA880-7DB6-4BDA-9AB8-C924DE2FB28D}.Release|Win32.Build.0 = Release|Win32
 		{719CA880-7DB6-4BDA-9AB8-C924DE2FB28D}.Release|x64.ActiveCfg = Release|Win32
+		{59F14EDB-19F9-46FB-A579-E000C604F641}.Debug|Win32.ActiveCfg = Debug|Win32
+		{59F14EDB-19F9-46FB-A579-E000C604F641}.Debug|Win32.Build.0 = Debug|Win32
+		{59F14EDB-19F9-46FB-A579-E000C604F641}.Debug|x64.ActiveCfg = Debug|Win32
+		{59F14EDB-19F9-46FB-A579-E000C604F641}.Release|Win32.ActiveCfg = Release|Win32
+		{59F14EDB-19F9-46FB-A579-E000C604F641}.Release|Win32.Build.0 = Release|Win32
+		{59F14EDB-19F9-46FB-A579-E000C604F641}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

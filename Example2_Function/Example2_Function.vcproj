@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="Example1_Hello"
-	ProjectGUID="{719CA880-7DB6-4BDA-9AB8-C924DE2FB28D}"
-	RootNamespace="Example1_Hello"
+	Name="Example2_Function"
+	ProjectGUID="{59F14EDB-19F9-46FB-A579-E000C604F641}"
+	RootNamespace="Example2_Function"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -61,7 +61,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="..\lib"
+				AdditionalLibraryDirectories="../lib"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
