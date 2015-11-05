@@ -35,8 +35,8 @@ namespace ju{
 			int64 _intValue;
 			double _doubleValue;
 			String* _strValue;
-			ObjectLink<Json>* _arrayValue;
-			ObjectLink<DICTION>* _objectValue;
+			ObjectList<Json>* _arrayValue;
+			ObjectList<DICTION>* _objectValue;
 			Memory<char>*	_binaryValue;
 		};
 		JSON_TYPE _type;
@@ -212,6 +212,12 @@ namespace ju{
 			val = js->Str();
 			return 1;
 		}
+		bool GetPropertyStr(LPCWSTR prop,String& val){
+			Json* js = GetProperty(prop);
+			if(!js||!js->IsString()) return 0;
+			val = js->Str();
+			return 1;
+		}
 		//返回属性的字串值，如果属性不存在或者属性不是字串类型，返回设置的缺省值 def 。
 		LPCWSTR PropertyStr(LPCWSTR prop,LPCWSTR def = 0){
 			Json* js = GetProperty(prop);
@@ -328,104 +334,84 @@ namespace ju{
 		Json* GetPropertyByIndex(int index,LPCWSTR* key = 0);
 		bool RemoveProperty(LPCWSTR prop);
 		bool RemovePropertyByIndex(int index);
-		//Array类型是属性的数字索引形式，内部用链表实现，所以速度比属性快，特别是数据量比较大的时候，删除添加查找都效率更高。
-		//把链表指针移动到开头
-		void ArrayFirst(){
-			if(_type!=json_array) return;
-			_arrayValue->First();
-		}
-		//把链表指针移动到末尾
-		void ArrayLast(){
-			if(_type!=json_array) return;
-			_arrayValue->Last();
-		}
-		//移动链表指针，正数向后，负数向前
-		int ArrayMove(int step){
-			if(_type!=json_array) return 0;
-			return _arrayValue->Move(step);
-		}
 		//返回数组的当前元素，如果当前链表为空，返回 NULL。
-		Json* GetArrayElm(){
+		Json* GetArrayElm(int i){
 			if(_type!=json_array) return 0;
-			return _arrayValue->Element();
+			return _arrayValue->GetElement(i);
 		}
 		//设置数组的当前元素的值，并且返回这个元素，如果当前对象不是数组，返回 NULL。
-		Json* SetArrayElm(Json& val){
+		Json* SetArrayElm(Json& val,int i){
 			if(_type!=json_array) return 0;
-			Json* elm = _arrayValue->Element();
+			Json* elm = _arrayValue->GetElement(i);
 			*elm = val;
 			return elm;
 		}
-		//插入一个数组元素, pos = LINK_FIRST（0） 插入到最前面，pos = LINK_CURRENT（1），
-		//插入到当前位置的后面；pos = LINK_LAST（2），插入到最后面。这个操作不改变当前元素的指针。
-		//返回插入的新元素。
-		Json* AddArrayElm(int pos = LINK_LAST){
+		//数组对象的指定位置添加一个元素，返回这个新元素。
+		//如果当前对象不是数组类型或者 null 类型，返回 NULL
+		//如果指定位置大于数组的最大索引，添加到末尾
+		Json* AddArrayElm(int pos = -1){
 			if(_type==json_null) SetToArray();
 			if(_type!=json_array) return 0;
 			return _arrayValue->Add(pos);
 		}
 		//移除当前数组元素，当前指针指向后一个元素，如果没有后一个元素，链表溢出。
-		void RemoveArrayElm(){
+		void RemoveArrayElm(int i,int count = 1){
 			if(_type!=json_array) return;
-			_arrayValue->Delete();
+			_arrayValue->Delete(i,count);
 		}
-		//链表是否处于溢出状态
-		bool ArrayOverFlow(){
-			return _arrayValue->OverFlow();
-		}
-		bool GetArrayStr(LPCWSTR& val){
-			Json* js = GetArrayElm();
+		bool GetArrayStr(LPCWSTR& val,int i){
+			Json* js = GetArrayElm(i);
 			if(!js||!js->IsString()) return 0;
 			val = js->Str();
 			return 1;
 		}
-		bool GetArrayInt32(int& val){
-			Json* js = GetArrayElm();
+		bool GetArrayInt32(int& val,int i){
+			Json* js = GetArrayElm(i);
 			if(!js||!js->IsInteger()) return 0;
 			val = js->Int32();
 			return 1;
 		}
-		bool GetArrayInt64(int64& val){
-			Json* js = GetArrayElm();
+		bool GetArrayInt64(int64& val,int i){
+			Json* js = GetArrayElm(i);
 			if(!js||!js->IsInteger()) return 0;
 			val = js->Int64();
 			return 1;
 		}
-		bool GetArrayBool(bool& val){
-			Json* js = GetArrayElm();
+		bool GetArrayBool(bool& val,int i){
+			Json* js = GetArrayElm(i);
 			if(!js||!js->IsBoolean()) return 0;
 			val = js->Boolean();
 			return 1;
 		}
-		bool GetArrayDouble(double& val){
-			Json* js = GetArrayElm();
+		bool GetArrayDouble(double& val,int i){
+			Json* js = GetArrayElm(i);
 			if(!js||!js->IsDouble()) return 0;
 			val = js->Double();
 			return 1;
 		}
-		Json* SetArrayStr(LPCWSTR val){
+		Json* SetArrayStr(LPCWSTR val,int i){
 			Json jv(val);
-			return SetArrayElm(jv);
+			return SetArrayElm(jv,i);
 		}
-		Json* SetArrayMbs(LPCSTR val){
+		Json* SetArrayMbs(LPCSTR val,int i){
 			Json jv(val);
-			return SetArrayElm(jv);
+			return SetArrayElm(jv,i);
 		}
-		Json* SetArrayBool(bool val){
+		Json* SetArrayBool(bool val,int i){
 			Json jv(val);
-			return SetArrayElm(jv);
+			return SetArrayElm(jv,i);
 		}
-		Json* SetArrayInt32(int val){
+		Json* SetArrayInt32(int val,int i){
 			Json jv(val);
-			return SetArrayElm(jv);
+			return SetArrayElm(jv,i);
 		}
-		Json* SetArrayInt64(int64 val){
+		Json* SetArrayInt64(int64 val,int i){
 			Json jv(val);
-			return SetArrayElm(jv);
+			return SetArrayElm(jv,i);
 		}
-		Json* SetArrayDouble(double val){
+		Json* SetArrayDouble(double val,int i){
 			Json jv(val);
-			return SetArrayElm(jv);
+			return SetArrayElm(jv,i);
 		}
 
 		//Count返回当前类型为数组或Object时的子项数量，其它类型返回 0 。
@@ -441,13 +427,11 @@ namespace ju{
 		bool Parse(LPCSTR jstr,int len,DWORD codepage = CP_THREAD_ACP);
 		bool LoadFromFile(LPCWSTR fn,DWORD codepage = CP_THREAD_ACP);
 		bool SaveToFile(LPCWSTR fn,DWORD codepage = CP_THREAD_ACP,bool readStyle = true);
-
+		//如果索引超界，会自动添加元素到这个位置，和之前的位置。
 		Json& operator [] (int index){
 			if(_type==json_array){
 				if((int)_arrayValue->Count()>index){
-					_arrayValue->First();
-					_arrayValue->Move(index);
-					return *_arrayValue->Element();
+					return *_arrayValue->GetElement(index);
 				}else{
 					Json* a;
 					for(int i=_arrayValue->Count();i<=index;i++)
@@ -458,7 +442,7 @@ namespace ju{
 				_ASSERT(0);
 				return *(Json*)0;
 			}
-			_arrayValue = new ObjectLink<Json>;
+			_arrayValue = new ObjectList<Json>;
 			_type = json_array;
 			Json* a;
 			for(int i=0;i<=index;i++)

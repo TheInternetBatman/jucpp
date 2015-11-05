@@ -1,7 +1,7 @@
 #include "../stdafx.h"
 #include "../../jubase.h"
 
-namespace ju{
+namespace cs{
 	//Json目前没有给出如果源字串有错误时候的错误位置，可以用一个静态变量来记录这个位置
 	//这样，既不会增加正确解析的运算量，也不会增加Json本身的资源。
 	inline void descapSpecialChar(wchar_t ch,wchar_t& ret){
@@ -179,15 +179,15 @@ namespace ju{
 		ds.CopyFrom(jstr+pos1,pos2-pos1);
 		return ds.ToInt64(v,10);
 	}
-	int _parseArray(LPCWSTR jstr,int pos,int maxlen,ObjectList<Json>* ja);
-	int _parseObject(LPCWSTR jstr,int pos,int maxlen,ObjectList<Json::DICTION>* jo);
+	int _parseArray(LPCWSTR jstr,int pos,int maxlen,ObjectLink<Json>* ja);
+	int _parseObject(LPCWSTR jstr,int pos,int maxlen,ObjectLink<Json::DICTION>* jo);
 	int _parseBinary(LPCWSTR jstr,int pos,int maxlen,Memory<char>* mbin){
 		String bin;
 		for(int i=pos;i<maxlen;i++){
 			if(jstr[i]=='\''){
 				bin.CopyFrom(jstr+pos,i-pos);
 				Memory<char> buf;
-				int len = bin.ToMultiByte(buf);
+				int len = bin.ToMultiByte(&buf);
 				Base64::Decode(*mbin,buf.Handle(),len);
 				return i+1;
 			}
@@ -209,11 +209,11 @@ namespace ju{
 			pos = _parseBinary(jstr,pos+1,maxlen,jv->_binaryValue);
 		}else if(jstr[pos]=='['){
 			jv->_type = json_array;
-			jv->_arrayValue = new ObjectList<Json>;
+			jv->_arrayValue = new ObjectLink<Json>;
 			pos = _parseArray(jstr,pos+1,maxlen,jv->_arrayValue);
 		}else if(jstr[pos]=='{'){
 			jv->_type = json_object;
-			jv->_objectValue = new ObjectList<Json::DICTION>;
+			jv->_objectValue = new ObjectLink<Json::DICTION>;
 			pos = _parseObject(jstr,pos+1,maxlen,jv->_objectValue);
 		}else{
 			int nextPos = _getNextWord(jstr,pos,maxlen);
@@ -234,7 +234,7 @@ namespace ju{
 		}
 		return pos;
 	}
-	int _parseArray(LPCWSTR jstr,int pos,int maxlen,ObjectList<Json>* ja){
+	int _parseArray(LPCWSTR jstr,int pos,int maxlen,ObjectLink<Json>* ja){
 		while(_isSpaceChar(jstr[pos])){
 			pos++;
 			if(pos>=maxlen) return -1;
@@ -254,7 +254,7 @@ namespace ju{
 				delete jv;
 				return -1;
 			}else{
-				ja->AddIn(jv);
+				ja->Add(jv);
 			}
 			while(_isSpaceChar(jstr[pos])){
 				pos++;
@@ -280,7 +280,7 @@ namespace ju{
 		pos++;
 		return _parseAll(jstr,pos,maxlen,dic->val);
 	}
-	int _parseObject(LPCWSTR jstr,int pos,int maxlen,ObjectList<Json::DICTION>* jo){
+	int _parseObject(LPCWSTR jstr,int pos,int maxlen,ObjectLink<Json::DICTION>* jo){
 		while(_isSpaceChar(jstr[pos])){
 			pos++;
 			if(pos==maxlen) return -1;
@@ -321,11 +321,11 @@ namespace ju{
 				continue;
 			}else if(jstr[i]=='{'){
 				jv->_type = json_object;
-				jv->_objectValue = new ObjectList<Json::DICTION>;
+				jv->_objectValue = new ObjectLink<Json::DICTION>;
 				i = _parseObject(jstr,i+1,maxlen,jv->_objectValue);
 			}else if(jstr[i]=='['){
 				jv->_type = json_array;
-				jv->_arrayValue = new ObjectList<Json>;
+				jv->_arrayValue = new ObjectLink<Json>;
 				i = _parseArray(jstr,i+1,maxlen,jv->_arrayValue);
 			}else if(jstr[i]=='\"'){
 				jv->_type = json_string;
@@ -375,9 +375,9 @@ namespace ju{
 			else
 				str = L"[";
 			String sub;
-			ObjectList<Json>& a = *jsn->_arrayValue;
-			int i = 0;
-			Json* sjsn = a.GetElement(i);
+			ObjectLink<Json>& a = *jsn->_arrayValue;
+			a.First();
+			Json* sjsn = a.Element();
 			if(sjsn){
 				if(readStyle)
 					tab += L"\t";
@@ -385,8 +385,8 @@ namespace ju{
 				str += tab;
 				str += sub;
 				while(true){
-					i++;
-					sjsn = a.GetElement(i);
+					a.Move(1);
+					sjsn = a.Element();
 					if(!sjsn) break;
 					_toString(sjsn,sub,tab,readStyle);
 					if(readStyle)
@@ -408,8 +408,9 @@ namespace ju{
 			else
 				str = L"{";
 			String sub;
-			ObjectList<Json::DICTION>& obj = *jsn->_objectValue;
-			Json::DICTION* dic = obj.GetElement(0);
+			ObjectLink<Json::DICTION>& obj = *jsn->_objectValue;
+			obj.First();
+			Json::DICTION* dic = obj.Element();
 			if(dic){
 				if(readStyle){
 					tab += L"\t";
@@ -425,10 +426,9 @@ namespace ju{
 				}
 				_toString(dic->val,sub,tab,readStyle);
 				str += sub;
-				int i = 0;
 				while(true){
-					i++;
-					dic = obj.GetElement(i);
+					obj.Move(1);
+					dic = obj.Element();
 					if(!dic) break;
 					if(readStyle){
 						str += L",\r\n";
@@ -470,19 +470,19 @@ namespace ju{
 			_strValue = new String();
 			*_strValue = *val._strValue;
 		}else if(val._type==json_array){
-			_arrayValue = new ObjectList<Json>;
-			ObjectList<Json>& a = *val._arrayValue;
-			for(uint i=0;i<a.Count();i++){
-				Json* sjn = a.GetElement(i);
+			_arrayValue = new ObjectLink<Json>;
+			ObjectLink<Json>& a = *val._arrayValue;
+			for(a.First();;a.Move(1)){
+				Json* sjn = a.Element();
 				if(!sjn) break;
 				Json* djn = _arrayValue->Add();
 				*djn = *sjn;
 			}
 		}else if(val._type==json_object){
-			_objectValue = new ObjectList<Json::DICTION>;
-			ObjectList<Json::DICTION>& a = *val._objectValue;
-			for(uint i=0;i<a.Count();i++){
-				Json::DICTION* sjn = a.GetElement(i);
+			_objectValue = new ObjectLink<Json::DICTION>;
+			ObjectLink<Json::DICTION>& a = *val._objectValue;
+			for(a.First();;a.Move(1)){
+				Json::DICTION* sjn = a.Element();
 				if(!sjn) break;
 				Json::DICTION* djn = _objectValue->Add();
 				djn->key = sjn->key;
@@ -536,7 +536,7 @@ namespace ju{
 	void Json::SetToArray(){
 		if(_type==json_array) return;
 		SetToNull();
-		_arrayValue = new ObjectList<Json>;
+		_arrayValue = new ObjectLink<Json>;
 		_type = json_array;
 	}
 	void Json::SetToBoolean(){
@@ -563,7 +563,7 @@ namespace ju{
 	void Json::SetToObject(){
 		if(_type==json_object) return;
 		SetToNull();
-		_objectValue = new ObjectList<Json::DICTION>;
+		_objectValue = new ObjectLink<Json::DICTION>;
 		_type = json_object;
 	}
 	void Json::SetToBinary(){
@@ -602,7 +602,7 @@ namespace ju{
 	}
 	Json* Json::GetProperty(LPCWSTR prop,bool createIfNotExist){
 		if(json_null==_type&&createIfNotExist){
-			_objectValue = new ObjectList<Json::DICTION>;
+			_objectValue = new ObjectLink<Json::DICTION>;
 			_type = json_object;
 			Json::DICTION* dic = _objectValue->Add();
 			dic->key = prop;
@@ -615,8 +615,8 @@ namespace ju{
 				return 0;
 			}
 		}
-		for(uint i=0;i<_objectValue->Count();i++){
-			Json::DICTION* dic = _objectValue->GetElement(i);
+		for(_objectValue->First();;_objectValue->Move(1)){
+			Json::DICTION* dic = _objectValue->Element();
 			if(!dic) break;
 			if(dic->key==prop){
 				return dic->val;
@@ -631,12 +631,12 @@ namespace ju{
 	}
 	Json* Json::SetProperty(LPCWSTR prop,Json& val){
 		if(_type==json_null){
-			_objectValue = new ObjectList<Json::DICTION>;
+			_objectValue = new ObjectLink<Json::DICTION>;
 			_type = json_object;
 		}else if(_type==json_object){
 		}else return 0;
-		for(uint i=0;i<_objectValue->Count();i++){
-			Json::DICTION* dic = _objectValue->GetElement(i);
+		for(_objectValue->First();;_objectValue->Move(1)){
+			Json::DICTION* dic = _objectValue->Element();
 			if(!dic) break;
 			if(dic->key==prop){
 				*dic->val = val;
@@ -650,25 +650,29 @@ namespace ju{
 	}
 	Json* Json::GetPropertyByIndex(int index,LPCWSTR* key){
 		if(_type!=json_object) return 0;
-		DICTION* dic = _objectValue->GetElement(index);
+		_objectValue->First();
+		_objectValue->Move(index);
+		DICTION* dic = _objectValue->Element();
 		if(dic==NULL) return 0;
 		if(key) *key = dic->key;
 		return dic->val;
 	}
 	bool Json::RemoveProperty(LPCWSTR prop){
 		if(_type!=json_object) return 0;
-		for(uint i=0;i<_objectValue->Count();i++){
-			DICTION* dic = _objectValue->GetElement(i);
+		for(_objectValue->First();;_objectValue->Move(1)){
+			DICTION* dic = _objectValue->Element();
 			if(!dic) break;
 			if(dic->key==prop){
-				return 1==_objectValue->Delete(i);
+				return _objectValue->Delete();
 			}
 		}
 		return 0;
 	}
 	bool Json::RemovePropertyByIndex(int index){
 		if(_type!=json_object) return 0;
-		return _objectValue->Delete(index)>0;
+		_objectValue->First();
+		_objectValue->Move(index);
+		return _objectValue->Delete();
 	}
 	void Json::ToString(String& str,bool readStyle){
 		String tab;
@@ -732,7 +736,7 @@ namespace ju{
 			fn = App::GetAppDirectory();
 			title = App::GetAppName();
 			FPLinkPath(fn,title);
-			FPLinkExt(fn,L"Json");
+			FPLinkExt(fn,L"json");
 		}else{
 			fn = name;
 		}
@@ -752,12 +756,13 @@ namespace ju{
 			f.Create(fn);
 		}
 		if(!rs->Tree.LoadFromFile(fn)){
-			CONASSERT(L"config file is not a valid Json format");
+			CONASSERT(L"config file is not a valid json format");
 		}
 		rs->FileName = fn;
 		dbList->AddIn(rs);
 		return rs;
 	}
+
 	Config::Config():_innerobj(0){}
 	Config::Config(LPCWSTR fname):_innerobj(0){
 		_innerobj = getConfigObject(fname);
@@ -798,10 +803,14 @@ namespace ju{
 		return _innerobj!=NULL;
 	}
 	/*Json* Config::GetJson(){
-	if(_innerobj==0) return 0;
-	return &((config_struct*)_innerobj)->Tree;
+		if(_innerobj==0) return 0;
+		return &((config_struct*)_innerobj)->Tree;
 	}*/
 	Config::~Config(){
 		Close();
 	}
+	/*void Config::Flush(){
+		if(_innerobj==0) return;
+		((config_struct*)_innerobj)->Tree.SaveToFile(((config_struct*)_innerobj)->FileName);
+	}*/
 }

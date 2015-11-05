@@ -195,7 +195,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\cpp\json2.cpp"
+				RelativePath=".\cpp\json.cpp"
 				>
 			</File>
 			<File
@@ -305,7 +305,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\json2.h"
+				RelativePath=".\json.h"
 				>
 			</File>
 			<File
