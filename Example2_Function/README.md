@@ -51,16 +51,29 @@ WINMAIN{
 # Function 类函数参考：
 
 1. IsNull()	这个函数是重写它的父类同名函数，IsNull 返回 true 的时候不能调用这个 Function 实例，因为它没有被有效初始化。
+
 2. Empty() 这个函数解绑它绑定的函数，但是呼叫这个实例并不报错，只是不执行任何函数。可以对一个未初始化的函数调用 Empty() 从而使它可以安全的被调用，Empty() 实际上会初始化实例，但是不绑定任何函数，IsNull() 返回 false。
+
 3. Procedure() 显式的返回一个函数指针，直接调用 Function 的实例实际上是操作符返回和 Procedure 函数相同的指针。
+
 4. Bind(obj,func) 绑定一个类的成员函数，需要传类的指针和类成员函数的指针两个参数。
+
 5. BindStd(func) 绑定一个静态回调函数(__stdcall)。
+
 6. operator = () 你可以直接使用等于号来对两个 Function 实例之间赋值，但是必须是同样格式（参数和返回值相同）的 Function 实例。
+
 7. HasBind() 实例是否已经绑定了一个函数。
+
 8. GetObject() 返回绑定的函数对象，如果绑定了一个静态函数，或者 Empty 状态，返回 NULL。
+
 9. GetFunction() 返回绑定的函数指针的 32 位值，如果是静态函数，它就是绑定的函数本身，如果函数为 Empty 状态，返回 NULL。
+
 10. operator == () 比较两个 Function 实例是否绑定了同一个对象。
+
 11. IsEmpty() 函数是否是 Empty 状态，函数调用了 Empty 之后就是 Empty 状态，这种状态可以调用，但是不回调任何函数。
+
 12. Release() 释放 Function 对象，每个 Function 实例占用 10 字节的内存，Release 之后，实例不可再调用，IsNull() 返回 true。
+
 13. IsStdcall() 是否绑定了一个静态函数。
+
 14. IsThiscall() 是否绑定了一个类的成员函数。
