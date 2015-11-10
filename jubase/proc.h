@@ -113,6 +113,7 @@ namespace ju{
 		//	}
 		}**/
 		bool SetHook(void* api,void* hook,int pSize);
+		bool SetHook(void* api,_StdClassProc& func);
 		/**,{
 		//	"type":"function",
 		//	"name":"UnHook()",

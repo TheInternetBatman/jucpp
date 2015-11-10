@@ -179,6 +179,36 @@ namespace ju{
 	APIHook::~APIHook(){
 		if(_orgFunc) GetGlobalExecMemory()->Free(_orgFunc);
 	}
+	bool APIHook::SetHook(void* api,_StdClassProc& func){
+		if(_orgFunc==NULL){
+			_orgFunc = (uchar*)GetGlobalExecMemory()->Alloc(16);
+			if(_orgFunc==NULL) return 0;
+		}
+		HANDLE hProcess = GetCurrentProcess();
+		DWORD dwOldProtect;
+		//读取原函数的首10个字节，
+		if(!VirtualProtect((void*)api,10, PAGE_EXECUTE_WRITECOPY, &dwOldProtect)) return 0;
+		DWORD size = 0;
+		//把 API 函数的首 10 个字节写入 _orgFunc，用来呼叫原函数。_orgFunc结构的有效
+		//大小是15字节，后5个字节完成一个跳转，跳到原函数的第11个字节。这样呼叫 _orgFunc
+		//和呼叫原函数，在汇编代码是一样的，只是第11个字节多了一个跳转，等于把连续的
+		//函数分在两个地方执行。
+		ReadProcessMemory(hProcess,api,_orgFunc,10,&size);
+		if(size==0) return 0;
+		//借助_StdClassProc把原函数的前10个字节改为Function结构，这样调用原函数（api）将会
+		//被跳转到绑定的函数（hook）。
+		_StdClassProc scp;
+		scp.Attach(api);
+		scp = func;
+		scp.Detach();
+		//生成原函数调用，原理就是呼叫这个地址，会跳转到 API 的 15字节之后 
+		*(_orgFunc+10) = 0xe9;
+		//10是原函数的相对入口的偏移，15是本结构的大小(不是分配的内存大小，本结构分配了16字节内存，但是只使用了15字节）
+		DWORD addr = *(DWORD*)(_orgFunc+11) = (DWORD)(UINT_PTR)api + 10 - 15 - (UINT_PTR)_orgFunc;
+		FlushInstructionCache(GetCurrentProcess(),_orgFunc,16);
+		FlushInstructionCache(GetCurrentProcess(),api,10);
+		return 1;
+	}
 	bool APIHook::SetHook(void* api,void* hook,int pSize){
 		if(_orgFunc==NULL){
 			_orgFunc = (uchar*)GetGlobalExecMemory()->Alloc(16);
