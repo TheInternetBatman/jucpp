@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9.00"
 	Name="Example4_Thread"
-	ProjectGUID="{E0824559-88DC-4A16-A093-680D4DD61F50}"
+	ProjectGUID="{FC642510-63AE-4CAA-ACF3-1C43B38A89FC}"
 	RootNamespace="Example4_Thread"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
