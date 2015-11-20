@@ -356,43 +356,43 @@ namespace ju{
 				find = FindNextFile(hFind,&wfd);
 				continue;
 			}
-			Json* json = 0;
-			if(files) json = files->AddArrayElm();
 			ListData sd;
 			sd.data = &wfd;
 			sd.original = original;
 			sd.relative = relative;
 			sd.extra = extra;
-			sd.json = json;
+			sd.json = 0;
 			sd.stop = 0;
 			sd.skip = 0;
 			if(!IsDir(wfd.dwFileAttributes)){
 				if(IsFilter(&_Filter,wfd.cFileName,_filterType)){
 					sd.flag = 0;
 					if(!OnList.IsNull()) OnList(&sd);
-					else if(json) json->SetPropertyStr(L"name",wfd.cFileName);
+					else if(files){
+						sd.json = files->AddArrayElm();
+						sd.json->SetPropertyStr(L"name",wfd.cFileName);
+					}
 				}
 			}else{
+				Json* sfiles = 0;
+				if(files){
+					sd.json = files->AddArrayElm();
+					sd.json->SetPropertyStr(L"name",wfd.cFileName);
+					sfiles = sd.json->SetPropertyArray(L"files");
+				}
 				if(_Pre){
-						sd.flag = 1;
-						if(!OnList.IsNull()) OnList(&sd);
-						else if(json) json->SetPropertyStr(L"name",wfd.cFileName);
+					sd.flag = 1;
+					if(!OnList.IsNull()) OnList(&sd);
 				}
 				if(sd.stop) break;
 				if(!sd.skip&&_Sub){
 					String nr = relative;
 					FPLinkPath(nr,wfd.cFileName);
-					Json* sfiles = 0;
-					if(json){
-						json->SetPropertyStr(L"name",wfd.cFileName);
-						sfiles = json->SetPropertyArray(L"files");
-					}
 					_Search(original,nr,extra,sfiles);
 				}
 				if(_After){
 					sd.flag = 2;
 					if(!OnList.IsNull()) OnList(&sd);
-					else if(json) json->SetPropertyStr(L"name",wfd.cFileName);
 				}
 			}
 			if(sd.stop) break;
