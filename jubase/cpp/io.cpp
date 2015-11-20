@@ -298,101 +298,39 @@ namespace ju{
 		}
 		return notin;
 	}
-	//FileTree使用的结构。
+	//FileSearch使用的结构。
 #define LISTDATA_FLAG_ISFILE	0
 #define LISTDATA_FLAG_PRECALL	1
 #define LISTDATA_FLAG_AFTERCALL	2
-	//class FileTree
-	FileTree::FileTree():_Sub(0),_Pre(1),_After(0),_filterType(FILTER_TYPE_DISABLE){
+	//class FileSearch
+	FileSearch::FileSearch():_Sub(0),_Pre(1),_After(0),_filterType(FILTER_TYPE_DISABLE){
 	}
-	Tree<String>* FileTree::_Store(Tree<String>* files,LPCWSTR file,bool sub)
-	{
-		Tree<String>* node = files->Add();
-		node->Handle = file;
-		return node;
-	}
-	bool FileTree::Search(LPCWSTR dir,Tree<String>* tl,bool asyn)
-	{
+	bool FileSearch::Search(LPCWSTR dir,void* extra,Json* json,bool asyn){
 		int len = WcsLength(dir)*2+2;
 		wchar_t* ps = (wchar_t*)MemoryAlloc(len);
 		memcpy(ps,dir,len);
-		if(asyn){
-			return _th.Call<bool>(this,&FileTree::_searchStore,(LPCWSTR)ps,tl);
-		}else{
-			tl->Handle = dir;
-			return _SearchStore(ps,L"",tl);
+		Json* files = 0;
+		if(json){
+			json->SetPropertyStr(L"name",dir);
+			files = json->SetPropertyArray(L"files");
 		}
-	}
-	bool FileTree::Search(LPCWSTR dir,void* extra,bool asyn){
-		int len = WcsLength(dir)*2+2;
-		wchar_t* ps = (wchar_t*)MemoryAlloc(len);
-		memcpy(ps,dir,len);
 		if(asyn){
 			Thread th;
-			return th.Call<bool>(this,&FileTree::_search,(LPCWSTR)ps,extra);
+			return th.Call<bool>(this,&FileSearch::_search,(LPCWSTR)ps,extra,files);
 		}else{
-			bool rst = _Search(dir,L"",extra);
+			bool rst = _Search(dir,L"",extra,files);
 			if(!rst) dir = 0;
 			if(!OnComplete.IsNull()) OnComplete(extra,dir);
 			return rst;
 		}
 	}
-	bool FileTree::_searchStore(LPCWSTR dir,Tree<String>* tl)
-	{
-		bool b = _SearchStore(dir,L"",tl);
-		if(!OnComplete.IsNull()) OnComplete(tl,dir);
-		MemoryFree((void*)dir);
-		return b;
-	}
-	bool FileTree::_SearchStore(LPCWSTR original,LPCWSTR relative,Tree<String>* tl)
-	{
-		String sp;
-		String path = original;
-		DWORD atr = GetFileAttributes(original);
-		if(((atr==INVALID_FILE_ATTRIBUTES)||((atr&FILE_ATTRIBUTE_DIRECTORY)==0))&&(relative[0]==0))
-		{
-			sp = original;
-			FPToParent(path);
-			original = path;
-		}else{
-			FPLinkPath(path,relative);
-			FPSetTailSlash(path);
-			sp = path;
-			sp += L"*";
-		}
-		WIN32_FIND_DATA wfd;
-		HANDLE hFind = FindFirstFile(sp,&wfd);
-		if(hFind==INVALID_HANDLE_VALUE) return 0;
-		int find = 1;
-		tl->Clear();
-		while(find)
-		{
-			if(ValidFile(wfd.cFileName))
-			{
-				if(IsDir(wfd.dwFileAttributes))
-				{
-					String nr = relative;
-					FPLinkPath(nr,wfd.cFileName);
-					Tree<String>* stl = _Store(tl,wfd.cFileName,1);
-					if(_Sub) _SearchStore(original,nr,stl);
-				}
-				else
-				{
-					if(IsFilter(&_Filter,wfd.cFileName,_filterType)) _Store(tl,wfd.cFileName,0);
-				}
-			}
-			find = FindNextFile(hFind,&wfd);
-		}
-		FindClose(hFind);
-		return true;
-	}
-	bool FileTree::_search(LPCWSTR dir,void* extra){
+	bool FileSearch::_search(LPCWSTR dir,void* extra,Json* json){
 		bool b = _Search(dir,L"",extra);
 		if(!OnComplete.IsNull()) OnComplete(extra,dir);
 		MemoryFree((void*)dir);
 		return b;
 	}
-	bool FileTree::_Search(LPCWSTR original,LPCWSTR relative,void* extra){
+	bool FileSearch::_Search(LPCWSTR original,LPCWSTR relative,void* extra,Json* files){
 		String sp;
 		String path = original;
 		DWORD atr = GetFileAttributes(original);
@@ -418,35 +356,46 @@ namespace ju{
 				find = FindNextFile(hFind,&wfd);
 				continue;
 			}
+			Json* json = 0;
+			if(files) json = files->AddArrayElm();
 			ListData sd;
-			sd.FindData = &wfd;
-			sd.Original = original;
-			sd.Relative = relative;
-			sd.ExtraData = extra;
-			sd.Stop = 0;
-			sd.Skip = 0;
+			sd.data = &wfd;
+			sd.original = original;
+			sd.relative = relative;
+			sd.extra = extra;
+			sd.json = json;
+			sd.stop = 0;
+			sd.skip = 0;
 			if(!IsDir(wfd.dwFileAttributes)){
 				if(IsFilter(&_Filter,wfd.cFileName,_filterType)){
-					sd.Flag = 0;
+					sd.flag = 0;
 					if(!OnList.IsNull()) OnList(&sd);
+					else if(json) json->SetPropertyStr(L"name",wfd.cFileName);
 				}
 			}else{
 				if(_Pre){
-						sd.Flag = 1;
+						sd.flag = 1;
 						if(!OnList.IsNull()) OnList(&sd);
+						else if(json) json->SetPropertyStr(L"name",wfd.cFileName);
 				}
-				if(sd.Stop) break;
-				if(!sd.Skip&&_Sub){
+				if(sd.stop) break;
+				if(!sd.skip&&_Sub){
 					String nr = relative;
 					FPLinkPath(nr,wfd.cFileName);
-					_Search(original,nr,extra);
+					Json* sfiles = 0;
+					if(json){
+						json->SetPropertyStr(L"name",wfd.cFileName);
+						sfiles = json->SetPropertyArray(L"files");
+					}
+					_Search(original,nr,extra,sfiles);
 				}
 				if(_After){
-					sd.Flag = 2;
+					sd.flag = 2;
 					if(!OnList.IsNull()) OnList(&sd);
+					else if(json) json->SetPropertyStr(L"name",wfd.cFileName);
 				}
 			}
-			if(sd.Stop) break;
+			if(sd.stop) break;
 			find = FindNextFile(hFind,&wfd);
 		}
 		FindClose(hFind);
@@ -592,7 +541,7 @@ namespace ju{
 		bool r = true;
 		if(isdir){
 			if(!CreateFolder(dst)) return 0;
-			FileTree ft;
+			FileSearch ft;
 			ft.SetAfterCall(1);
 			ft.SetPreCall(1);
 			ft.SetSearchSub(1);
@@ -609,27 +558,27 @@ namespace ju{
 		return r;
 	}
 	void DirectorySystem_onList_init(ListData* ld,DSParam* dsp,DirData& dd,String& spath,String& dpath,String& src,String& dst){
-		spath = ld->Original;
-		FPLinkPath(spath,ld->Relative);
+		spath = ld->original;
+		FPLinkPath(spath,ld->relative);
 		dd.SourceDir = spath;
 		dd.Skip = 0;
 		dd.PreOrAfter = 0;
 		dd.Stop = 0;
 		dd.Error = 0;
 		dpath = dsp->Destinate;
-		FPLinkPath(dpath,ld->Relative);
+		FPLinkPath(dpath,ld->relative);
 		dd.DestDir = dpath;
-		dd.FindData = ld->FindData;
+		dd.FindData = ld->data;
 		dst = dd.DestDir;
-		FPLinkPath(dst,ld->FindData->cFileName);
+		FPLinkPath(dst,ld->data->cFileName);
 		src = dd.SourceDir;
-		FPLinkPath(src,ld->FindData->cFileName);
+		FPLinkPath(src,ld->data->cFileName);
 	}
 	bool DirectorySystem_onList_pre(ListData* ld,DSParam* dsp,DirData& dd){
 		if(!dsp->OnProgress.IsNull())
 			dsp->OnProgress(&dd,dsp->UserData);
 		if(dd.Stop){
-			ld->Stop = 1;
+			ld->stop = 1;
 			return 1;
 		}
 		if(dd.Skip) return 1;
@@ -639,15 +588,15 @@ namespace ju{
 		dd.PreOrAfter = 1;
 		if(!dsp->OnProgress.IsNull())
 			dsp->OnProgress(&dd,dsp->UserData);
-		ld->Stop = dd.Stop;
+		ld->stop = dd.Stop;
 	}
 	void DirectorySystem::_Move(ListData* ld){
 		String src,dst,spath,dpath;
-		DSParam* dsp = (DSParam*)ld->ExtraData;
+		DSParam* dsp = (DSParam*)ld->extra;
 		DirData dd;
 		DirectorySystem_onList_init(ld,dsp,dd,spath,dpath,src,dst);
 
-		if(ld->Flag==LISTDATA_FLAG_ISFILE){
+		if(ld->flag==LISTDATA_FLAG_ISFILE){
 			bool rst = DirectorySystem_onList_pre(ld,dsp,dd);
 			if(rst) return;
 
@@ -658,33 +607,33 @@ namespace ju{
 			dd.Error = (uchar)fs.Move(dst);
 
 			DirectorySystem_onList_after(ld,dsp,dd);
-		}else if(ld->Flag==LISTDATA_FLAG_PRECALL){
+		}else if(ld->flag==LISTDATA_FLAG_PRECALL){
 			bool rst = DirectorySystem_onList_pre(ld,dsp,dd);
 			if(rst) return;
 			dd.Error = !CreateFolder(dst);
-		}else if(ld->Flag==LISTDATA_FLAG_AFTERCALL){
+		}else if(ld->flag==LISTDATA_FLAG_AFTERCALL){
 			dd.Error = (uchar)!RemoveFile(src);
 			DirectorySystem_onList_after(ld,dsp,dd);
 		}
 	}
 	void DirectorySystem::_Delete(ListData* ld){
 		String src,dst,spath,dpath;
-		DSParam* dsp = (DSParam*)ld->ExtraData;
+		DSParam* dsp = (DSParam*)ld->extra;
 		DirData dd;
 		DirectorySystem_onList_init(ld,dsp,dd,spath,dpath,src,dst);
 		dd.DestDir = 0;
 
-		if(ld->Flag==LISTDATA_FLAG_ISFILE){
+		if(ld->flag==LISTDATA_FLAG_ISFILE){
 			bool rst = DirectorySystem_onList_pre(ld,dsp,dd);
 			if(rst) return;
 
 			dd.Error = (uchar)!RemoveFile(src);
 
 			DirectorySystem_onList_after(ld,dsp,dd);
-		}else if(ld->Flag==LISTDATA_FLAG_PRECALL){
+		}else if(ld->flag==LISTDATA_FLAG_PRECALL){
 			bool rst = DirectorySystem_onList_pre(ld,dsp,dd);
 			if(rst) return;
-		}else if(ld->Flag==LISTDATA_FLAG_AFTERCALL){
+		}else if(ld->flag==LISTDATA_FLAG_AFTERCALL){
 			dd.Error = (uchar)!RemoveFile(src);
 			DirectorySystem_onList_after(ld,dsp,dd);
 		}
@@ -699,7 +648,7 @@ namespace ju{
 		bool isdir = type==2;
 		bool r = true;
 		if(isdir){
-			FileTree ft;
+			FileSearch ft;
 			ft.SetAfterCall(1);
 			ft.SetPreCall(1);
 			ft.SetSearchSub(1);
@@ -715,11 +664,11 @@ namespace ju{
 	}
 	void DirectorySystem::_Copy(ListData* ld){
 		String src,dst,spath,dpath;
-		DSParam* dsp = (DSParam*)ld->ExtraData;
+		DSParam* dsp = (DSParam*)ld->extra;
 		DirData dd;
 		DirectorySystem_onList_init(ld,dsp,dd,spath,dpath,src,dst);
 
-		if(ld->Flag==LISTDATA_FLAG_ISFILE){
+		if(ld->flag==LISTDATA_FLAG_ISFILE){
 			bool rst = DirectorySystem_onList_pre(ld,dsp,dd);
 			if(rst) return;
 
@@ -730,11 +679,11 @@ namespace ju{
 			dd.Error = (uchar)fs.Copy(dst);
 
 			DirectorySystem_onList_after(ld,dsp,dd);
-		}else if(ld->Flag==LISTDATA_FLAG_PRECALL){
+		}else if(ld->flag==LISTDATA_FLAG_PRECALL){
 			bool rst = DirectorySystem_onList_pre(ld,dsp,dd);
 			if(rst) return;
 			dd.Error = !CreateFolder(dst);
-		}else if(ld->Flag==LISTDATA_FLAG_AFTERCALL){
+		}else if(ld->flag==LISTDATA_FLAG_AFTERCALL){
 			DirectorySystem_onList_after(ld,dsp,dd);
 		}
 	}
@@ -750,7 +699,7 @@ namespace ju{
 		bool r = true;
 		if(isdir){
 			if(!CreateFolder(dst)) return 0;
-			FileTree ft;
+			FileSearch ft;
 			ft.SetAfterCall(1);
 			ft.SetPreCall(1);
 			ft.SetSearchSub(1);

@@ -12,6 +12,14 @@ namespace ju{
 #pragma pack(push,1)
 	//FileTime是时间的64位整数表示。
 	typedef struct JUBASE_API FileTime : public _struct{
+		FileTime(){}
+		FileTime(DWORD hight,DWORD low){
+			LowValue = low;
+			HighValue = hight;
+		}
+		FileTime(uint64& val){
+			Value = val;
+		}
 		//求2个时间的差.这个值的1/10000代表1毫秒.
 		void operator -= (FileTime& t){
 			Value -= t.Value;

@@ -289,41 +289,61 @@ namespace ju{
 			if(!js||!js->IsBinary()) return 0;
 			return js->GetBinary(len);
 		}
+		//设置属性为 Null，返回值就是这个 Null 对象
+		Json* SetPropertyNull(LPCWSTR prop){
+			Json* jv = GetProperty(prop,true);
+			jv->SetToNull();
+			return jv;
+		}
+		//设置属性为一个初始化数组，返回值就是这个数组对象
+		Json* SetPropertyArray(LPCWSTR prop){
+			Json* jv = GetProperty(prop,true);
+			jv->SetToArray();
+			return jv;
+		}
 		//设置属性为指定的字串值
 		Json* SetPropertyStr(LPCWSTR prop,LPCWSTR val){
-			Json jv = val;
-			return SetProperty(prop,jv);
+			Json* jv = GetProperty(prop,true);
+			*jv = val;
+			return jv;
 		}
 		//设置属性为指定的字串值
 		Json* SetPropertyMbs(LPCWSTR prop,LPCSTR val){
-			Json jv = val;
-			return SetProperty(prop,jv);
+			Json* jv = GetProperty(prop,true);
+			*jv = val;
+			return jv;
 		}
 		//设置属性为指定的32位整数值
 		Json* SetPropertyInt32(LPCWSTR prop,int val){
-			Json jv = val;
-			return SetProperty(prop,jv);
+			Json* jv = GetProperty(prop,true);
+			*jv = val;
+			return jv;
 		}
 		//设置属性为指定的64位整数值
 		Json* SetPropertyInt64(LPCWSTR prop,int64 val){
-			Json jv = val;
-			return SetProperty(prop,jv);
+			Json* jv = GetProperty(prop,true);
+			*jv = val;
+			return jv;
 		}
 		//设置属性为指定的浮点值
 		Json* SetPropertyDouble(LPCWSTR prop,double val){
-			Json jv = val;
-			return SetProperty(prop,jv);
+			Json* jv = GetProperty(prop,true);
+			*jv = val;
+			return jv;
 		}
 		//设置属性为指定的布尔值
 		Json* SetPropertyBool(LPCWSTR prop,bool val){
-			Json jv = val;
-			return SetProperty(prop,jv);
+			Json* jv = GetProperty(prop,true);
+			*jv = val;
+			return jv;
 		}
-		//设置属性为指定的二进制值
+		//设置属性为指定的二进制值，如果原来没有这个属性，会添加这个属性，即使第二部设置数据失败
 		Json* SetPropertyBinary(LPCWSTR prop,const void* data,int len){
-			Json jv;
-			if(!jv.SetBinary(data,len)) return 0;
-			return SetProperty(prop,jv);
+			Json* jv = GetProperty(prop,true);
+			if(!jv->SetBinary(data,len)){
+				return 0;
+			}
+			return jv;
 		}
 		//设置当前对象的属性值为空，如果当前对象不是 Object 或者 Null 类型，操作失败，返回 NULL。
 		//Json* SetProperty(LPCWSTR prop);
