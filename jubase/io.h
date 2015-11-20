@@ -49,25 +49,30 @@ namespace ju{
 		StringMemList Paths;
 	};
 	typedef struct ListData : public _struct{
-		WIN32_FIND_DATA*	FindData;		//文件的相关属性和信息。
-		LPCWSTR				Original;		//原始路径, 就是搜索的参数.
-		LPCWSTR				Relative;		//相对路径，这个路径包含一个末尾的反斜杠。
-		WORD				Flag;			//这个成员指示呼叫方式，如果是文件夹，且_Pre方式呼叫，此值为1，_After方式呼叫此值为2，文件时，此值为0.
-		bool				Stop;			//是否取消搜索的标识。
-		bool				Skip;			//在PreCall时这个值如果设为 true 搜索将跳过这个文件夹的文件（不搜索它的文件）。
-		void*				ExtraData;		//用户可能需要传递额外的数据。
+		WIN32_FIND_DATA*	data;			//文件的相关属性和信息。
+		LPCWSTR				original;		//原始路径, 就是搜索的参数.
+		LPCWSTR				relative;		//相对路径，这个路径包含一个末尾的反斜杠。
+		WORD				flag;			//这个成员指示呼叫方式，如果是文件夹，且_Pre方式呼叫，此值为1，_After方式呼叫此值为2，文件时，此值为0.
+		bool isPreCall(){return flag==1;}
+		bool isAfterCall(){return flag==2;}
+		bool isFile(){return flag==0;}
+		uint64 length(){return *(uint64*)&data->nFileSizeHigh;}
+		bool				stop;			//是否取消搜索的标识。
+		bool				skip;			//在PreCall时这个值如果设为 true 搜索将跳过这个文件夹的文件（不搜索它的文件）。
+		void*				extra;			//用户可能需要传递额外的数据。
+		Json*				json;			//如果指定了 Json 参数，使用这个成员保存信息，否则它为 0.
 	}ListData;
 	//
-	//FileTree用于枚举一个目录的所有文件,可以搜索多级子文件夹.OnSearch是一个回调函数,每搜索到一个文件(或文件夹),这个函数
+	//FileSearch用于枚举一个目录的所有文件,可以搜索多级子文件夹.OnSearch是一个回调函数,每搜索到一个文件(或文件夹),这个函数
 	//会被呼叫.文件被列举的次序和具体情况有关,一般NTFS分区和CDFS分区是字母顺序被列举,而FAT32分区和文件在磁盘上的结构有关.
 	//设置搜索选项，sub指示是否搜索子文件夹，dir指示是否接受文件夹（dir为0时，不接受文件夹，但如果sub=1子文件夹中的文件仍然会被搜索），
 	//preCall指示搜索到文件夹时，先返回文件夹再搜索它的内容，afterCall指示搜索
 	//到文件夹是，先搜索它的子文件，在返回它本身。如果两个都为TRUE，则搜索到文件夹时会返回两次。如果都为0，则不返回文件夹。
 	//对于dir为 0，sub 不为 0 的情形，在执行存储搜索时，因为子文件夹的文件需要保存在这个分支下，所以，文件夹仍然会被保存。
-	//FileTree可以异步执行多个搜索，OnList 和 OnCompete 可以重新指定，而不会影响已经执行的搜索。但是，改变过滤器和搜索选项，
+	//FileSearch可以异步执行多个搜索，OnList 和 OnCompete 可以重新指定，而不会影响已经执行的搜索。但是，改变过滤器和搜索选项，
 	//会影响正在执行的搜索。
 	//Search（）函数的dir参数如果是一个含通配符的字串，或者是一个文件，搜索会返回符合通配符的文件（夹),或者文件本身。如果是一个目录，则执行的是搜索目录。
-	class JUBASE_API FileTree : public _class{
+	class JUBASE_API FileSearch : public _class{
 	protected:
 		enum{
 			FILTER_TYPE_DISABLE,
@@ -79,11 +84,8 @@ namespace ju{
 		int _filterType;
 		bool _Sub,_Pre,_After;
 
-		Tree<String>* _Store(Tree<String>* files,LPCWSTR file,bool sub = 0);
-		bool _search(LPCWSTR dir,void* extra = 0);
-		bool _Search(LPCWSTR original,LPCWSTR relative,void* extra = 0);
-		bool _searchStore(LPCWSTR dir,Tree<String>* tl);
-		bool _SearchStore(LPCWSTR original,LPCWSTR relative,Tree<String>* tl);
+		bool _search(LPCWSTR dir,void* extra = 0,Json* json = 0);
+		bool _Search(LPCWSTR original,LPCWSTR relative,void* extra = 0,Json* json = 0);
 	public:
 		//搜索回调函数。
 		Function<void,ListData*> OnList;
@@ -93,7 +95,7 @@ namespace ju{
 		Function<void,void*,LPCWSTR> OnComplete;
 		//Function<void,void*,LPCWSTR,bool> OnStart;
 
-		FileTree();
+		FileSearch();
 		//返回文件类型过滤器，它是一个字符串列表。成员是文件后缀名，不包含“.”和“*”字符如“jpg”而不是".jpg"和"*.jpg"，不支持通配符，不区分大小写。
 		StringMemList* GetFilter(){return &_Filter;}
 		//设置类型过滤方式：0-不使用，1-返回包含在类型中的文件，2-返回不包含在类型组中的文件。
@@ -108,9 +110,11 @@ namespace ju{
 		//asyn指示调用是否是异步的。如果dir参数不是一个文件夹，而是一个文件，
 		//函数返回fasle。异步调用返回成功，不代表搜索真的成功，只表示搜索线程
 		//启动成功，在 OnComplete 回调函数里检测第二个参数是否为 NULL，NULL表示失败。
-		bool Search(LPCWSTR dir,void* extra = 0,bool asyn = 0);
-		//dir是要搜索的目录,tl是用于存储文件名的树形数据结构.asyn指示调用是否是异步的。
-		bool Search(LPCWSTR dir,Tree<String>* tl,bool asyn = 0);
+		bool Search(LPCWSTR dir,void* extra = 0,Json* json = 0,bool asyn = 0);
+		//目录本身是树形结构，这个函数把目录树保存为Json结构，默认只保存文件名
+		//以属性 name 保存，可以在 OnList 回调中自己添加保存信息，其中 ListData 参数
+		//的 ExtraData 就是每个搜索项对应 json 对象指针。如果设置了 OnList 回调，
+		//Json 数据的 name 属性需要自己设置。
 	};
 	//FilsSystem Copy ,Delete, Move 函数可能的返回值。
 #define FS_OK						0	//操作成功

@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="Example4_Thread"
-	ProjectGUID="{FC642510-63AE-4CAA-ACF3-1C43B38A89FC}"
-	RootNamespace="Example4_Thread"
+	Name="Example7_FileTree"
+	ProjectGUID="{A2A9E5A3-DADB-4450-9E0E-80DAAFA05408}"
+	RootNamespace="Example7_FileTree"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>

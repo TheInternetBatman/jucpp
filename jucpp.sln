@@ -28,6 +28,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Example5_TaskPool", "Exampl
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Example6_APIHook", "Example6_APIHook\Example6_APIHook.vcproj", "{5FA0FBF6-CBC0-4344-B57A-E17C8FFC6F3E}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Example7_FileTree", "Example7_FileTree\Example7_FileTree.vcproj", "{A2A9E5A3-DADB-4450-9E0E-80DAAFA05408}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -98,6 +100,12 @@ Global
 		{5FA0FBF6-CBC0-4344-B57A-E17C8FFC6F3E}.Release|Win32.ActiveCfg = Release|Win32
 		{5FA0FBF6-CBC0-4344-B57A-E17C8FFC6F3E}.Release|Win32.Build.0 = Release|Win32
 		{5FA0FBF6-CBC0-4344-B57A-E17C8FFC6F3E}.Release|x64.ActiveCfg = Release|Win32
+		{A2A9E5A3-DADB-4450-9E0E-80DAAFA05408}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A2A9E5A3-DADB-4450-9E0E-80DAAFA05408}.Debug|Win32.Build.0 = Debug|Win32
+		{A2A9E5A3-DADB-4450-9E0E-80DAAFA05408}.Debug|x64.ActiveCfg = Debug|Win32
+		{A2A9E5A3-DADB-4450-9E0E-80DAAFA05408}.Release|Win32.ActiveCfg = Release|Win32
+		{A2A9E5A3-DADB-4450-9E0E-80DAAFA05408}.Release|Win32.Build.0 = Release|Win32
+		{A2A9E5A3-DADB-4450-9E0E-80DAAFA05408}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
