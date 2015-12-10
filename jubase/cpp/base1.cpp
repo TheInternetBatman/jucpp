@@ -32,6 +32,22 @@ namespace ju{
 		return p;
 	}
 #define PROGRESS_INDEX_FASTMEM_HANDLE 0
+	FastMemory* initFastMem(uint mb){
+		static FastMemory* fm = 0;
+		if(fm==0){
+			MutexLock ml(L"{249567BC-F034-4dca-BD04-8CCD1C9DD15F}");
+			if(fm==0){
+				void* buf = mallocGlobalStaticMem(sizeof(FastMemory));
+				fm = new (buf) FastMemory;
+			}
+		}
+		void** fmadr = getProgressMemSpace(PROGRESS_INDEX_FASTMEM_HANDLE);
+		if(!fmadr[PROGRESS_INDEX_FASTMEM_HANDLE]){
+			fmadr[PROGRESS_INDEX_FASTMEM_HANDLE] = fm;
+			fm->CreateMB(mb);
+		}
+		return (FastMemory*)fmadr[PROGRESS_INDEX_FASTMEM_HANDLE];
+	}
 #define PROGRESS_INDEX_EXECMEM_HANDLE 1
 	ExecMemory* initExecMem(uint mb){
 		static ExecMemory* em = 0;
@@ -49,12 +65,46 @@ namespace ju{
 		}
 		return (ExecMemory*)fmadr[PROGRESS_INDEX_EXECMEM_HANDLE];
 	}
+	FastMemory* GetGlobalFastMemory(){
+		static FastMemory* pfm = initFastMem(FASTMEM_SIZE_MB);
+		return pfm;
+	}
 	ExecMemory* GetGlobalExecMemory(){
 		static ExecMemory* pem = initExecMem(EXECMEM_SIZE);
 		return pem;
 	}
-	void InitJulib(uint execMemSize){
+	void InitConciseLib(uint fastMemSize,uint execMemSize){
+		initFastMem(fastMemSize);
 		initExecMem(execMemSize);
+	}
+	/*bool SetFastMemory(int size){
+	if(size<=0) return 0;
+	if(!GetGlobalFastMemory()->IsNull()) return 0;
+	return GetGlobalFastMemory()->Create(size);
+	}*/
+	//分配一定数量的内存,当size = 0时,这个函数仍然会分配一个1字节的内存,返回一个有效的内存指针.
+	void* FastAlloc(int size){
+		FastMemory* csn = GetGlobalFastMemory();
+		return csn->Alloc(size);
+	}
+	//重新分配一个内存指针的大小,当p=0时,这个函数作用和MemoryAlloc相同.
+	void* FastRealloc(void* p,int size){
+		FastMemory* csn = GetGlobalFastMemory();
+		return csn->ReAlloc(p,size);
+	}
+	//释放已经分配的内存.成功返回true,失败或p为0返回false.
+	bool FastFree(void* p){
+		FastMemory* csn = GetGlobalFastMemory();
+		return csn->Free(p);
+	}
+	//返回内在的大小,返回0如果p=0,如果p不是一个有效的内存指针,会引发一个异常.
+	int FastSize(void* p){
+		FastMemory* csn = GetGlobalFastMemory();
+		return csn->GetLength(p);
+	}
+	bool IsFastMemory(void* p){
+		FastMemory* csn = GetGlobalFastMemory();
+		return csn->IsFastMemory(p);
 	}
 	void* SYSAlloc(int size){
 		return ::HeapAlloc(GetProcessHeap(),0,size);
@@ -70,6 +120,50 @@ namespace ju{
 	int SYSSize(void* p){
 		if(p) return (int)::HeapSize(GetProcessHeap(),0,p);
 		else return 0;
+	}
+	void* MemoryAlloc(int size,bool sys){
+		if(sys) return ::HeapAlloc(GetProcessHeap(),0,size);
+		FastMemory* csn = GetGlobalFastMemory();
+		void* rp = csn->Alloc(size);
+		/*if(rp==0){
+			rp = ::HeapAlloc(GetProcessHeap(),0,size);
+		}*/
+		return rp;
+	}
+	void* MemoryRealloc(void* p,int size,bool sys){
+		if(sys){
+			if(p) return ::HeapReAlloc(GetProcessHeap(),0,p,size);
+			else return ::HeapAlloc(GetProcessHeap(),0,size);
+		}
+		FastMemory* csn = GetGlobalFastMemory();
+		void* rp = csn->ReAlloc(p,size);
+		/*if(rp==0){
+			rp = ::HeapAlloc(GetProcessHeap(),0,size);
+			if(rp){
+				memcpy(rp,p,MemorySize(p,false));
+			}
+		}*/
+		return rp;
+	}
+	bool MemoryFree(void* p,bool sys){
+		if(sys){
+			if(p) return ::HeapFree(GetProcessHeap(),0,p)!=0;
+			else return false;
+		}
+		FastMemory* csn = GetGlobalFastMemory();
+		return csn->Free(p);
+	}
+	int MemorySize(void* p,bool sys){
+		if(sys){
+			if(p) return (int)::HeapSize(GetProcessHeap(),0,p);
+			else return 0;
+		}
+		FastMemory* csn = GetGlobalFastMemory();
+		return csn->GetLength(p);
+	}
+	void MemoryInfo(void* p){
+		p = (char*)p - 12;
+		ju::Print(L"pre:%X,cur:%X,next:%X,8(head)+len:%X",*(char**)((char*)p),(char*)p,*(char**)((char*)p+4),*(char**)((char*)p+8));
 	}
 	//struct Rect32
 	Rect32::Rect32(Rect32& rect){

@@ -75,7 +75,6 @@ namespace ju{
 		Twin sz = csbmp.Size();
 		if(sz.x==0) return 0;
 		Memory<byte> srcpix;
-		srcpix.SetUseSysMemory(true);
 		csbmp.GetPixelData(&srcpix,32);
 		csbmp.Detach();
 		_image = new Gdiplus::Bitmap(sz.x,sz.y,PixelFormat32bppARGB);
@@ -155,7 +154,6 @@ namespace ju{
 		li.QuadPart = 0;
 		stream->Seek(li,STREAM_SEEK_END,&npos);
 		if(mem.Length()<npos.LowPart){
-			mem.SetUseSysMemory(1);
 			if(!mem.SetLength(npos.LowPart)) return 0;
 		}
 		stream->Seek(li,STREAM_SEEK_SET,0);

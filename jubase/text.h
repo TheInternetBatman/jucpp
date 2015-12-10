@@ -68,18 +68,18 @@ namespace ju{
 	String默认使用Fast内存方式, 所以如果需要大字串, 设置sys参数为 true*/
 	class JUBASE_API String : public HandleType<LPWSTR>{
 	protected:
-		uint _Length,_Cubage;bool _sys;//Size--the size of the memory,Number--the caracter number of this string;
+		uint _Length,_Cubage;//Size--the size of the memory,Number--the caracter number of this string;
 	public: 
 		String();
 		//创建一个指定初始容量的字符串实例,cubage = 0, 则不预先分配内存, 直到给它赋值.
-		String(uint cubage,bool sys = 0);
+		String(uint cubage);
 		//用一个字串来初始化实例.
-		String(LPCWSTR wstr,bool sys = 0);
+		String(LPCWSTR wstr);
 		//= 操作符使用的函数.
-		String(String& wstr,bool sys = 0);
-		String(LPCSTR mbs,bool sys = 0);
+		String(String& wstr);
+		String(LPCSTR mbs);
 		~String(){
-			if(_Handle) MemoryFree(_Handle,_sys);
+			if(_Handle) MemoryFree(_Handle);
 		}
 		//绑定.
 		bool Attach(LPWSTR wstr);
@@ -222,12 +222,13 @@ namespace ju{
 		void TrimLeft();
 		void TrimRight();
 	};
-#define LS_CUBAGE 255
+#define LS_CUBAGE 255	//默认大小。
 	class JUBASE_API LocalString : public String{
 	protected:
 		wchar_t _buf[LS_CUBAGE+1];
 	public:
 		LocalString();
+		LocalString(uint cubage);
 		LocalString(LPCWSTR ws,uint cubage = 0);
 		LocalString(LocalString& ls);
 		LocalString(String& str);
@@ -235,7 +236,7 @@ namespace ju{
 		~LocalString(){
 			if(_Handle==_buf) _Handle = 0;
 		}
-		bool LocalString::SetCubage(uint capacity,bool dbSpace = 1);
+		bool SetCubage(uint capacity,bool dbSpace = 1);
 		void operator = (LocalString& ls);
 		void operator = (String& str);
 		void operator = (LPCWSTR wstr);

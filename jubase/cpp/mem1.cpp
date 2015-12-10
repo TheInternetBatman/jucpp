@@ -328,4 +328,31 @@ namespace ju{
 		_curLarge = _curSmall = 0;
 		return 1;
 	}
+	bool FastMemory::Create(uint total){
+		LCS lcs(_cs);
+		if(_curLarge) return 0;
+		uint section = total/0x10000;
+		if(total%0x10000) section += 1;
+		if(_handle) ::VirtualFree(_handle,0,MEM_FREE);
+		_length = section*0x10000;
+		_handle = ::VirtualAlloc(0,_length,MEM_RESERVE|MEM_COMMIT,PAGE_READWRITE);
+		if(_handle==0){
+			_length = 0;
+			wchar_t buf[32];
+			int n = swprintf_s(buf,32,L"…Í«Î∏ﬂÀŸƒ⁄¥Ê ß∞‹ size=%d",total);
+			::MessageBox(0,buf,L"FastMemory::Create",MB_ICONERROR);
+			CONASSERT(L"FastMemory.Create Error");
+			return 0;
+		}
+		_curLarge = (char*)_handle;
+		_curSmall = _curLarge;
+		_setPointer(_curLarge,0,0,-HANDLE_SIZE*3);
+		return true;
+	}
+	bool FastMemory::IsFastMemory(void* mem){
+		UINT p = (UINT)(UINT_PTR)mem;
+		UINT p0 = (UINT)(UINT_PTR)_handle;
+		UINT p1 = p0 + _length;
+		return (p<=p0||p>=p1);
+	}
 }

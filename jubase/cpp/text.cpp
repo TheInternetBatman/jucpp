@@ -438,13 +438,11 @@ namespace ju{
 	//LocalString
 	LocalString::LocalString(){
 		_Length = 0;
-		_sys = true;
 		_Cubage = LS_CUBAGE;
 		_Handle = _buf;
 		_Handle[0] = 0;
 	}
 	LocalString::LocalString(LPCWSTR ws,uint cubage){
-		_sys = true;
 		uint len;
 		if(ws){
 			len = WcsLength(ws);
@@ -470,7 +468,6 @@ namespace ju{
 		}
 	}
 	LocalString::LocalString(LocalString& ls){
-		_sys = true;
 		uint len = ls._Length;
 		if(len>LS_CUBAGE){
 			_Handle = (wchar_t*)SYSAlloc(len*2+2);
@@ -492,7 +489,6 @@ namespace ju{
 		}
 	}
 	LocalString::LocalString(String& str){
-		_sys = true;
 		uint len = str.Length();
 		if(len>LS_CUBAGE){
 			_Handle = (wchar_t*)SYSAlloc(len*2+2);
@@ -645,26 +641,16 @@ namespace ju{
 		return str[_Length]!=0;
 	}
 	//String
-	String::String():_Length(0),_sys(0){
+	String::String():_Length(0){
 		_Cubage = 0;
-		/*_Handle = (LPWSTR)MemoryAlloc(7*2+2,_sys);
-		if(_Handle==0){
-#ifdef _DEBUG
-			MessageBox(0,L"String(uint) failed",L"String",MB_ICONWARNING);
-#endif
-			return;
-		}
-		_Cubage = 7;
-		::ZeroMemory(_Handle,_Cubage*2+2);*/
 	}
-	String::String(uint capacity,bool sys):_Length(0){
-		_sys = sys;
+	String::String(uint capacity):_Length(0){
 		if(capacity==0){
 			_Cubage = 0;
 			_Handle = 0;
 			return;
 		}
-		_Handle = (LPWSTR)MemoryAlloc(capacity*2+2,_sys);
+		_Handle = (LPWSTR)MemoryAlloc(capacity*2+2);
 		if(_Handle==0){
 #ifdef _DEBUG
 			MessageBox(0,L"String(uint) failed",L"String",MB_ICONWARNING);
@@ -674,26 +660,23 @@ namespace ju{
 		_Cubage = capacity;
 		::ZeroMemory(_Handle,_Cubage*2+2);
 	}
-	String::String(LPCWSTR wstr,bool sys):_Length(0),_Cubage(0){
-		_sys = sys;
+	String::String(LPCWSTR wstr):_Length(0),_Cubage(0){
 		*this = wstr;
 	}
-	String::String(String& wstr,bool sys){
-		_sys = sys;
+	String::String(String& wstr){
 		_Length = wstr.Length();
 		_Cubage = _Length;
 		if(_Length==0) return;
-		_Handle = (LPWSTR)MemoryAlloc(_Cubage*2+2,_sys);
+		_Handle = (LPWSTR)MemoryAlloc(_Cubage*2+2);
 		memcpy(_Handle,wstr.Handle(),_Cubage*2+2);
 	}
-	String::String(LPCSTR mbs,bool sys):_Length(0),_Cubage(0){
-		_sys = sys;
+	String::String(LPCSTR mbs):_Length(0),_Cubage(0){
 		*this = mbs;
 	}
 	bool String::Attach(LPWSTR wstr)
 	{
 		if(_Handle)
-			MemoryFree(_Handle,_sys);
+			MemoryFree(_Handle);
 		_Handle = wstr;
 		_Length = WcsLength(wstr);
 		_Cubage = _Length;
@@ -774,7 +757,7 @@ namespace ju{
 			size = capacity;
 		size *= 2;
 		if(size<=0) return 0;//无法分配超过2G的内存。
-		void* handle = MemoryRealloc(_Handle,size,_sys);
+		void* handle = MemoryRealloc(_Handle,size);
 		if(handle==0) return 0;
 		_Cubage = size/2 - 1;
 		_Handle = (LPWSTR)handle;
@@ -788,7 +771,7 @@ namespace ju{
 		_Length = WcsLength(_Handle);
 		if(!resetsize) return;
 		_Cubage = _Length;
-		_Handle = (LPWSTR)MemoryRealloc(_Handle,_Cubage*2 + 2,_sys);
+		_Handle = (LPWSTR)MemoryRealloc(_Handle,_Cubage*2 + 2);
 	}
 	uint String::Find(wchar_t ch,uint start,uint maxlen){
 		if(!_Handle||start>=_Length) return -1;
@@ -893,7 +876,7 @@ namespace ju{
 		uint len = WcsLength(wstr);
 		if(len>_Cubage) SetCubage(len);
 		if(_Handle==0){
-			_Handle = (LPWSTR)MemoryAlloc(2,_sys);
+			_Handle = (LPWSTR)MemoryAlloc(2);
 		}
 		::RtlMoveMemory(_Handle,wstr,len*2);
 		_Length = len;
@@ -1149,7 +1132,7 @@ namespace ju{
 		return j;
 	}
 	void String::Release(){
-		MemoryFree(_Handle,_sys);
+		MemoryFree(_Handle);
 		_Handle = 0;
 		_Length = 0;
 		_Cubage = 0;
@@ -1369,18 +1352,18 @@ namespace ju{
 	//StringMemList
 	StringMemList::StringMemList():_Length(0),_Size(8)
 	{
-		_Handle = (LPWSTR)MemoryAlloc(_Size*2,1);
+		_Handle = (LPWSTR)MemoryAlloc(_Size*2);
 	}
 	StringMemList::StringMemList(uint size):_Length(0)
 	{
-		_Handle = (LPWSTR)MemoryAlloc(size*2,1);
+		_Handle = (LPWSTR)MemoryAlloc(size*2);
 		if(_Handle!=0)
 			_Size = size*2;
 	}
 	StringMemList::~StringMemList()
 	{
 		if(_Handle!=0)
-			MemoryFree(_Handle,1);
+			MemoryFree(_Handle);
 	}
 	void StringMemList::Clear()
 	{
@@ -1393,7 +1376,7 @@ namespace ju{
 			return 0;
 		if(len<1)
 			len = 1;
-		void* handle = MemoryRealloc(_Handle,len*2,1);
+		void* handle = MemoryRealloc(_Handle,len*2);
 		if(handle==NULL)
 			return 0;
 		if(handle!=(void*)_Handle)
@@ -1470,7 +1453,7 @@ namespace ju{
 	}
 	void StringMemList::Release()
 	{
-		MemoryFree(_Handle,1);
+		MemoryFree(_Handle);
 		_Strs.Clear();
 		_Length = 0;
 		_Handle = 0;

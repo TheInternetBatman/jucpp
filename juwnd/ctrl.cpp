@@ -215,7 +215,7 @@ namespace ju{
 	}
 	//获取删除选中项后的文本
 	int getNewText(Edit* edit,String& ns){
-		String str(256,1);
+		LocalString str;
 		edit->GetText(str);
 		Twin16 sel = edit->GetSelect();
 		ns.CopyFrom(str,sel.x);

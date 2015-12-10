@@ -88,21 +88,13 @@ namespace ju{
 	JUBASE_API int FastSize(void* p);
 	//一个内存指针是否是预分配内存，此函数只是简单的检测指针是否在预分配内存范围内，范围内的错误指针仍然返回 true。
 	JUBASE_API bool IsFastMemory(void* p);
-	*/
+
 	//FAST_MEMORY开关控制Memory开头的内存分配函数使用哪个版本(快速Fast还是系统SYS).
-	inline void* MemoryAlloc(int size){
-		return SYSAlloc(size);
-	}
-	inline void* MemoryRealloc(void* p,int size){
-		return SYSRealloc(p,size);
-	}
-	inline bool MemoryFree(void* p){
-		return SYSFree(p);
-	}
-	inline int MemorySize(void* p){
-		return SYSSize(p);
-	}
-	//inline void MemoryInfo(void* p);
+	JUBASE_API void* MemoryAlloc(int size,bool sys = 0);
+	JUBASE_API void* MemoryRealloc(void* p,int size,bool sys = 0);
+	JUBASE_API bool MemoryFree(void* p,bool sys = 0);
+	JUBASE_API int MemorySize(void* p,bool sys = 0);
+	JUBASE_API void MemoryInfo(void* p);*/
 	//添加位
 	template<typename T> inline void BitAdd(T& bit,T add){
 		bit |= add;
@@ -317,4 +309,22 @@ namespace ju{
 	};
 #define AutoStruct(T,v) T v;::ZeroMemory(&v,sizeof(T))
 #define AutoStruct2(T,v) T v;::ZeroMemory(&v,sizeof(T));v.cbSize = sizeof(v)
+	//主要用于Windows API常用的一类结构,特点是首4字节设为结构的大小(一般叫作cbSize成员).
+	//它的作用是把结构用0初始化,然后设置cbSize成员为结构的大小.在API中这是相当重复的工作.
+	/*这个对象在MFC出现莫名的问题，编译器识别大小错误4字节，导致改写了外部的内容。
+	template<typename T,bool size = false> struct JUBASETL_API AutoStruct : public T,public _class{
+	AutoStruct(){
+	RtlZeroMemory(this,sizeof(T));
+	if(size) *((size_t*)this) = sizeof(T);
+	}
+	void Zero(){
+	RtlZeroMemory(this,sizeof(T));
+	}
+	operator T& (){
+	return *((T*)this);
+	}
+	void operator = (T& t){
+	*((T*)this) = t;
+	}
+	};*/
 }

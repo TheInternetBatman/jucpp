@@ -7,19 +7,24 @@ namespace ju{
 	template<typename T> class JUBASETL_API Memory : public HandleType<T*>{
 	protected:
 		uint _Size;
-		bool _bind;
+		bool _sys,_bind;
 	public:
-		Memory():_Size(0),_bind(0){}	//构造函数
-		Memory(uint size):_bind(0){
-			SetLength(size);
-		}	//构造函数
+		Memory():_Size(0),_sys(0),_bind(0){}	//构造函数
 		//构造函数,length是初始空间的大小,注意,内存空间的大小是这个值乘以元素的大小.
-		~Memory(){			//析构函数
-			if(_Handle&&!_bind) MemoryFree(_Handle);
+		Memory(bool sys):_Size(0),_bind(0){
+			_sys = sys;
 		}
+		~Memory(){			//析构函数
+			if(_Handle&&!_bind) MemoryFree(_Handle,_sys);
+		}
+		//设置使用的内存是系统内存还是高速内存, 默认是高速内存. 必须在实例分配的内存为空的状态下, 才能设置.
+		//因为高速内存大小有限, 如果分配大量内存, 而且不用频繁的分配和释放, 就无需使用高速分配内存.
+		inline void SetUseSysMemory(bool sys = 0){_sys = sys;}
+		//或者内存类型.
+		inline bool GetUseSysMemory(){return _sys;}
 		void Bind(T* pointer,uint size = 0){
 			if(_Handle&&!_bind){
-				MemoryFree(_Handle);
+				MemoryFree(_Handle,_sys);
 			}
 			_Handle = pointer;
 			_Size = size;
@@ -35,14 +40,14 @@ namespace ju{
 			if(_bind) return false;
 			if(length==_Size) return true;
 			if(length==0){
-				bool r = MemoryFree(_Handle);
+				bool r = MemoryFree(_Handle,_sys);
 				if(r){
 					_Size = 0;
 					_Handle = 0;
 				}
 				return r;
 			}else{
-				T* handle = (T*)MemoryRealloc(_Handle,length*sizeof(T));
+				T* handle = (T*)MemoryRealloc(_Handle,length*sizeof(T),_sys);
 				if(handle==0) return 0;
 				_Size = length;
 				_Handle = handle;
@@ -82,14 +87,14 @@ namespace ju{
 			if(length==0) return 1;
 			T* handle;
 			if(length>0){
-				handle = (T*)MemoryRealloc(_Handle,(_Size+length)*sizeof(T));
+				handle = (T*)MemoryRealloc(_Handle,(_Size+length)*sizeof(T),_sys);
 				if(handle==0) return 0;
 				if((index>=0)&&(index<_Size))
 					::RtlMoveMemory(handle+index+length,handle+index,sizeof(T)*(_Size-index));
 			}else{
 				if((index>=0)&&(index<_Size))
 					::RtlMoveMemory(_Handle+index+length,_Handle+index,sizeof(T)*(_Size-index));
-				handle = (T*)MemoryRealloc(_Handle,(_Size+length)*sizeof(T));
+				handle = (T*)MemoryRealloc(_Handle,(_Size+length)*sizeof(T),_sys);
 				if(handle==0) return 0;
 			}
 			_Handle = handle;
@@ -106,7 +111,7 @@ namespace ju{
 				size = 0x20;
 			}
 			if(size<minSize) size = minSize;
-			void* handle = (T*)MemoryRealloc(_Handle,size*sizeof(T));
+			void* handle = (T*)MemoryRealloc(_Handle,size*sizeof(T),_sys);
 			if(handle){
 				_Handle = (T*)handle;
 				_Size = size;
@@ -120,7 +125,7 @@ namespace ju{
 				_Size = 0;
 				_bind = 0;
 				return 1;
-			}else if(MemoryFree(_Handle)){
+			}else if(MemoryFree(_Handle,_sys)){
 				_Handle = 0;
 				_Size = 0;
 				return 1;
@@ -128,10 +133,11 @@ namespace ju{
 			return 0;
 		}
 		//绑定的内存必须考虑是系统内存还是高速内存.
-		bool Attach(T* handle){
-			if(_Handle&&!_bind) MemoryFree(_Handle);
+		bool Attach(T* handle,bool sys = 0){
+			if(_Handle&&!_bind) MemoryFree(_Handle,_sys);
 			_Size = MemorySize(handle)/sizeof(T);
 			_Handle = handle;
+			_sys = sys;
 			_bind = false;
 			return 1;
 		}
@@ -268,7 +274,17 @@ namespace ju{
 		bool Create(int size);
 		bool Close();
 	};
+	class JUBASE_API FastMemory : public IMemory{
+	public:
+		//初始化可用总内存大小, 此值不可更改, 32位系统能使用的内存是有限的, 这是可使用的最大内存, 不一定会分配这么多物理内存.
+		bool Create(uint total);
+		//按MB初始化
+		inline bool CreateMB(uint n){return Create(n*0x100000);}
+		//一个内存指针是否是预分配内存
+		bool IsFastMemory(void* mem);
+	};
 #define EXECMEM_SIZE	0x10000
+	JUBASE_API FastMemory* GetGlobalFastMemory();
 	JUBASE_API ExecMemory* GetGlobalExecMemory();
-	JUBASE_API void InitJulib(uint execMemSize = EXECMEM_SIZE);
+	JUBASE_API void InitConciseLib(uint execMemSize = EXECMEM_SIZE);
 }
