@@ -110,11 +110,9 @@ namespace ju{
 		//asyn指示调用是否是异步的。如果dir参数不是一个文件夹，而是一个文件，
 		//函数返回fasle。异步调用返回成功，不代表搜索真的成功，只表示搜索线程
 		//启动成功，在 OnComplete 回调函数里检测第二个参数是否为 NULL，NULL表示失败。
+		//Json 参数用来保存树状结构的文件数据，每个Json的name属性是文件名，files属性是一个数组，对应子文件，如果当前对象不是文件夹，则没有files属性。
 		bool Search(LPCWSTR dir,void* extra = 0,Json* json = 0,bool asyn = 0);
-		//目录本身是树形结构，这个函数把目录树保存为Json结构，默认只保存文件名
-		//以属性 name 保存，可以在 OnList 回调中自己添加保存信息，其中 ListData 参数
-		//的 ExtraData 就是每个搜索项对应 json 对象指针。如果设置了 OnList 回调，
-		//Json 数据的 name 属性需要自己设置。
+		//如果使用 json 来保存数据，当没有设置 OnList（null）的时候，搜索到的文件，文件夹都会被保存，当设置了 OnList，文件夹一定会被保存，但是文件需要在回调里手动保存。
 	};
 	//FilsSystem Copy ,Delete, Move 函数可能的返回值。
 #define FS_OK						0	//操作成功
