@@ -18,8 +18,8 @@ void setPng(LPCWSTR name){
 		for(int j=0;j<h;j++){
 			int index = i*h*4 + j*4;
 			if(pix[index+3]){
-				pix[index] = 0x33;
-				pix[index+1] = 0x33;
+				pix[index] = 0xff;
+				pix[index+1] = 0x99;
 				pix[index+2] = 0x33;
 			}
 		}
@@ -40,9 +40,10 @@ void setSrcPng(){
 }
 WINMAIN{
 	ju::LogShowWindow();
-	src = dst;
-	//src = L"D:\\Develop\\android\\Julib\\res\\drawable-hdpi";
-	//dst = L"D:\\Develop\\android\\Julib\\res\\drawable-hdpi";
-	setPng(L"ic_sort_48.png");
+	src = L"D:\\Develop\\android\\SportsCounter\\res\\drawable-hdpi";
+	dst = L"D:\\Develop\\android\\SportsCounter\\res\\drawable-hdpi";
+
+	//setSrcPng();
+	setPng(L"ic_help_48.png");
 	ju::MsgLoop::Start();
 }

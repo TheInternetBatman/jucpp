@@ -510,6 +510,7 @@ namespace ju{
 		}
 	}
 	LocalString::LocalString(LPCSTR mbs){
+		_Handle = _buf;
 		uint len = MbsByteLen(mbs);
 		if(len==0){
 			_Handle[0] = 0;
@@ -1149,18 +1150,23 @@ namespace ju{
 		TrimLeft();
 	}
 	void String::TrimLeft(){
-		for (uint i=0; i < _Length; i++) {
+		uint i = 0;
+		for (; i < _Length; i++) {
 			if(_isSpaceChar(_Handle[i])) continue;
 			Tail(i);
-			break;
+			return;
 		}
+		Tail(i);
 	}
 	void String::TrimRight(){
-		for (uint i = _Length - 1; i >= 0; i--) {
+		if(_Length==0) return;
+		int i = _Length - 1;
+		for (; i >= 0; i--) {
 			if(_isSpaceChar(_Handle[i])) continue;
 			Head(i+1);
-			break;
+			return;
 		}
+		Head(i+1);
 	}
 
 	//StringList

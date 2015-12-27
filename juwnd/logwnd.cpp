@@ -118,16 +118,6 @@ namespace ju{
 			line->color = color;
 		}
 	public:
-		/*int GetRequireRect(LPCWSTR str,HFONT font){
-		HDC hdc = ::GetDC(0);
-		Rect r;
-		r.SetValue(0,0,0,0);
-		HGDIOBJ hf = SelectObject(hdc,font);
-		::DrawText(hdc,str,wcslen(str),r,DT_CALCRECT|DT_SINGLELINE);
-		SelectObject(hdc,hf);
-		::ReleaseDC(0,hdc);
-		return r.Width();
-		}*/
 		LogWnd():maxCount(1000),lineSpace(5),selIndex(-1){
 			margin.SetValue(10,10,10,10);
 			selRect.SetValue(0,0,0,0);
@@ -225,6 +215,119 @@ namespace ju{
 			}
 		}
 	};
+	
+	void logf(Memory<wchar_t>& buf,LPCWSTR fms,va_list vaList){
+		int bufSize = _vscwprintf(fms,vaList);
+		if(bufSize==-1){
+			return;
+		}
+		buf.SetLength(bufSize+1);
+		int n = vswprintf_s(buf,bufSize+1,fms,vaList);
+	}
+	void logf(Memory<char>& buf,LPCSTR fms,va_list vaList){
+		int bufSize = _vscprintf(fms,vaList);
+		if(bufSize==-1){
+			return;
+		}
+		buf.SetLength(bufSize+1);
+		int n = vsprintf_s(buf,bufSize+1,fms,vaList);
+	}
+	LogView::LogView():_handle(0){}
+	LogView::~LogView(){
+		if(_handle){
+			delete (LogWnd*)_handle;
+		}
+	}
+	HWND LogView::Create(HWND parent){
+		LogWnd* lw = new LogWnd();
+		if(!lw->Create(parent)){
+			delete lw;
+		}
+		_handle = lw;
+		return *lw;
+	}
+	void LogView::Destroy(){
+		if(_handle==NULL) return;
+		LogWnd* lw = (LogWnd*)_handle;
+		::DestroyWindow(*lw);
+		delete lw;
+		_handle = NULL;
+	}
+	void LogView::SetBkColor(int bkColor){
+		if(_handle==NULL) return;
+		LogWnd* lw = (LogWnd*)_handle;
+		lw->BkColor = bkColor;
+		lw->Invalidate();
+	}
+	void LogView::SetMaxLine(int count){
+		if(_handle==NULL) return;
+		LogWnd* lw = (LogWnd*)_handle;
+		lw->SetMaxLine(count);
+	}
+	void LogView::SetFontSize(int size){
+		if(_handle==NULL) return;
+		LogWnd* lw = (LogWnd*)_handle;
+		lw->SetFontSize(size);
+	}
+	void LogView::Log(LPCWSTR str,int color){
+		if(_handle==NULL) return;
+		LogWnd* lw = (LogWnd*)_handle;
+		lw->AddLine(str,color);
+		lw->UpdateDisplay();
+	}
+	void LogView::Log(LPCSTR str,int color){
+		if(_handle==NULL) return;
+		LogWnd* lw = (LogWnd*)_handle;
+		String s = str;
+		lw->AddLine(s,color);
+		lw->UpdateDisplay();
+	}
+	void LogView::Logf(int color,LPCWSTR fms,...){
+		if(_handle==NULL) return;
+		LogWnd* lw = (LogWnd*)_handle;
+		Memory<wchar_t> buf;
+		va_list vaList;
+		va_start(vaList,fms);
+		logf(buf,fms,vaList);
+		va_end(vaList);
+		Log(buf,color);
+	}
+	void LogView::Logf(int color,LPCSTR fms,...){
+		if(_handle==NULL) return;
+		LogWnd* lw = (LogWnd*)_handle;
+		Memory<char> buf;
+		va_list vaList;
+		va_start(vaList,fms);
+		logf(buf,fms,vaList);
+		va_end(vaList);
+		Log(buf,color);
+	}
+	void LogView::Logf(LPCWSTR fms,...){
+		if(_handle==NULL) return;
+		LogWnd* lw = (LogWnd*)_handle;
+		Memory<wchar_t> buf;
+		va_list vaList;
+		va_start(vaList,fms);
+		logf(buf,fms,vaList);
+		va_end(vaList);
+		Log(buf);
+	}
+	void LogView::Logf(LPCSTR fms,...){
+		if(_handle==NULL) return;
+		LogWnd* lw = (LogWnd*)_handle;
+		Memory<char> buf;
+		va_list vaList;
+		va_start(vaList,fms);
+		logf(buf,fms,vaList);
+		va_end(vaList);
+		Log(buf);
+	}
+	void LogView::Clear(){
+		if(_handle==NULL) return;
+		LogWnd* lw = (LogWnd*)_handle;
+		lw->Clear();
+	}
+
 	class OutputFrame : public Frame{
 	protected:
 		Font	_font;

@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="Example9_String"
-	ProjectGUID="{8649180E-5C00-4679-822C-FAF0EEC7328A}"
-	RootNamespace="Example9_String"
+	Name="Example9_ApkSignTool"
+	ProjectGUID="{2C43D046-6116-479B-A0F1-DBF6E6A3A46E}"
+	RootNamespace="Example9_ApkSignTool"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -182,12 +182,24 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath=".\resource.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="资源文件"
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
+			<File
+				RelativePath=".\res\app.ico"
+				>
+			</File>
+			<File
+				RelativePath=".\Example9_ApkSignTool.rc"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>
