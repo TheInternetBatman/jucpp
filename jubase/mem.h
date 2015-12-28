@@ -96,8 +96,29 @@ namespace ju{
 			_Size += length;
 			return 1;
 		}
+		//通过容量加倍的方式，让内存至少 size 长度可用，如果当前可用内存 >= size，则函数立即返回，不做任何事情。
+		bool Double(uint minSize){
+			if(_Size>=minSize) return true;
+			if(_bind) return false;
+			uint size;
+			if(_Size){ 
+				size = _Size*2;
+				if(size<_Size) size = minSize;
+			}else{ 
+				size = 0x20;
+			}
+			if(size<minSize) size = minSize;
+			void* handle = (T*)MemoryRealloc(_Handle,size*sizeof(T));
+			if(handle){
+				_Handle = (T*)handle;
+				_Size = size;
+			}else{
+				CONASSERT(L"ValidByDouble failed");
+			}
+			return handle!=0;
+		}
 		//容量加倍,如果当前的_Size为0,则设置为0x20, 如果指定了minSize，内存加倍后达不到nimSize的话，会被设为minSize.
-		bool Double(int minSize = 0){
+		bool Double(){
 			if(_bind) return false;
 			int size;
 			if(_Size){ 
@@ -105,7 +126,6 @@ namespace ju{
 			}else{ 
 				size = 0x20;
 			}
-			if(size<minSize) size = minSize;
 			void* handle = (T*)MemoryRealloc(_Handle,size*sizeof(T));
 			if(handle){
 				_Handle = (T*)handle;

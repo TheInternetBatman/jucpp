@@ -349,6 +349,7 @@ namespace ju{
 		//Json* SetProperty(LPCWSTR prop);
 		//设置当前对象的属性值为指定的值，如果当前对象不是 Object 或者 Null 类型，操作失败，返回 NULL。
 		Json* SetProperty(LPCWSTR prop,Json& val);
+		Json* SetProperty(LPCWSTR prop);
 		//Property也可以通过数字索引操作，但是仅限于读取和删除，一般不要通过索引来设置属性。
 		//GetPropertyByIndex 获取的 key 和 pval 都指向对象内部的值，所以应该只用于读取它们的值，不要更改它们。
 		Json* GetPropertyByIndex(int index,LPCWSTR* key = 0);
@@ -475,6 +476,14 @@ namespace ju{
 			}
 			return *GetProperty(key,true);
 		}
+		//把 Json 对象序列化为二进制数据，序列化二进制数据比字串速度快得多，也略微节省内存。返回值是数据大小，和data的长度相同。
+		uint ToBytes(Memory<byte>& data);
+		//把二进制数据解析为 Json 对象，解析二进制数据比解析字串快，解析过程中出现错误，返回 false，但是可能部分解析。
+		bool FromBytes(Memory<byte>& data);
+		//保存为二进制文件
+		uint SaveBytes(LPCWSTR fn);
+		//加载二进制文件
+		bool LoadBytes(LPCWSTR fn);
 	};
 	/*使用方法，可以使用局部变量的方式 Config cfg(0); 0 表示默认配置文件，然后用 Lock 函数获取
 	Json 对象。无需调用 Close 和 Unlock 函数，因为它们在析构的时候会自动调用。

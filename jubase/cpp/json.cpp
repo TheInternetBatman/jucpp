@@ -188,7 +188,8 @@ namespace ju{
 				bin.CopyFrom(jstr+pos,i-pos);
 				Memory<char> buf;
 				int len = bin.ToMultiByte(buf);
-				Base64::Decode(*mbin,buf.Handle(),len);
+				len = Base64::Decode(*mbin,buf.Handle(),len);
+				mbin->SetLength(len);
 				return i+1;
 			}
 		}
@@ -461,6 +462,129 @@ namespace ju{
 			str.Insert('\'');
 		}
 	}
+	bool _fromStrBytes(String* str,Memory<byte>& data,uint& offset,uint maxlen){
+		if(offset+4>maxlen) return false;
+		uint len = *(uint*)(data+offset);
+		offset += 4;
+		if(offset+len<len||offset+len>maxlen) return false;//error len to big
+		if(!str->FromMultiByte((char*)(data+offset),len,CP_UTF8)) return false;
+		offset += len;
+		return true;
+	}
+	bool _fromBytes(Json* jsn,Memory<byte>& data,uint& offset,uint maxlen){
+		JSON_TYPE type = (JSON_TYPE)*(byte*)(data+offset);
+		offset += 1;
+		if(type==json_null){
+			jsn->SetToNull();
+		}else if(type==json_boolean){
+			if(offset+1>maxlen) return false;
+			*jsn = *(bool*)(data+offset);
+			offset += 1;
+		}else if(type==json_integer){
+			if(offset+8>maxlen) return false;
+			*jsn = *(int64*)(data+offset);
+			offset += 8;
+		}else if(type==json_double){
+			if(offset+8>maxlen) return false;
+			*jsn = *(double*)(data+offset);
+			offset += 8;
+		}else if(type==json_string){
+			jsn->SetToString();
+			if(!_fromStrBytes(jsn->_strValue,data,offset,maxlen)) return false;
+		}else if(type==json_array){
+			if(offset+4>maxlen) return false;
+			jsn->SetToArray();
+			uint count = *(uint*)(data+offset);
+			offset += 4;
+			for(uint i=0;i<count;i++){
+				Json* sjn = jsn->AddArrayElm();
+				if(!_fromBytes(sjn,data,offset,maxlen)) return false;
+			}
+		}else if(type==json_object){
+			if(offset+4>maxlen) return false;
+			jsn->SetToObject();
+			uint count = *(uint*)(data+offset);
+			offset += 4;
+			for(uint i=0;i<count;i++){
+				Json::DICTION* dic = jsn->_objectValue->Add();
+				if(!_fromStrBytes(&dic->key,data,offset,maxlen)) return false;
+				if(!_fromBytes(dic->val,data,offset,maxlen)) return false;
+			}
+		}else if(type==json_binary){
+			if(offset+4>maxlen) return false;
+			uint len = *(uint*)(data+offset);
+			offset += 4;
+			if(offset+len>maxlen) return false;
+			jsn->SetToBinary();
+			jsn->_binaryValue->CopyFrom((char*)(data+offset),len);
+			offset += len;
+		}else{
+			return false;
+		}
+		return true;
+	}
+	void _strToBytes(String* str,Memory<byte>& data,uint& offset){
+		uint len = str->Length()*3;
+		data.Double(offset+len+4);
+		uint slen = str->ToMultiByte((char*)(data+offset+4),len,CP_UTF8);
+		if(slen==0&&len!=0&&GetLastError()==ERROR_INSUFFICIENT_BUFFER){
+			//缓存不足;
+			Memory<char> buf;
+			slen = str->ToMultiByte(buf,CP_UTF8);
+			if(slen==0){
+				CONASSERT(L"内存不足或异常");
+			}
+		}
+		*(uint*)(data+offset) = slen;
+		offset += slen + 4;
+	}
+	void _toBytes(Json* jsn,Memory<byte>& data,uint& offset){
+		data.Double(offset+1);
+		*(byte*)(data+offset) = jsn->_type;
+		offset++;
+		if(jsn->_type==json_null){
+		}else if(jsn->_type==json_boolean){
+			data.Double(offset+1);
+			*(bool*)(data+offset) = jsn->_boolValue;
+			offset += 1;
+		}else if(jsn->_type==json_integer){
+			data.Double(offset+8);
+			*(int64*)(data+offset) = jsn->_intValue;
+			offset += 8;
+		}else if(jsn->_type==json_double){
+			data.Double(offset+8);
+			*(double*)(data+offset) = jsn->_doubleValue;
+			offset += 8;
+		}else if(jsn->_type==json_string){
+			_strToBytes(jsn->_strValue,data,offset);
+		}else if(jsn->_type==json_array){
+			data.Double(offset+4);
+			ObjectList<Json>& a = *jsn->_arrayValue;
+			*(uint*)(data+offset) = a.Count();
+			offset += 4;
+			for(uint i=0;i<a.Count();i++){
+				Json* sjsn = a.GetElement(i);
+				_toBytes(sjsn,data,offset);
+			}
+		}else if(jsn->_type==json_object){
+			data.Double(offset+4);
+			ObjectList<Json::DICTION>& obj = *jsn->_objectValue;
+			*(uint*)(data+offset) = obj.Count();
+			offset += 4;
+			for(uint i=0;i<obj.Count();i++){
+				Json::DICTION* dic = obj.GetElement(i);
+				_strToBytes(&dic->key,data,offset);
+				_toBytes(dic->val,data,offset);
+			}
+		}else if(jsn->_type==json_binary){
+			uint len = jsn->_binaryValue->Length();
+			data.Double(offset+4+len);
+			*(uint*)(data+offset) = len;
+			offset += 4;
+			data.CopyFrom((byte*)jsn->_binaryValue->Handle(),len,offset);
+			offset += len;
+		}
+	}
 	//Json
 	void Json::operator = (Json& val){
 		SetToNull();
@@ -630,6 +754,11 @@ namespace ju{
 		return 0;
 	}
 	Json* Json::SetProperty(LPCWSTR prop,Json& val){
+		Json* jsn = SetProperty(prop);
+		*jsn = val;
+		return jsn;
+	}
+	Json* Json::SetProperty(LPCWSTR prop){
 		if(_type==json_null){
 			_objectValue = new ObjectList<Json::DICTION>;
 			_type = json_object;
@@ -639,13 +768,11 @@ namespace ju{
 			Json::DICTION* dic = _objectValue->GetElement(i);
 			if(!dic) break;
 			if(dic->key==prop){
-				*dic->val = val;
 				return dic->val;
 			}
 		}
 		Json::DICTION* dic = _objectValue->Add();
 		dic->key = prop;
-		*dic->val = val;
 		return dic->val;
 	}
 	Json* Json::GetPropertyByIndex(int index,LPCWSTR* key){
@@ -700,7 +827,39 @@ namespace ju{
 		ToString(buf,readStyle);
 		return 0!=fs.WriteString(buf,0,0,codepage);
 	}
+	uint Json::SaveBytes(LPCWSTR fn){
+		Memory<byte> buf;
+		if(!ToBytes(buf)) return 0;
+		File file;
+		if(!file.Create(fn,OPEN_EXISTING)) return 0;
+		file.SetLength(0);
+		return file.Write(&buf);
+	}
+	bool Json::LoadBytes(LPCWSTR fn){
+		File file;
+		if(!file.Create(fn,OPEN_ALWAYS)) return 0;
+		Memory<byte> buf;
+		uint len = file.Read(&buf);
+		if(len==0) return false;
+		return FromBytes(buf);
+	}
 
+static const uint json_header_tag = 0x3a5f3d97;
+	uint Json::ToBytes(Memory<byte>& data){
+		data.Double(4);
+		*(uint*)data.Handle() = json_header_tag;
+		uint offset = 4;
+		_toBytes(this,data,offset);
+		data.SetLength(offset);
+		return offset;
+	}
+	bool Json::FromBytes(Memory<byte>& data){
+		SetToNull();
+		if(data.Length()<5) return 0;
+		if(*(uint*)data.Handle()!=json_header_tag) return 0;
+		uint offset = 4;
+		return _fromBytes(this,data,offset,data.Length());
+	}
 	//Config
 	class config_struct : public _class{
 	public:
