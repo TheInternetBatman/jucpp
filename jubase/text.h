@@ -110,7 +110,7 @@ namespace ju{
 		//因为可以操作实例的内存所以可以用这个函数来还原实例中的成员函数合法.
 		void Realize(bool resetsize = 0);
 		//设置实例的容量.
-		virtual bool SetCubage(uint cubage,bool dbSpace = 1);
+		virtual bool SetCubage(uint cubage,bool dbSpace = 0);
 		//在实例中查找字符,返回-1如果不存在.
 		uint Find(wchar_t wch,uint start = 0,uint maxlen = -1);
 		//在实例中查找字串.
@@ -221,6 +221,7 @@ namespace ju{
 		void Trim();
 		void TrimLeft();
 		void TrimRight();
+		uint getUsedMemory();
 	};
 #define LS_CUBAGE 255	//默认大小。
 	class JUBASE_API LocalString : public String{

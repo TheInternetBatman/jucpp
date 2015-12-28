@@ -127,6 +127,9 @@ namespace ju{
 			_ASSERT(index<_Count);
 			return _Handle[_Count-index-1];
 		}
+		uint getUsedMemory(){
+			return _Handle.Length()*sizeof(T) + sizeof(this);
+		}
 	};
 	//Diction类的与List类的区别在于它只存贮值不同的元素.
 	template<typename T> class JUBASETL_API Diction : public List<T>{
@@ -301,6 +304,9 @@ namespace ju{
 		//析构
 		~ObjectList(){
 			for(uint i=0;i<_Ptrs.Count();i++) delete _Ptrs[i];
+		}
+		uint getUsedMemory(){
+			return _Ptrs.getUsedMemory() + sizeof(this);
 		}
 	};
 	/*ObjectLink管理一系列的对象实例，它可以在析构自动删除所有成员，遍历元素使用Move调整位置，Element返回元素

@@ -211,10 +211,12 @@ namespace ju{
 		}else if(jstr[pos]=='['){
 			jv->_type = json_array;
 			jv->_arrayValue = new ObjectList<Json>;
+			jv->_arrayValue->SetGrow(1);
 			pos = _parseArray(jstr,pos+1,maxlen,jv->_arrayValue);
 		}else if(jstr[pos]=='{'){
 			jv->_type = json_object;
 			jv->_objectValue = new ObjectList<Json::DICTION>;
+			jv->_objectValue->SetGrow(1);
 			pos = _parseObject(jstr,pos+1,maxlen,jv->_objectValue);
 		}else{
 			int nextPos = _getNextWord(jstr,pos,maxlen);
@@ -323,10 +325,12 @@ namespace ju{
 			}else if(jstr[i]=='{'){
 				jv->_type = json_object;
 				jv->_objectValue = new ObjectList<Json::DICTION>;
+				jv->_objectValue->SetGrow(1);
 				i = _parseObject(jstr,i+1,maxlen,jv->_objectValue);
 			}else if(jstr[i]=='['){
 				jv->_type = json_array;
 				jv->_arrayValue = new ObjectList<Json>;
+				jv->_arrayValue->SetGrow(1);
 				i = _parseArray(jstr,i+1,maxlen,jv->_arrayValue);
 			}else if(jstr[i]=='\"'){
 				jv->_type = json_string;
@@ -467,7 +471,8 @@ namespace ju{
 		uint len = *(uint*)(data+offset);
 		offset += 4;
 		if(offset+len<len||offset+len>maxlen) return false;//error len to big
-		if(!str->FromMultiByte((char*)(data+offset),len,CP_UTF8)) return false;
+		str->CopyFrom((LPCWSTR)(data+offset),len/2);
+		//if(!str->FromMultiByte((char*)(data+offset),len,CP_UTF8)) return false;
 		offset += len;
 		return true;
 	}
@@ -524,9 +529,13 @@ namespace ju{
 		return true;
 	}
 	void _strToBytes(String* str,Memory<byte>& data,uint& offset){
-		uint len = str->Length()*3;
+		uint len = str->Length()*2;
 		data.Double(offset+len+4);
-		uint slen = str->ToMultiByte((char*)(data+offset+4),len,CP_UTF8);
+		*(uint*)(data+offset) = len;
+		offset += 4;
+		data.CopyFrom((byte*)str->Handle(),len,offset);
+		offset += len;
+		/*uint slen = str->ToMultiByte((char*)(data+offset+4),len,CP_UTF8);
 		if(slen==0&&len!=0&&GetLastError()==ERROR_INSUFFICIENT_BUFFER){
 			//缓存不足;
 			Memory<char> buf;
@@ -534,9 +543,7 @@ namespace ju{
 			if(slen==0){
 				CONASSERT(L"内存不足或异常");
 			}
-		}
-		*(uint*)(data+offset) = slen;
-		offset += slen + 4;
+		}*/
 	}
 	void _toBytes(Json* jsn,Memory<byte>& data,uint& offset){
 		data.Double(offset+1);
@@ -595,6 +602,7 @@ namespace ju{
 			*_strValue = *val._strValue;
 		}else if(val._type==json_array){
 			_arrayValue = new ObjectList<Json>;
+			_arrayValue->SetGrow(1);
 			ObjectList<Json>& a = *val._arrayValue;
 			for(uint i=0;i<a.Count();i++){
 				Json* sjn = a.GetElement(i);
@@ -604,6 +612,7 @@ namespace ju{
 			}
 		}else if(val._type==json_object){
 			_objectValue = new ObjectList<Json::DICTION>;
+			_objectValue->SetGrow(1);
 			ObjectList<Json::DICTION>& a = *val._objectValue;
 			for(uint i=0;i<a.Count();i++){
 				Json::DICTION* sjn = a.GetElement(i);
@@ -661,6 +670,7 @@ namespace ju{
 		if(_type==json_array) return;
 		SetToNull();
 		_arrayValue = new ObjectList<Json>;
+		_arrayValue->SetGrow(1);
 		_type = json_array;
 	}
 	void Json::SetToBoolean(){
@@ -688,6 +698,7 @@ namespace ju{
 		if(_type==json_object) return;
 		SetToNull();
 		_objectValue = new ObjectList<Json::DICTION>;
+		_objectValue->SetGrow(1);
 		_type = json_object;
 	}
 	void Json::SetToBinary(){
@@ -727,6 +738,7 @@ namespace ju{
 	Json* Json::GetProperty(LPCWSTR prop,bool createIfNotExist){
 		if(json_null==_type&&createIfNotExist){
 			_objectValue = new ObjectList<Json::DICTION>;
+			_objectValue->SetGrow(1);
 			_type = json_object;
 			Json::DICTION* dic = _objectValue->Add();
 			dic->key = prop;
@@ -761,6 +773,7 @@ namespace ju{
 	Json* Json::SetProperty(LPCWSTR prop){
 		if(_type==json_null){
 			_objectValue = new ObjectList<Json::DICTION>;
+			_objectValue->SetGrow(1);
 			_type = json_object;
 		}else if(_type==json_object){
 		}else return 0;
@@ -842,6 +855,26 @@ namespace ju{
 		uint len = file.Read(&buf);
 		if(len==0) return false;
 		return FromBytes(buf);
+	}
+	uint Json::getUsedMemory(){
+		uint len = sizeof(this);
+		if(_type==json_string){
+			len += _strValue->getUsedMemory();
+		}else if(_type==json_array){
+			len += _arrayValue->getUsedMemory();
+			for(uint i=0;i<_arrayValue->Count();i++){
+				len += _arrayValue->Element(i)->getUsedMemory();
+			}
+		}else if(_type==json_object){
+			len += _objectValue->getUsedMemory();
+			for(uint i=0;i<_objectValue->Count();i++){
+				DICTION* dic = _objectValue->Element(i);
+				len += sizeof(DICTION);
+				len += dic->key.getUsedMemory();
+				len += dic->val->getUsedMemory();
+			}
+		}
+		return len;
 	}
 
 static const uint json_header_tag = 0x3a5f3d97;

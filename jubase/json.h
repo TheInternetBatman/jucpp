@@ -37,7 +37,7 @@ namespace ju{
 			String* _strValue;
 			ObjectList<Json>* _arrayValue;
 			ObjectList<DICTION>* _objectValue;
-			Memory<char>*	_binaryValue;
+			Memory<char>* _binaryValue;
 		};
 		JSON_TYPE _type;
 		~Json(){
@@ -484,6 +484,8 @@ namespace ju{
 		uint SaveBytes(LPCWSTR fn);
 		//加载二进制文件
 		bool LoadBytes(LPCWSTR fn);
+		//使用的内存
+		uint getUsedMemory();
 	};
 	/*使用方法，可以使用局部变量的方式 Config cfg(0); 0 表示默认配置文件，然后用 Lock 函数获取
 	Json 对象。无需调用 Close 和 Unlock 函数，因为它们在析构的时候会自动调用。

@@ -1169,6 +1169,9 @@ namespace ju{
 		Head(i+1);
 	}
 
+	uint String::getUsedMemory(){
+		return _Cubage*2 + sizeof(this);
+	}
 	//StringList
 	uint StringList::AddSub(LPCWSTR wstr,uint length,uint index)
 	{
