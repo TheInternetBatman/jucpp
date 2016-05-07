@@ -13,10 +13,13 @@
 #define _WIN32_IE 0x0600	// Change this to the appropriate value to target other versions of IE.
 #endif
 
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
+
 #ifdef MFC		//如果是MFC程序，需要定义MFC宏
 #include <afx.h>
 #include <afxwin.h>         // MFC 核心组件和标准组件
 #else
+//#include <Ws2tcpip.h>
 #include <WinSock2.h>
 #include <windows.h>
 #include <tchar.h>

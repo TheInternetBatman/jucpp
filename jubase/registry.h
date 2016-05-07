@@ -56,12 +56,11 @@ namespace ju{
 	protected:
 		Registry reg;
 	public:
-		bool Create();
+		CodePage();
 		//返回注册表中全部的 CodePage 名称，这些名称有些是别称，对应的 CodePage 值可以重复。
 		int GetAllCodePage(StringMemList* sml);
 		//返回指定名称的码表值，0 表示没有指定名称的代码页，名称不区分大小写。
 		DWORD GetCode(LPCWSTR cpName);
-		bool Close();
 	};
 	//从名称取得代码页, 这个函数内部维护一个列表, 如果遇到没有的名称回去查询注册表,
 	//如果已经查询成功的代码页名称, 会存储在列表中, 下次直接返回, 空串返回 CP_THREAD_ACP(3), 这个函数比使用 CodePage 要快, 它内置了几个基本的代码页信息, CodePage 的 Create 函数会从注册表读取全部的代码也信息.

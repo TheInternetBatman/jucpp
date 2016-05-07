@@ -16,6 +16,8 @@
 #else
 #include <winsock2.h>
 #include <windows.h>
+#include <commdlg.h>
+#include <shellapi.h>
 #include <tchar.h>
 #include <crtdbg.h>
 #endif

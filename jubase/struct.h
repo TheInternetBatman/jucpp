@@ -4,8 +4,8 @@ namespace ju{
 #pragma pack(push,2)
 	//这相当于点
 	typedef union JUBASE_API Twin32{
-		struct{__int32 x,y;};
-		struct{__int64 Value;};
+		struct {__int32 x,y;};
+		struct {__int64 Value;};
 
 		inline Twin32(){}
 		inline Twin32(int x,int y){this->x = x;this->y = y;}

@@ -70,13 +70,14 @@ namespace ju{
 		::SetForegroundWindow(hOwner);
 		return ::TrackPopupMenu(::GetSubMenu(_Handle,uPos),tpm,x,y,0,hOwner,0)!=0;
 	}
-	bool UserMenu::AddItem(UINT uPos,LPCWSTR text,UINT msgId,HBITMAP bmp,bool byPos){
-		AutoStruct2(MENUITEMINFO,mii);
+	bool UserMenu::AddItem(UINT uPos,LPCWSTR text,UINT msgId,HBITMAP image,bool byPos){
+		if(image&&ImageList) ImageList->Add(image);
+		AutoStruct2(MENUITEMINFO, mii);
 		mii.fMask = MIIM_DATA|MIIM_ID|MIIM_FTYPE|MIIM_STRING;
 		mii.fType = MFT_STRING|MFT_OWNERDRAW;
 		mii.dwTypeData = (LPWSTR)text;
 		mii.wID = msgId;
-		mii.dwItemData = (ULONG_PTR)bmp;
+		mii.dwItemData = (ULONG_PTR)image;
 
 		return ::InsertMenuItem(_Handle,uPos,byPos,&mii)!=0; 
 	}
@@ -102,6 +103,7 @@ namespace ju{
 		mii.fType = MFT_STRING|MFT_OWNERDRAW;
 		mii.dwTypeData = (LPWSTR)text;
 		mii.dwItemData = (ULONG_PTR)image;
+		if(image&&ImageList) ImageList->Add(image);
 		static int subMenuId = 0x10000;
 		mii.wID = subMenuId++;
 		HMENU h = 0;
@@ -122,10 +124,10 @@ namespace ju{
 		return ::InsertMenuItemW(_Handle,uid,byPos,&mii)!=0; 
 	}
 	bool UserMenu::DeleteItem(UINT uid,bool byPos){
-		return ::DeleteMenu(_Handle,uid,byPos)!=0;
+		return ::DeleteMenu(_Handle, uid, byPos ? MF_BYPOSITION : MF_BYCOMMAND) != 0;
 	}
 	bool UserMenu::RemoveItem(UINT uid,bool byPos){
-		return ::RemoveMenu(_Handle,uid,byPos)!=0;
+		return ::RemoveMenu(_Handle, uid, byPos ? MF_BYPOSITION : MF_BYCOMMAND) != 0;
 	}
 	bool UserMenu::Load(ResID rMenu){
 		HMENU hMenu = ::LoadMenuW(rMenu.Instance,rMenu);
@@ -175,7 +177,7 @@ namespace ju{
 		return ::EnableMenuItem(_Handle,uid,state)!=-1;
 	}
 	bool UserMenu::GetItemDisable(UINT uid,bool byPos){
-		return (::GetMenuState(_Handle,uid,byPos)&MF_DISABLED)==MF_DISABLED;
+		return (::GetMenuState(_Handle, uid, byPos ? MF_BYPOSITION : MF_BYCOMMAND)&MF_DISABLED) == MF_DISABLED;
 	}
 	bool UserMenu::SetItemState(UINT uid,UINT state,bool byPos){
 		AutoStruct2(MENUITEMINFO,mii);
@@ -229,11 +231,11 @@ namespace ju{
 		if(!OnMeasureItem.IsNull()) OnMeasureItem(mi);
 		else{
 			//测试此消息是否是这个菜单发出
-			AutoStruct2(MENUITEMINFO,mii);
+			/*AutoStruct2(MENUITEMINFO,mii);
 			mii.cbSize = sizeof(mii);
-			mii.fMask = MIIM_TYPE;
+			mii.fMask = MIIM_TYPE|MIIM_ID;
 			bool b = GetItemInfo(mi->itemID,&mii,false);
-			if(!b) return;
+			if(!b) return;*/
 
 			mi->itemHeight = Param.ItemHeight;
 			String text;
@@ -249,14 +251,14 @@ namespace ju{
 #define HAS_STYLE(v,s) (v&s)==s
 	void UserMenu::HookDrawItem(Message* msg,IWnd*){
 		LPDRAWITEMSTRUCT di = (LPDRAWITEMSTRUCT)msg->lParam;
-		if(di->CtlType!=ODT_MENU) return;
+		if(di->CtlType != ODT_MENU) return;
 		if(!OnDrawItem.IsNull()) OnDrawItem(di);
 		else{
 			//测试此消息是否是这个菜单发出
-			AutoStruct2(MENUITEMINFO,mii);
+			/*AutoStruct2(MENUITEMINFO,mii);
 			mii.fMask = MIIM_TYPE;
 			bool b = GetItemInfo(di->itemID,&mii,false);
-			if(!b) return;
+			if(!b) return;*/
 
 			int color = Param.TextColor;
 			Rect& rc = *(Rect*)&di->rcItem;
@@ -270,16 +272,16 @@ namespace ju{
 				GdiSelector gsp(di->hDC,Param.Pen);
 				::SetDCPenColor(di->hDC,Param.SelectBorderColor);
 				Rectangle(di->hDC,rc.left,rc.top,rc.right,rc.bottom);
-				color = RGB(255,0,0);
+				color = RGB(0,0,255);
 			}else{
 				GdiSelector gsb(di->hDC,Param.Brush);
 				::SetDCBrushColor(di->hDC,Param.DefaultBkColor);
 				gsb.Close();
 				::FillRect(di->hDC,rc,Param.Brush);
 			}
-			if(ImageList){
-				HBITMAP icon = HAS_STYLE(di->itemState,ODS_CHECKED)?Param.BmpCheck:(HBITMAP)di->itemData;
-				ImageList->Draw(icon,di->hDC,255,1,rc.left+Param.ImageX,rc.top+Param.ImageY);
+			if(ImageList) {
+				HBITMAP icon = HAS_STYLE(di->itemState, ODS_CHECKED) ? Param.BmpCheck : (HBITMAP)di->itemData;
+				ImageList->Draw(icon, di->hDC, 255, 1, rc.left + Param.ImageX, rc.top + Param.ImageY);
 			}
 			SetTextColor(di->hDC,color);
 			String text;
@@ -315,7 +317,7 @@ namespace ju{
 		_TextCY = 0;
 		ItemHeight = 26;
 		TextColor = 0;
-		SelectBorderColor = RGB(0,200,200);
+		SelectBorderColor = RGB(185, 213, 238);// 0, 200, 200);
 		SelectBkColor = RGB(185,213,238);
 		DefaultBkColor = GetSysColor(COLOR_MENU);
 		Brush = (HBRUSH)GetStockObject(DC_BRUSH);

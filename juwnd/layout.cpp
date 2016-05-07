@@ -138,6 +138,8 @@ namespace ju{
 			_createWnd = 0;
 		}
 		_wnd = ctrl;
+		_wnd.SetLocation(_location.x,_location.y);
+		_wnd.SetSize(_size.x,_size.y);
 	}
 	void Layout::SetControl(LPCWSTR className,WORD id,LPCWSTR text,DWORD style,DWORD exstyle){
 		if(WcsLength(className)!=0){

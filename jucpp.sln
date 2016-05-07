@@ -1,40 +1,37 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "jubase", "jubase\jubase.vcproj", "{747D10D7-6348-465E-92A3-9FDFF35D36F1}"
-	ProjectSection(ProjectDependencies) = postProject
-		{3423EC9A-52E4-4A4D-9753-EDEBC38785EF} = {3423EC9A-52E4-4A4D-9753-EDEBC38785EF}
-	EndProjectSection
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.40629.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "jubase", "jubase\jubase.vcxproj", "{747D10D7-6348-465E-92A3-9FDFF35D36F1}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "juwnd", "juwnd\juwnd.vcproj", "{E3EB03FF-C3DA-4F38-8340-2838927EE10E}"
-	ProjectSection(ProjectDependencies) = postProject
-		{3423EC9A-52E4-4A4D-9753-EDEBC38785EF} = {3423EC9A-52E4-4A4D-9753-EDEBC38785EF}
-		{747D10D7-6348-465E-92A3-9FDFF35D36F1} = {747D10D7-6348-465E-92A3-9FDFF35D36F1}
-	EndProjectSection
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "juwnd", "juwnd\juwnd.vcxproj", "{E3EB03FF-C3DA-4F38-8340-2838927EE10E}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cryptlib", "cryptlib\cryptlib.vcproj", "{3423EC9A-52E4-4A4D-9753-EDEBC38785EF}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cryptlib", "cryptlib\cryptlib.vcxproj", "{3423EC9A-52E4-4A4D-9753-EDEBC38785EF}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Example1_Hello", "Example1_Hello\Example1_Hello.vcproj", "{719CA880-7DB6-4BDA-9AB8-C924DE2FB28D}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Example1_Hello", "Example1_Hello\Example1_Hello.vcxproj", "{719CA880-7DB6-4BDA-9AB8-C924DE2FB28D}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Example2_Function", "Example2_Function\Example2_Function.vcproj", "{59F14EDB-19F9-46FB-A579-E000C604F641}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Example2_Function", "Example2_Function\Example2_Function.vcxproj", "{59F14EDB-19F9-46FB-A579-E000C604F641}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Example3_Delegate", "Example3_Delegate\Example3_Delegate.vcproj", "{82BD044F-F504-4592-BB50-121D575D1AB1}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Example3_Delegate", "Example3_Delegate\Example3_Delegate.vcxproj", "{82BD044F-F504-4592-BB50-121D575D1AB1}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "JuProjectTool", "JuProjectTool\JuProjectTool.vcproj", "{E0824559-88DC-4A16-A093-680D4DD61F50}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "JuProjectTool", "JuProjectTool\JuProjectTool.vcxproj", "{E0824559-88DC-4A16-A093-680D4DD61F50}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Example4_Thread", "Example4_Thread\Example4_Thread.vcproj", "{FC642510-63AE-4CAA-ACF3-1C43B38A89FC}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Example4_Thread", "Example4_Thread\Example4_Thread.vcxproj", "{FC642510-63AE-4CAA-ACF3-1C43B38A89FC}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Example5_TaskPool", "Example5_TaskPool\Example5_TaskPool.vcproj", "{4B3E17EB-DDE5-4AD1-99A7-353A8724B2DC}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Example5_TaskPool", "Example5_TaskPool\Example5_TaskPool.vcxproj", "{4B3E17EB-DDE5-4AD1-99A7-353A8724B2DC}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Example6_APIHook", "Example6_APIHook\Example6_APIHook.vcproj", "{5FA0FBF6-CBC0-4344-B57A-E17C8FFC6F3E}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Example6_APIHook", "Example6_APIHook\Example6_APIHook.vcxproj", "{5FA0FBF6-CBC0-4344-B57A-E17C8FFC6F3E}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Example7_FileTree", "Example7_FileTree\Example7_FileTree.vcproj", "{A2A9E5A3-DADB-4450-9E0E-80DAAFA05408}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Example7_FileTree", "Example7_FileTree\Example7_FileTree.vcxproj", "{A2A9E5A3-DADB-4450-9E0E-80DAAFA05408}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Example8_Image", "Example8_Image\Example8_Image.vcproj", "{4C56EAF0-400A-4E1F-B3EA-B2CA82DEE4FD}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Example8_Image", "Example8_Image\Example8_Image.vcxproj", "{4C56EAF0-400A-4E1F-B3EA-B2CA82DEE4FD}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Example9_ApkSignTool", "Example9_ApkSignTool\Example9_ApkSignTool.vcproj", "{2C43D046-6116-479B-A0F1-DBF6E6A3A46E}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Example9_ApkSignTool", "Example9_ApkSignTool\Example9_ApkSignTool.vcxproj", "{2C43D046-6116-479B-A0F1-DBF6E6A3A46E}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Example10_Json", "Example10_Json\Example10_Json.vcproj", "{EE81ACC8-50FE-42A8-8BAC-A944C2CED787}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Example10_Json", "Example10_Json\Example10_Json.vcxproj", "{EE81ACC8-50FE-42A8-8BAC-A944C2CED787}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Example11_Crypt", "Example11_Crypt\Example11_Crypt.vcxproj", "{6228E105-762C-4624-8995-CD3E2FC47627}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -308,6 +305,24 @@ Global
 		{EE81ACC8-50FE-42A8-8BAC-A944C2CED787}.Release|Windows Mobile 6 Professional SDK (ARMV4I).ActiveCfg = Release|Win32
 		{EE81ACC8-50FE-42A8-8BAC-A944C2CED787}.Release|Windows Mobile 6 Standard SDK (ARMV4I).ActiveCfg = Release|Win32
 		{EE81ACC8-50FE-42A8-8BAC-A944C2CED787}.Release|x64.ActiveCfg = Release|Win32
+		{6228E105-762C-4624-8995-CD3E2FC47627}.Debug|Pocket PC 2003 (ARMV4).ActiveCfg = Debug|Win32
+		{6228E105-762C-4624-8995-CD3E2FC47627}.Debug|Smartphone 2003 (ARMV4).ActiveCfg = Debug|Win32
+		{6228E105-762C-4624-8995-CD3E2FC47627}.Debug|Win32.ActiveCfg = Debug|Win32
+		{6228E105-762C-4624-8995-CD3E2FC47627}.Debug|Win32.Build.0 = Debug|Win32
+		{6228E105-762C-4624-8995-CD3E2FC47627}.Debug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I).ActiveCfg = Debug|Win32
+		{6228E105-762C-4624-8995-CD3E2FC47627}.Debug|Windows Mobile 5.0 Smartphone SDK (ARMV4I).ActiveCfg = Debug|Win32
+		{6228E105-762C-4624-8995-CD3E2FC47627}.Debug|Windows Mobile 6 Professional SDK (ARMV4I).ActiveCfg = Debug|Win32
+		{6228E105-762C-4624-8995-CD3E2FC47627}.Debug|Windows Mobile 6 Standard SDK (ARMV4I).ActiveCfg = Debug|Win32
+		{6228E105-762C-4624-8995-CD3E2FC47627}.Debug|x64.ActiveCfg = Debug|Win32
+		{6228E105-762C-4624-8995-CD3E2FC47627}.Release|Pocket PC 2003 (ARMV4).ActiveCfg = Release|Win32
+		{6228E105-762C-4624-8995-CD3E2FC47627}.Release|Smartphone 2003 (ARMV4).ActiveCfg = Release|Win32
+		{6228E105-762C-4624-8995-CD3E2FC47627}.Release|Win32.ActiveCfg = Release|Win32
+		{6228E105-762C-4624-8995-CD3E2FC47627}.Release|Win32.Build.0 = Release|Win32
+		{6228E105-762C-4624-8995-CD3E2FC47627}.Release|Windows Mobile 5.0 Pocket PC SDK (ARMV4I).ActiveCfg = Release|Win32
+		{6228E105-762C-4624-8995-CD3E2FC47627}.Release|Windows Mobile 5.0 Smartphone SDK (ARMV4I).ActiveCfg = Release|Win32
+		{6228E105-762C-4624-8995-CD3E2FC47627}.Release|Windows Mobile 6 Professional SDK (ARMV4I).ActiveCfg = Release|Win32
+		{6228E105-762C-4624-8995-CD3E2FC47627}.Release|Windows Mobile 6 Standard SDK (ARMV4I).ActiveCfg = Release|Win32
+		{6228E105-762C-4624-8995-CD3E2FC47627}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

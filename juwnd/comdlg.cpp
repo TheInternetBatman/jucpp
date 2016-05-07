@@ -93,7 +93,7 @@ namespace ju{
 				}
 				break;
 			case CDN_TYPECHANGE:
-				OnTypeChange(pon->lpOFN->nFilterIndex,this);
+				if(!OnTypeChange.IsNull()) OnTypeChange(pon->lpOFN->nFilterIndex,this);
 				break;
 			}
 		}

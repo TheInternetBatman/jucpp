@@ -1,0 +1,405 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+    <Filter Include="zlib">
+      <UniqueIdentifier>{a56e4569-a822-4b59-863d-f258371a75f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xyssl">
+      <UniqueIdentifier>{f412df5f-49b3-482b-b8ae-67634e8eeab5}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="cpp\base.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\console.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\datatree.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\debugoutput.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="dllmain.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\ecc.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\filemanage.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\gdi.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\gzip.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\img.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\io.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\json.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\kernel.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\key.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\mem.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\msgloop.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\precitimer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\proc.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\registry.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\res.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\text.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\user.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\web.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\WinHttp.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\xyssl.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="zlib\adler32.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="zlib\compress.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="zlib\crc32.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="zlib\deflate.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="zlib\infback.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="zlib\inffast.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="zlib\inflate.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="zlib\inftrees.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="zlib\trees.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="zlib\uncompr.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="zlib\zutil.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="xyssl\aes.c">
+      <Filter>xyssl</Filter>
+    </ClCompile>
+    <ClCompile Include="xyssl\arc4.c">
+      <Filter>xyssl</Filter>
+    </ClCompile>
+    <ClCompile Include="xyssl\base64.c">
+      <Filter>xyssl</Filter>
+    </ClCompile>
+    <ClCompile Include="xyssl\bignum.c">
+      <Filter>xyssl</Filter>
+    </ClCompile>
+    <ClCompile Include="xyssl\certs.c">
+      <Filter>xyssl</Filter>
+    </ClCompile>
+    <ClCompile Include="xyssl\debug.c">
+      <Filter>xyssl</Filter>
+    </ClCompile>
+    <ClCompile Include="xyssl\des.c">
+      <Filter>xyssl</Filter>
+    </ClCompile>
+    <ClCompile Include="xyssl\dhm.c">
+      <Filter>xyssl</Filter>
+    </ClCompile>
+    <ClCompile Include="xyssl\havege.c">
+      <Filter>xyssl</Filter>
+    </ClCompile>
+    <ClCompile Include="xyssl\md2.c">
+      <Filter>xyssl</Filter>
+    </ClCompile>
+    <ClCompile Include="xyssl\md4.c">
+      <Filter>xyssl</Filter>
+    </ClCompile>
+    <ClCompile Include="xyssl\md5.c">
+      <Filter>xyssl</Filter>
+    </ClCompile>
+    <ClCompile Include="xyssl\net.c">
+      <Filter>xyssl</Filter>
+    </ClCompile>
+    <ClCompile Include="xyssl\padlock.c">
+      <Filter>xyssl</Filter>
+    </ClCompile>
+    <ClCompile Include="xyssl\rsa.c">
+      <Filter>xyssl</Filter>
+    </ClCompile>
+    <ClCompile Include="xyssl\sha1.c">
+      <Filter>xyssl</Filter>
+    </ClCompile>
+    <ClCompile Include="xyssl\sha2.c">
+      <Filter>xyssl</Filter>
+    </ClCompile>
+    <ClCompile Include="xyssl\sha4.c">
+      <Filter>xyssl</Filter>
+    </ClCompile>
+    <ClCompile Include="xyssl\ssl_cli.c">
+      <Filter>xyssl</Filter>
+    </ClCompile>
+    <ClCompile Include="xyssl\ssl_srv.c">
+      <Filter>xyssl</Filter>
+    </ClCompile>
+    <ClCompile Include="xyssl\ssl_tls.c">
+      <Filter>xyssl</Filter>
+    </ClCompile>
+    <ClCompile Include="xyssl\timing.c">
+      <Filter>xyssl</Filter>
+    </ClCompile>
+    <ClCompile Include="xyssl\x509parse.c">
+      <Filter>xyssl</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="base.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="console.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="datatree.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="debugoutput.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ecc.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="filemanage.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="function.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="gdi.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="gzip.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="img.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="io.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="json.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\jubase.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="kernel.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="key.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="list.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="macro.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="mem.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="msgloop.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="precitimer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="proc.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="registry.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="res.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="struct.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="sys.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="text.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="user.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="web.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="WinHttp.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="xyssl.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="zlib\crc32.h">
+      <Filter>zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="zlib\deflate.h">
+      <Filter>zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="zlib\inffast.h">
+      <Filter>zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="zlib\inffixed.h">
+      <Filter>zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="zlib\inflate.h">
+      <Filter>zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="zlib\inftrees.h">
+      <Filter>zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="zlib\trees.h">
+      <Filter>zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="zlib\zconf.h">
+      <Filter>zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="zlib\zlib.h">
+      <Filter>zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="zlib\zutil.h">
+      <Filter>zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="xyssl\aes.h">
+      <Filter>xyssl</Filter>
+    </ClInclude>
+    <ClInclude Include="xyssl\arc4.h">
+      <Filter>xyssl</Filter>
+    </ClInclude>
+    <ClInclude Include="xyssl\base64.h">
+      <Filter>xyssl</Filter>
+    </ClInclude>
+    <ClInclude Include="xyssl\bignum.h">
+      <Filter>xyssl</Filter>
+    </ClInclude>
+    <ClInclude Include="xyssl\bn_mul.h">
+      <Filter>xyssl</Filter>
+    </ClInclude>
+    <ClInclude Include="xyssl\certs.h">
+      <Filter>xyssl</Filter>
+    </ClInclude>
+    <ClInclude Include="xyssl\config.h">
+      <Filter>xyssl</Filter>
+    </ClInclude>
+    <ClInclude Include="xyssl\debug.h">
+      <Filter>xyssl</Filter>
+    </ClInclude>
+    <ClInclude Include="xyssl\des.h">
+      <Filter>xyssl</Filter>
+    </ClInclude>
+    <ClInclude Include="xyssl\dhm.h">
+      <Filter>xyssl</Filter>
+    </ClInclude>
+    <ClInclude Include="xyssl\havege.h">
+      <Filter>xyssl</Filter>
+    </ClInclude>
+    <ClInclude Include="xyssl\md2.h">
+      <Filter>xyssl</Filter>
+    </ClInclude>
+    <ClInclude Include="xyssl\md4.h">
+      <Filter>xyssl</Filter>
+    </ClInclude>
+    <ClInclude Include="xyssl\md5.h">
+      <Filter>xyssl</Filter>
+    </ClInclude>
+    <ClInclude Include="xyssl\net.h">
+      <Filter>xyssl</Filter>
+    </ClInclude>
+    <ClInclude Include="xyssl\openssl.h">
+      <Filter>xyssl</Filter>
+    </ClInclude>
+    <ClInclude Include="xyssl\padlock.h">
+      <Filter>xyssl</Filter>
+    </ClInclude>
+    <ClInclude Include="xyssl\rsa.h">
+      <Filter>xyssl</Filter>
+    </ClInclude>
+    <ClInclude Include="xyssl\sha1.h">
+      <Filter>xyssl</Filter>
+    </ClInclude>
+    <ClInclude Include="xyssl\sha2.h">
+      <Filter>xyssl</Filter>
+    </ClInclude>
+    <ClInclude Include="xyssl\sha4.h">
+      <Filter>xyssl</Filter>
+    </ClInclude>
+    <ClInclude Include="xyssl\ssl.h">
+      <Filter>xyssl</Filter>
+    </ClInclude>
+    <ClInclude Include="xyssl\timing.h">
+      <Filter>xyssl</Filter>
+    </ClInclude>
+    <ClInclude Include="xyssl\x509.h">
+      <Filter>xyssl</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+</Project>

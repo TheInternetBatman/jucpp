@@ -347,7 +347,7 @@ namespace ju{
 		WIN32_FIND_DATA wfd;
 		HANDLE hFind = FindFirstFile(sp,&wfd);
 		if(hFind==INVALID_HANDLE_VALUE){
-			if(!OnComplete.IsNull()) OnComplete(extra,0);
+			//if(!OnComplete.IsNull()) OnComplete(extra,0);
 			return 0;
 		}
 		int find = 1;
@@ -428,36 +428,59 @@ namespace ju{
 		_name = name;
 		return FPToFullPath(_name);
 	}
+	inline bool ftneq(FILETIME& ft1, FILETIME& ft2) {
+		return *(uint64*)&ft1 != *(uint64*)&ft2;
+	}
+	inline bool fteq(FILETIME& ft1, FILETIME& ft2) {
+		return *(uint64*)&ft1 == *(uint64*)&ft2;
+	}
+	typedef struct MFT {
+		FILETIME ct,wt;
+		inline bool operator == (MFT& mft) {
+			return fteq(ct, mft.ct) && fteq(wt,mft.wt);
+		}
+		inline bool operator != (MFT& mft) {
+			return ftneq(ct, mft.ct) || ftneq(wt, mft.wt);
+		}
+		inline bool GetTime(HANDLE file) {
+			return 0!=::GetFileTime(file,&ct,0,&wt);
+		}
+		inline bool SetTime(HANDLE file) {
+			return 0 != ::SetFileTime(file, &ct, 0, &wt);
+		}
+	}MFT, *LPMFT;
 	HRESULT FileSystem::Copy(LPCWSTR newName,bool check){
 		String fp = newName;
 		if(!FPToFullPath(fp)) return FS_OPEN_DEST_FAILED;
 		if(FPIsSame(_name,newName)) return FS_SAME_NAME;
 		FPToParent(fp);
 		if(!CreateFolder(fp)) return FS_OPEN_DEST_FAILED;
-		uint unit = 0x100000;
 		FileStream sfm,dfm;
 		if(!sfm.Create(_name,OPEN_EXISTING,FILE_SHARE_READ|FILE_SHARE_WRITE,GENERIC_READ)) return FS_OPEN_SOURCE_FAILED;
 		if(!dfm.Create(newName,OPEN_ALWAYS,FILE_SHARE_READ|FILE_SHARE_WRITE,GENERIC_READ|GENERIC_WRITE)) return FS_OPEN_DEST_FAILED;
-		FILETIME sft,dft;
-		while(check){
-			if(sfm.GetLength()!=dfm.GetLength()) break;
-			::GetFileTime(sfm.Handle(),0,0,&sft);
-			::GetFileTime(dfm.Handle(),0,0,&dft);
-			if((sft.dwHighDateTime!=dft.dwHighDateTime)||(sft.dwLowDateTime!=dft.dwLowDateTime)) break;
+		uint64 u = sfm.GetLength()/10;
+		uint unit = (uint)(u<0x1000000 ? u : 0x1000000);
+		if(unit<0x100000) unit = 0x100000;
+		MFT st,dt;
+		if(!dt.GetTime(dfm.Handle())) return FS_OPEN_DEST_FAILED;
+		if(!st.GetTime(sfm.Handle())) return FS_OPEN_SOURCE_FAILED;
+		uint64 sLength = sfm.GetLength();
+		uint64 dLength = dfm.GetLength();
+		while(check) {
+			if(sLength!=dLength) break;
+			if(st!=dt) break;
 			return FS_FILE_COPYED;
 		}
-		uint64 length = sfm.GetLength();
 		uint64 offset = 0;
 		Memory<char> buf;
 		buf.SetLength(unit);
 		uchar inf[24];
 		while(dfm.GetLength()==(sfm.GetLength()+24)){
-			if(!::GetFileTime(sfm.Handle(),0,0,&sft)) break;
-			dfm.SetPointer(length);
+			dfm.SetPointer(sLength);
 			dfm.Read(inf,24);
-			if(memcmp(&sft,inf,16)!=0) break;
-			memcpy(&offset,inf+16,8);
-			if(offset>=length){
+			if(memcmp(&st, inf, sizeof(st)) != 0) break;
+			memcpy(&offset,inf+sizeof(st),8);
+			if(offset>=sLength){
 				offset = 0;
 				break;
 			}
@@ -467,7 +490,7 @@ namespace ju{
 			}
 			break;
 		}
-		uint64 left = length - offset;
+		uint64 left = sLength - offset;
 		while(1){
 			uint len;
 			if(left>unit)
@@ -481,21 +504,24 @@ namespace ju{
 			offset += len;
 			left -= len;
 			bool stop = 0;
-			if(!OnProgress.IsNull()) OnProgress(offset,length,stop,UserData);
+			if(!OnProgress.IsNull()) OnProgress(offset,sLength,stop,UserData);
 			if(left==0){
-				dfm.SetLength(length);
+				dfm.SetLength(sLength);
 				if(check){
-					::SetFileTime(dfm,0,0,&sft);
+					dfm.Close();
+					dfm.Create(newName, OPEN_ALWAYS, FILE_SHARE_READ | FILE_SHARE_WRITE, GENERIC_READ | GENERIC_WRITE);
+					//源文件时间设置给目的文件。
+					st.SetTime(dfm);
 				}
 				return FS_OK;
 			}
 			if(stop){
-				dfm.SetPointer(length);
-				if(!::GetFileTime(sfm.Handle(),0,0,&sft)) break;
-				memcpy(inf,&sft,16);
-				memcpy(inf+16,&offset,8);
+				dfm.SetPointer(sLength);
+				//源文件时间和当前位置写入后24字节
+				memcpy(inf,&st,sizeof(st));
+				memcpy(inf + sizeof(st), &offset, 8);
 				dfm.Write(inf,24);
-				dfm.SetLength(length+24);
+				dfm.SetLength(sLength+24);
 				return FS_COPY_PAUSE;
 			}
 		}

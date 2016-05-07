@@ -132,7 +132,12 @@ namespace ju{
 		//wchar_t tp[256];
 		//这样也不行。
 		//WcsCopy(tp,type);
+		//2016-1-13: 可能是因为内存对齐的原因
 		String tp = type;
+		if(tp.Length()<1) return 0;
+		if(tp[0] != '.') {
+			tp.Insert('.',0);
+		}
 		if(!GetImageEncoderClsid(tp,&clsid)) return 0;
 
 		if(quality>100) quality = 100;

@@ -1,7 +1,10 @@
 #pragma once
 #pragma comment(lib,"Ws2_32.lib")
 #pragma comment(lib,"Urlmon.lib")
-namespace ju{
+
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
+
+namespace ju {
 	//把字串处理成UTF8编码，的字串表示。
 	JUBASE_API void EncodeURI(String& str,DWORD codePage = CP_UTF8);
 	//把UTF8编码的字串还原。
@@ -257,7 +260,7 @@ namespace ju{
 	public:
 		//当客户端有链接请求时做出响应的回调函数。
 		Function<void,SOCKET> OnAccept;
-
+		Function<void> OnClose;
 		~TCPServer();
 		//返回绑定的 Socket 指针。
 		Socket* GetSocket(){return &_Handle;}

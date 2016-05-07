@@ -1,6 +1,8 @@
 //这个文件是外部程序引用库的头文件
 #pragma once
 
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
+
 #include "jubase/macro.h"
 #include "jubase/base.h"
 #include "jubase/struct.h"

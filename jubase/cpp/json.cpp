@@ -844,7 +844,7 @@ namespace ju{
 		Memory<byte> buf;
 		if(!ToBytes(buf)) return 0;
 		File file;
-		if(!file.Create(fn,OPEN_EXISTING)) return 0;
+		if(!file.Create(fn,OPEN_ALWAYS)) return 0;
 		file.SetLength(0);
 		return file.Write(&buf);
 	}

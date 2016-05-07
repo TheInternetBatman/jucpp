@@ -198,12 +198,12 @@ namespace ju{
 	TCPServer::~TCPServer()
 	{
 		_Handle.Close();
-		_thread.Wait();
+		//_thread.Wait();
 	}
 	void TCPServer::Close(){
 		_Handle.Close();
-		_thread.Wait();
-		_thread.Close();
+		//_thread.Wait();
+		//_thread.Close();
 	}
 	HRESULT TCPServer::Startup(ushort port,IP ip){
 		if(!_Handle.Create()) return 0;
@@ -252,8 +252,9 @@ namespace ju{
 			if((cs==-1)||(cs==0)){
 				break;
 			}
-			OnAccept(cs);
+			if(!OnAccept.IsNull()) OnAccept(cs);
 		}
+		if(!OnClose.IsNull()) OnClose();
 	}
 
 	/*

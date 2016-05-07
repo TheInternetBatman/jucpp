@@ -160,6 +160,79 @@ namespace ju{
 		//返回颜色.
 		COLORREF GetColor();
 	};
+	class DCBrush : public HandleType<HBRUSH>{
+	protected:
+		HDC _hdc;
+	public:
+		DCBrush():_hdc(0){}
+		~DCBrush(){
+			Release();
+		}
+		void Release(){
+			if(!_hdc) return;
+			if(_Handle){
+				_Handle = (HBRUSH)::SelectObject(_hdc,_Handle);
+				_Handle = NULL;
+			}
+			_hdc = NULL;
+		}
+		DCBrush(HDC hdc){
+			_hdc = hdc;
+			_Handle = (HBRUSH)::GetStockObject(DC_BRUSH);
+			_Handle = (HBRUSH)::SelectObject(_hdc,_Handle);
+		}
+		DCBrush(HDC hdc,COLORREF color){
+			if(hdc==NULL) return;
+			_hdc = hdc;
+			_Handle = (HBRUSH)::GetStockObject(DC_BRUSH);
+			_Handle = (HBRUSH)::SelectObject(_hdc,_Handle);
+			::SetDCBrushColor(_hdc,color);
+		}
+		COLORREF SetColor(COLORREF color){
+			return ::SetDCBrushColor(_hdc,color);
+		}
+		COLORREF GetColor(){
+			return ::GetDCBrushColor(_hdc);
+		}
+		HDC GetDC(){return _hdc;}
+	};
+	class DCPen : public HandleType<HPEN>{
+	protected:
+		HDC _hdc;
+	public:
+		DCPen():_hdc(0){}
+		~DCPen(){
+			Release();
+		}
+		void Release(){
+			if(!_hdc) return;
+			if(_Handle){
+				_Handle = (HPEN)::SelectObject(_hdc,_Handle);
+				_Handle = NULL;
+			}
+			_hdc = NULL;
+		}
+		DCPen(HDC hdc){
+			if(hdc==NULL) return;
+			_hdc = hdc;
+			_Handle = (HPEN)::GetStockObject(DC_PEN);
+			_Handle = (HPEN)::SelectObject(_hdc,_Handle);
+		}
+		DCPen(HDC hdc,COLORREF color){
+			if(hdc==NULL) return;
+			_hdc = hdc;
+			_Handle = (HPEN)::GetStockObject(DC_PEN);
+			_Handle = (HPEN)::SelectObject(_hdc,_Handle);
+			::SetDCPenColor(_hdc,color);
+		}
+		COLORREF SetColor(COLORREF color){
+			return ::SetDCPenColor(_hdc,color);
+		}
+		COLORREF GetColor(){
+			return ::GetDCPenColor(_hdc);
+		}
+		HDC GetDC(){return _hdc;}
+	};
 	//Font的具体参数可以从LogFont()返回的指针来操作.如果没有调用Create函数,实际上并没有字体资源生成
 	//这个类此时仍可以做为一个LOGFONT结构使用,很多字体的操作实际上只要求对LOGFONT进行,而无须生成字体.
 	class JUBASE_API Font : public GdiObject<HFONT>{

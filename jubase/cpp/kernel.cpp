@@ -90,6 +90,7 @@ namespace ju{
 	}
 	void Event::Close(){
 		if(!_Handle) return;
+		::SetEvent(_Handle);
 		::CloseHandle(_Handle);
 		_Handle = 0;
 	}

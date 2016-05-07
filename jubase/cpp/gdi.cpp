@@ -206,8 +206,10 @@ namespace ju{
 	}
 	bool Bitmap::Resize(int cx,int cy){
 		if(!_Handle) return 0;
-		Twin size(cx,cy),_Size = Size();
-		if(_Size==size) return 1;
+		Twin _Size = Size();
+		if(cx<=0) cx = _Size.x;
+		if(cy<=0) cy = _Size.y;
+		if(cx == _Size.x&&cy==_Size.y) return 1;
 		//create a new bitmap and dc.
 		HDC sdc = ::GetDC(NULL);
 		HDC hdc = ::CreateCompatibleDC(0);

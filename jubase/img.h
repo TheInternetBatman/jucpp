@@ -4,7 +4,7 @@ namespace ju{
 	//ImageItem ÊÇ Gdiplus µÄ PropertyItem Àà.	
 	class ImageItem{
 	public:
-		PROPID  id;                 // ID of this property
+		ULONG  id;                 // ID of this property
 		ULONG   length;             // Length of the property value, in bytes
 		WORD    type;               // Type of the value, as one of TAG_TYPE_XXX
 		VOID*   value;              // property value

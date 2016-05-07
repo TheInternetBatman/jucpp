@@ -43,6 +43,7 @@ namespace ju{
 		uint Finish(void* digest);
 		static uint GetDigest(void* digest,const void* data,uint len,SHA_BITS bits = sha_160);
 		static uint GetFileDigest(void* digest,LPCWSTR fn,SHA_BITS bits = sha_160);
+		static uint GetFileDigest(void* digest, LPCSTR fn, SHA_BITS bits = sha_160);
 	};
 	class JUBASE_API ShaHmac : public _class{
 	protected:
@@ -68,6 +69,9 @@ namespace ju{
 	protected:
 		void* _aes_ctx;
 		char _iv[16];
+		unsigned char _key[32];
+		int _iv_offset;
+		int _bits;
 	public:
 		Aes();
 		~Aes();
@@ -82,8 +86,8 @@ namespace ju{
 		不足对应类型密码的长度，会用 0 在末尾补足，如果大于指定的长度，多余的字节会被舍弃。
 		当 keylen 小于等于 0 时，userkey 被看成字串，可用长度就是字串的长度。
 		@text 函数没有返回值。*/
-		void SetEncKey(const void* userkey,int keylen = 0,AES_BITS keytype = aes_128);
-		void SetDecKey(const void* userkey,int keylen = 0,AES_BITS keytype = aes_128);
+		void SetKey(const void* userkey,int keylen = 0,AES_BITS keytype = aes_128);
+		void SetMode(bool encrypt);
 		/*@function Encrypt(const void* in16,void* out16)
 		@text 加密数据，加密是以16字节为单位的，输入和输出缓存都不能小于16字节，
 		输入和输出字节数是相同的。
@@ -111,8 +115,8 @@ namespace ju{
 		//cbc 模式支持16字节一组的流式处理方式，解密是向量 iv 必须初始化为和加密时相同。
 		//cbc 解密可以随便选2个相邻的密文块，解密之后，后一个块是正确的原文。
 		void DecryptCbc(void* output,const void* input,int len);
-		void EncryptCfb(void* output,const void* input,int len,void* iv16,int* ivoffset);
-		void DecryptCfb(void* output,const void* input,int len,void* iv16,int* ivoffset);
+		void EncryptCfb(void* output,const void* input,int len);
+		void DecryptCfb(void* output,const void* input,int len);
 		/*@function void Encrypt(const void* input,int len,void* output)
 		@text 加密指定长度的数据，输入可以是任意长度，但是输出总是16字节整数倍。
 		比如加密长度是17字节，输出就需要32字节的空间。

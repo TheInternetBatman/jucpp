@@ -1,0 +1,222 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{747D10D7-6348-465E-92A3-9FDFF35D36F1}</ProjectGuid>
+    <RootNamespace>concise</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>12.0.30501.0</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;JUBASE_EXPORTS;JUBASE_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Lib>
+      <OutputFile>../lib/$(ProjectName).lib</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;JUBASE_EXPORTS;JUBASE_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Lib>
+      <OutputFile>../lib/$(ProjectName)D.lib</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="cpp\base.cpp" />
+    <ClCompile Include="cpp\console.cpp" />
+    <ClCompile Include="cpp\datatree.cpp" />
+    <ClCompile Include="cpp\debugoutput.cpp" />
+    <ClCompile Include="cpp\ecc.cpp" />
+    <ClCompile Include="cpp\filemanage.cpp" />
+    <ClCompile Include="cpp\gdi.cpp" />
+    <ClCompile Include="cpp\gzip.cpp" />
+    <ClCompile Include="cpp\img.cpp" />
+    <ClCompile Include="cpp\io.cpp" />
+    <ClCompile Include="cpp\json.cpp" />
+    <ClCompile Include="cpp\kernel.cpp" />
+    <ClCompile Include="cpp\key.cpp" />
+    <ClCompile Include="cpp\mem.cpp" />
+    <ClCompile Include="cpp\msgloop.cpp" />
+    <ClCompile Include="cpp\precitimer.cpp" />
+    <ClCompile Include="cpp\proc.cpp" />
+    <ClCompile Include="cpp\registry.cpp" />
+    <ClCompile Include="cpp\res.cpp" />
+    <ClCompile Include="cpp\text.cpp" />
+    <ClCompile Include="cpp\user.cpp" />
+    <ClCompile Include="cpp\web.cpp" />
+    <ClCompile Include="cpp\WinHttp.cpp" />
+    <ClCompile Include="cpp\xyssl.cpp" />
+    <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="xyssl\aes.c" />
+    <ClCompile Include="xyssl\arc4.c" />
+    <ClCompile Include="xyssl\base64.c" />
+    <ClCompile Include="xyssl\bignum.c" />
+    <ClCompile Include="xyssl\certs.c" />
+    <ClCompile Include="xyssl\debug.c" />
+    <ClCompile Include="xyssl\des.c" />
+    <ClCompile Include="xyssl\dhm.c" />
+    <ClCompile Include="xyssl\havege.c" />
+    <ClCompile Include="xyssl\md2.c" />
+    <ClCompile Include="xyssl\md4.c" />
+    <ClCompile Include="xyssl\md5.c" />
+    <ClCompile Include="xyssl\net.c" />
+    <ClCompile Include="xyssl\padlock.c" />
+    <ClCompile Include="xyssl\rsa.c" />
+    <ClCompile Include="xyssl\sha1.c" />
+    <ClCompile Include="xyssl\sha2.c" />
+    <ClCompile Include="xyssl\sha4.c" />
+    <ClCompile Include="xyssl\ssl_cli.c" />
+    <ClCompile Include="xyssl\ssl_srv.c" />
+    <ClCompile Include="xyssl\ssl_tls.c" />
+    <ClCompile Include="xyssl\timing.c" />
+    <ClCompile Include="xyssl\x509parse.c" />
+    <ClCompile Include="zlib\adler32.c" />
+    <ClCompile Include="zlib\compress.c" />
+    <ClCompile Include="zlib\crc32.c" />
+    <ClCompile Include="zlib\deflate.c" />
+    <ClCompile Include="zlib\infback.c" />
+    <ClCompile Include="zlib\inffast.c" />
+    <ClCompile Include="zlib\inflate.c" />
+    <ClCompile Include="zlib\inftrees.c" />
+    <ClCompile Include="zlib\trees.c" />
+    <ClCompile Include="zlib\uncompr.c" />
+    <ClCompile Include="zlib\zutil.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\jubase.h" />
+    <ClInclude Include="base.h" />
+    <ClInclude Include="console.h" />
+    <ClInclude Include="datatree.h" />
+    <ClInclude Include="debugoutput.h" />
+    <ClInclude Include="ecc.h" />
+    <ClInclude Include="filemanage.h" />
+    <ClInclude Include="function.h" />
+    <ClInclude Include="gdi.h" />
+    <ClInclude Include="gzip.h" />
+    <ClInclude Include="img.h" />
+    <ClInclude Include="io.h" />
+    <ClInclude Include="json.h" />
+    <ClInclude Include="kernel.h" />
+    <ClInclude Include="key.h" />
+    <ClInclude Include="list.h" />
+    <ClInclude Include="macro.h" />
+    <ClInclude Include="mem.h" />
+    <ClInclude Include="msgloop.h" />
+    <ClInclude Include="precitimer.h" />
+    <ClInclude Include="proc.h" />
+    <ClInclude Include="registry.h" />
+    <ClInclude Include="res.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="struct.h" />
+    <ClInclude Include="sys.h" />
+    <ClInclude Include="text.h" />
+    <ClInclude Include="user.h" />
+    <ClInclude Include="web.h" />
+    <ClInclude Include="WinHttp.h" />
+    <ClInclude Include="xyssl.h" />
+    <ClInclude Include="xyssl\aes.h" />
+    <ClInclude Include="xyssl\arc4.h" />
+    <ClInclude Include="xyssl\base64.h" />
+    <ClInclude Include="xyssl\bignum.h" />
+    <ClInclude Include="xyssl\bn_mul.h" />
+    <ClInclude Include="xyssl\certs.h" />
+    <ClInclude Include="xyssl\config.h" />
+    <ClInclude Include="xyssl\debug.h" />
+    <ClInclude Include="xyssl\des.h" />
+    <ClInclude Include="xyssl\dhm.h" />
+    <ClInclude Include="xyssl\havege.h" />
+    <ClInclude Include="xyssl\md2.h" />
+    <ClInclude Include="xyssl\md4.h" />
+    <ClInclude Include="xyssl\md5.h" />
+    <ClInclude Include="xyssl\net.h" />
+    <ClInclude Include="xyssl\openssl.h" />
+    <ClInclude Include="xyssl\padlock.h" />
+    <ClInclude Include="xyssl\rsa.h" />
+    <ClInclude Include="xyssl\sha1.h" />
+    <ClInclude Include="xyssl\sha2.h" />
+    <ClInclude Include="xyssl\sha4.h" />
+    <ClInclude Include="xyssl\ssl.h" />
+    <ClInclude Include="xyssl\timing.h" />
+    <ClInclude Include="xyssl\x509.h" />
+    <ClInclude Include="zlib\crc32.h" />
+    <ClInclude Include="zlib\deflate.h" />
+    <ClInclude Include="zlib\inffast.h" />
+    <ClInclude Include="zlib\inffixed.h" />
+    <ClInclude Include="zlib\inflate.h" />
+    <ClInclude Include="zlib\inftrees.h" />
+    <ClInclude Include="zlib\trees.h" />
+    <ClInclude Include="zlib\zconf.h" />
+    <ClInclude Include="zlib\zlib.h" />
+    <ClInclude Include="zlib\zutil.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\cryptlib\cryptlib.vcxproj">
+      <Project>{3423ec9a-52e4-4a4d-9753-edebc38785ef}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

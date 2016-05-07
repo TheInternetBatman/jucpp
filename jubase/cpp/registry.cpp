@@ -308,9 +308,8 @@ namespace ju{
 	}
 
 
-	bool CodePage::Create(){
+	CodePage::CodePage() {
 		reg.Create(L"SOFTWARE\\Classes\\MIME\\Database\\Charset",HKEY_LOCAL_MACHINE);
-		return !reg.IsNull();
 	}
 	//返回注册表中全部的 CodePage 名称，这些名称有些是别称，对应的 CodePage 值可以重复。
 	int CodePage::GetAllCodePage(StringMemList* sml){
@@ -332,9 +331,6 @@ namespace ju{
 		}
 		return code;
 	}
-	bool CodePage::Close(){
-		return reg.Close();
-	}
 	DWORD GetCodePage(LPCWSTR name){
 		static StringList nameList;
 		static IntegerList<DWORD> codeList;
@@ -354,7 +350,6 @@ namespace ju{
 		int index = nameList.IndexOf(codeName);
 		if(index!=-1) return codeList[index];
 		CodePage cp;
-		cp.Create();
 		DWORD code = cp.GetCode(codeName);
 		if(code==0) return CP_THREAD_ACP;
 		nameList.Add(codeName);

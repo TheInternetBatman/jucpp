@@ -46,12 +46,14 @@ namespace ju{
 		//从资源加载菜单,0表示从当前应用程序实例加载.
 		bool Load(ResID rMenu);
 		//如果菜单已经设为一个窗口的菜单,这个操作会失败,也就是说,不能销毁一个绑定到窗口的菜单.而窗口在销毁时会自动清除菜单资源.
+		//也不能销毁一个子菜单，子菜单需要使用父菜单的DeleteItem删除。
 		void Destroy();
 		//捆绑一个菜单
 		void Attach(HMENU hMenu);
 		HMENU Detach(){return HandleType::Detach();}
 		//uPos是添加的位置,当由ID索引时,uPos可以是菜单的任意级子菜单的ID,表示插入到这个
 		//菜单项的前面.当由位置索引时,插入菜单项只能是当前菜单的子项,成功插入菜单后,它的位置索引就是uPos.
+		//设置图标应该设置 ImageList 为有效的 BitmapList。
 		HMENU AddSubMenu(UINT uPos,LPCWSTR text,HMENU sub = NULL,HBITMAP image = 0,bool byPos = true);
 		//添加一个菜单分隔线(它本质上也是一个菜单项,但仅仅起一个分隔作用,不具备菜单的其它功能).
 		bool AddSplit(UINT uPos,bool byPos = true);

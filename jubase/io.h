@@ -2,7 +2,7 @@
 namespace ju{
 	//判断一个路径的类型,0：路径不存在，1：是一个文件，2：是一个文件夹。
 	JUBASE_API int GetFileType(LPCWSTR file);
-	inline boolean FileExist(LPCWSTR file){return GetFileType(file)!=0;}
+	inline bool FileExist(LPCWSTR file){return GetFileType(file)!=0;}
 	//对应非法的目录名称，系统的 GetFileAttributes 可能返回一个错误的值。这个函数添加了检测目录合法性。
 	JUBASE_API DWORD GetFileAttributes(LPCWSTR path);
 	//生成一个文件夹，file=1表示path是一个文件，生成它的文件夹，否则，path是文件夹的的路径。

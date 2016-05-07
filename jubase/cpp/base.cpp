@@ -57,15 +57,16 @@ namespace ju{
 		initExecMem(execMemSize);
 	}
 	void* SYSAlloc(int size){
-		return ::HeapAlloc(GetProcessHeap(),0,size);
+		return malloc(size);//::HeapAlloc(GetProcessHeap(),0,size);
 	}
 	bool SYSFree(void* p){
-		if(p) return ::HeapFree(GetProcessHeap(),0,p)!=0;
-		else return false;
+		if(p) free(p);//::HeapFree(GetProcessHeap(),0,p)!=0;
+		return true;
+		//else return false;
 	}
 	void* SYSRealloc(void* p,int size){
-		if(p) return ::HeapReAlloc(GetProcessHeap(),0,p,size);
-		else return ::HeapAlloc(GetProcessHeap(),0,size);
+		if(p) return realloc(p,size);//::HeapReAlloc(GetProcessHeap(),0,p,size);
+		else return malloc(size);//::HeapAlloc(GetProcessHeap(),0,size);
 	}
 	int SYSSize(void* p){
 		if(p) return (int)::HeapSize(GetProcessHeap(),0,p);

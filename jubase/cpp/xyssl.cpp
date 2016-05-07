@@ -164,7 +164,25 @@ namespace ju{
 		} 
 		return rst?0:bits;
 	}
-	ShaHmac::ShaHmac(SHA_BITS bits){
+	uint Sha::GetFileDigest(void* digest, LPCSTR fn, SHA_BITS bits) {
+		int rst;
+		if(bits == sha_160) {
+			rst = sha1_file((char*)fn, (byte*)digest);
+		} else if(bits == sha_224) {
+			rst = sha2_file((char*)fn, (byte*)digest, 1);
+		} else if(bits == sha_256) {
+			rst = sha2_file((char*)fn, (byte*)digest, 0);
+		} else if(bits == sha_384) {
+			rst = sha4_file((char*)fn, (byte*)digest, 1);
+		} else if(bits == sha_512) {
+			rst = sha4_file((char*)fn, (byte*)digest, 0);
+		} else {
+			_ASSERT(0);
+			return 0;
+		}
+		return rst ? 0 : bits;
+	}
+	ShaHmac::ShaHmac(SHA_BITS bits) {
 		_bits = bits;
 		if(_bits==sha_160){
 			_sha_ctx = new sha1_context;
@@ -245,49 +263,39 @@ namespace ju{
 		return bits;
 	}
 #define aes_ctx (aes_context*)_aes_ctx
-	Aes::Aes(){
+	Aes::Aes():_iv_offset(0){
 		_aes_ctx = new aes_context;
 		::ZeroMemory(_iv,sizeof(_iv));
+		::ZeroMemory(_key, sizeof(_key));
+		_bits = aes_128;
 	}
 	Aes::~Aes(){
 		delete aes_ctx;
 	}
-	void _setAesKey(aes_context* ctx,const void* userkey,int len,AES_BITS key_type,bool encrypt){
-		int keysize,bytes;
-		if(key_type==aes_128){
-			keysize = 128;
-		}else if(key_type==aes_192){
-			keysize = 192;
-		}else if(key_type==aes_256){
-			keysize = 256;
-		}else{
-			return;
+	void Aes::SetKey(const void* userkey,int len,AES_BITS key_type){
+		_bits = key_type;
+		if(key_type != aes_128&&key_type != aes_192&&key_type != aes_256) {
+			_bits = aes_128;
 		}
-		bytes = keysize/8;
-		if(len<=0){
+		if(len <= 0) {
 			len = strlen((const char*)userkey);
 		}
-		if(len>bytes) len = bytes;
-		uchar key[32];
-		memcpy(key,userkey,len);
-		memset(key+len,0,bytes-len);
-
+		len = len<_bits ? len : _bits;
+		memcpy(_key,userkey,len);
+		memset(_key+len,0,32-len);
+	}
+	void Aes::SetMode(bool encrypt){
 		if(encrypt)
-			aes_setkey_enc(ctx,key,keysize);//16,24,32
+			aes_setkey_enc(aes_ctx, _key, _bits*8);//16,24,32
 		else
-			aes_setkey_dec(ctx,key,keysize);//16,24,32
-	}
-	void Aes::SetEncKey(const void* userkey,int len,AES_BITS key_type){
-		_setAesKey(aes_ctx,userkey,len,key_type,true);
-	}
-	void Aes::SetDecKey(const void* userkey,int len,AES_BITS key_type){
-		_setAesKey(aes_ctx,userkey,len,key_type,false);
+			aes_setkey_dec(aes_ctx, _key, _bits*8);//16,24,32
 	}
 	void Aes::SetIV(const void* iv16,int len){
 		if(iv16==NULL) len = 0;
 		if((uint)len>16) len = 16;
 		memcpy(_iv,iv16,len);
 		memset(_iv+len,0,16-len);
+		_iv_offset = 0;
 	}
 
 	//加密数据，加密是以16字节为单位的，输入和输出缓存都不能小于16字节，输入和输出字节数是相同的。
@@ -382,11 +390,11 @@ namespace ju{
 	void Aes::DecryptCbc(void* output,const void* input,int len){
 		aes_crypt_cbc(aes_ctx,AES_DECRYPT,len,(byte*)_iv,(byte*)input,(byte*)output);
 	}
-	void Aes::EncryptCfb(void* output,const void* input,int len,void* iv16,int* ivoffset){
-		aes_crypt_cfb(aes_ctx,AES_ENCRYPT,len,ivoffset,(byte*)iv16,(byte*)input,(byte*)output);
+	void Aes::EncryptCfb(void* output,const void* input,int len){
+		aes_crypt_cfb(aes_ctx,AES_ENCRYPT,len,&_iv_offset,(byte*)_iv,(byte*)input,(byte*)output);
 	}
-	void Aes::DecryptCfb(void* output,const void* input,int len,void* iv16,int* ivoffset){
-		aes_crypt_cfb(aes_ctx,AES_DECRYPT,len,ivoffset,(byte*)iv16,(byte*)input,(byte*)output);
+	void Aes::DecryptCfb(void* output,const void* input,int len){
+		aes_crypt_cfb(aes_ctx, AES_DECRYPT, len, &_iv_offset, (byte*)_iv, (byte*)input, (byte*)output);
 	}
 	int Base64::Encode(Memory<char>& output,const void* data,int len){
 		int dlen = 0;

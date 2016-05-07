@@ -94,7 +94,7 @@ namespace ju{
 		//返回窗口的区域,对于顶级窗口对应屏幕坐标,对于子窗口,对应父窗口坐标.
 		bool GetRect(Rect& r);		
 		//返回窗口的客户区尺寸.窗户区的左上角坐标一般是(0,0),但也可能不是,如果有边框的话.但它的具体坐标没有一个API函数可以提供.可以使用Window类的成员来获取.
-		bool GetClientSize(Twin16& c);						
+		bool GetClientSize(Twin16& c);
 		//设置大小，不改变位置.
 		inline bool SetSize(int cx,int cy) {return ::SetWindowPos(_Handle,0,0,0,cx,cy,SWP_NOMOVE|SWP_NOZORDER)!=0;}
 		//设置位置，不改变大小
@@ -102,7 +102,7 @@ namespace ju{
 		//设置大小和位置。
 		inline bool SetDimension(int x,int y,int cx,int cy) {return ::MoveWindow(_Handle,x,y,cx,cy,1)!=0;}
 		//移动窗口或调整窗口大小,dx,dy是窗口位置的偏移量,cx,cy是大小的变化量.
-		void Offset(int dx, int dy, int cx, int cy);	
+		void Offset(int dx, int dy, int cx, int cy);
 
 		//取得文本字串的长度，不包括结尾 0 字符。
 		inline int TextLength(){return ::GetWindowTextLength(_Handle);}
@@ -150,7 +150,7 @@ namespace ju{
 	//截获窗口消息的静态函数类型.
 	typedef void (__stdcall*MSGPROC)(Message*); 
 	//Class IWnd 类提供基本的窗口结构，不要实例化这个类。
-	interface JUWND_API IWnd : virtual public WndPtr{//public HandleType<HWND>//
+	struct JUWND_API IWnd : virtual public WndPtr{//public HandleType<HWND>//
 	public:
 		//因为有一个外部函数要调用这个函数,在一般情况下这个函数不必在外部调用,所以用"_"来标识.
 		LRESULT _WndProc(HWND hWnd,UINT uMsg,WPARAM wParam,LPARAM lParam);
