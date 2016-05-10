@@ -34,3 +34,11 @@
 
 #include "jubase/datatree.h"
 #include "jubase/precitimer.h"
+//根据安装目录来更改路径.
+#ifndef CONCISEUI_EXPORTS
+#ifdef _DEBUG
+#pragma comment(lib,"jubaseD.lib")
+#else
+#pragma comment(lib,"jubase.lib")
+#endif
+#endif

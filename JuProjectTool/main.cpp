@@ -8,7 +8,7 @@
 class Main : public ju::Frame{
 protected:
 	ju::GroupBox	gBox;
-	ju::Button		btnOk;
+	ju::Button		btnOk9,btnOk12;
 	ju::Edit		editName;
 	ju::TopLayout	layout;
 	void onCreate(ju::IWnd*){
@@ -24,38 +24,53 @@ protected:
 		editName.Param->Text = L"";
 		editName.Create(_Handle);
 		editLay->SetControl(editName);
-		editLay->SetParam(0,1,20,30,20,20);
+		editLay->SetParam(30,0,20,30,20,20);
 
 		ju::Layout* btnLay = layout.Add();
-		btnOk.Param->Text = L"创建工程";
-		btnOk.Create(_Handle);
-		btnLay->SetControl(btnOk);
-		btnLay->SetParam(0,1,20,0,20,20);
+		btnLay->SetParam(0, 1.0, 0, 0, 0, 0, true);
+
+		ju::Layout* btnLay9 = btnLay->Add();
+		btnOk9.Param->Text = L"创建VS2008工程";
+		btnOk9.Create(_Handle);
+		btnLay9->SetControl(btnOk9);
+		btnLay9->SetParam(0,1,20,0,20,20);
+
+		ju::Layout* btnLay12 = btnLay->Add();
+		btnOk12.Param->Text = L"创建VS2013工程";
+		btnOk12.Create(_Handle);
+		btnLay12->SetControl(btnOk12);
+		btnLay12->SetParam(0, 1, 20, 0, 20, 20);
 	}
 	void onCommand(WORD id,WORD type,ju::IWnd* wnd){
-		if(wnd==&btnOk){//点击了创建按钮
+		if(wnd==&btnOk9||wnd==&btnOk12){//点击了创建按钮
 			ju::LocalString name;
 			editName.GetText(name);
 			if(name.Length()==0){
 				alertError(L"需要输入工程名称");
 				return;
 			}
-			if(createProject(name)){
+			if(createProject(name, wnd == &btnOk9)) {
 				alertOk(L"创建成功");
 				Close();
 			}
 		}
 	}
-	void alertError(LPCWSTR msg){
-		::MessageBox(_Handle,msg,L"Error",MB_ICONERROR);
+	void alert(LPCWSTR fmt,LPCWSTR msg,LPCWSTR title,int icon) {
+		ju::String str;
+		str.Format(fmt, msg);
+		::MessageBox(_Handle, str, L"Error", icon);
 	}
-	void alertOk(LPCWSTR msg){
-		::MessageBox(_Handle,msg,L"Error",MB_ICONINFORMATION);
+	void alertError(LPCWSTR msg,LPCWSTR fmt = L"%s") {
+		alert(fmt, msg, L"Error", MB_ICONERROR);
 	}
-	bool createProject(LPCWSTR name){
+	void alertOk(LPCWSTR msg,LPCWSTR fmt = L"%s"){
+		alert(fmt, msg, L"Error", MB_ICONINFORMATION);
+	}
+	bool createProject(LPCWSTR name,bool proj9){
+		LPCWSTR temp = proj9 ? L"proj_9_temp.xml" : L"proj_12_temp.xml";
 		ju::FileStream fs;
-		if(!fs.OpenExist(L"proj_temp.txt")){
-			alertError(L"没有找到 proj_temp.txt 文件");
+		if(!fs.OpenExist(temp)){
+			alertError(temp,L"没有找到 %s 文件");
 			return false;
 		}
 		ju::String proj;
@@ -63,22 +78,15 @@ protected:
 		fs.Close();
 
 		if(!len){
-			alertError(L"proj_temp.txt 读取失败");
+			alertError(temp,L"%s 读取失败");
 			return false;
 		}
 		ju::String rep = L"{proj}";
-		int pos1 = proj.Find(rep);
-		if(pos1<0){
-			alertError(L"proj_temp.txt 格式错误");
-			return false;
+		int pos = proj.Find(rep);
+		while(pos >= 0) {
+			proj.Replace(name, pos, rep.Length());
+			pos = proj.Find(rep);
 		}
-		int pos2 = proj.Find(rep,pos1+5);
-		if(pos2<0){
-			alertError(L"proj_temp.txt 格式错误");
-			return false;
-		}
-		proj.Replace(name,pos2,rep.Length());
-		proj.Replace(name,pos1,rep.Length());
 
 		ju::String new_proj;
 		new_proj.Format(L"../%s",name);
@@ -87,7 +95,11 @@ protected:
 			return false;
 		}
 		ju::String proj_file;
-		proj_file.Format(L"../%s/%s.vcproj",name,name);
+		if(proj9) {
+			proj_file.Format(L"../%s/%s.vcproj", name, name);
+		} else {
+			proj_file.Format(L"../%s/%s.vcxproj", name, name);
+		}
 		if(!fs.Create(proj_file,CREATE_NEW)){
 			alertError(L"同名工程已经存在，请另外选一个名称或者删除存在的工程文件夹");
 			return false;
