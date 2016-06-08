@@ -124,10 +124,10 @@ namespace ju{
 		int len2 = p2.Length();
 		if(len2<2) return 0;
 		if((p1[len1-1]=='\\')||(p1[len1-1]=='/')){
-			p1.Head(-1);
+			p1.Left(-1);
 		}
 		if((p2[len2-1]=='\\')||(p2[len2-1]=='/')){
-			p2.Head(-1);
+			p2.Left(-1);
 		}
 		if(p1.Length()!=p2.Length()) return 0;
 		for(uint i=0;i<p1.Length();i++){
@@ -153,7 +153,7 @@ namespace ju{
 			int tail = Handle.Length()-1;
 			if(tail>=0){
 				if((Handle[tail]=='/')||(Handle[tail]=='\\')){
-					Handle.Head(-1);
+					Handle.Left(-1);
 				}
 				else break;
 			}
@@ -173,7 +173,7 @@ namespace ju{
 			if(Handle[i]=='.') continue;
 			break;
 		}
-		Handle.Head(i+1);
+		Handle.Left(i+1);
 		i = 0;
 		Handle += L".";
 		while(str[i]=='.') i++;
@@ -192,7 +192,7 @@ namespace ju{
 	void FPToParent(String& Handle){
 		for(int i=Handle.Length()-2;i>=0;i--){
 			if((Handle[i]=='\\')||(Handle[i]=='/')){
-				Handle.Head(i);
+				Handle.Left(i);
 				return;
 			}
 		}
@@ -224,13 +224,13 @@ namespace ju{
 				break;
 			}
 		}
-		Handle.Head(tail);
-		Handle.Tail(i+1);
+		Handle.Left(tail);
+		Handle.Right(i+1);
 	}
 	void FPToFileName(String& Handle){
 		for(int i=Handle.Length()-1;i>=0;i--){
 			if((Handle[i]=='\\')||(Handle[i]=='/')){
-				Handle.Tail(i+1);
+				Handle.Right(i+1);
 				return;
 			}
 		}

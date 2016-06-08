@@ -94,10 +94,10 @@ namespace ju{
 		String str = url;
 		if(WcsIncludeNoCase(url,L"https://")){
 			SetHttpsMode(true);
-			str.Tail(8);
+			str.Right(8);
 		}else if(WcsIncludeNoCase(url,L"http://")){
 			SetHttpsMode(false);
-			str.Tail(7);
+			str.Right(7);
 		}else return 0;
 		int pos = str.Find('/');
 		if(pos==-1){
@@ -106,7 +106,7 @@ namespace ju{
 		}else{
 			Host = L"";
 			Host.CopyFrom(str,pos);
-			str.Tail(pos);
+			str.Right(pos);
 		}
 		Page = str;
 		return 1;

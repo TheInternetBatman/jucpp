@@ -990,37 +990,32 @@ namespace ju{
 		_Handle[_Length] = 0;
 		return slen;
 	}
-	bool String::Tail(int index)
-	{
-		if(index<0)
-		{
-			if((_Length+index)<0) return 0;
-			::RtlMoveMemory(_Handle,_Handle+(_Length+index),-index*2+2);
-			_Length = -index;
-		}
-		else if(index>0)
-		{
-			if(index>(int)_Length) return 0;
-			::RtlMoveMemory(_Handle,_Handle+index,(_Length-index)*2+2);
-			_Length -= index;
-		}
-		return 1;
+	void String::Right(int index){
+		if (_Handle == NULL) return;
+		if (index < 0) index = _Length + index;
+		if (index < 0) index = 0;
+		if (index > (int)_Length) index = _Length;
+		_Length -= index;
+		MoveMemory(_Handle, _Handle + index, _Length*2);
+		_Handle[_Length] = 0;
 	}
-	bool String::Head(int index)
-	{
-		if(index<0)
-		{
-			if(((int)_Length+index)<0) return 0;
-			_Length += index;
-			_Handle[_Length] = 0;
-		}
-		else if(index>0)
-		{
-			if(index>(int)_Length) return 0;
-			_Length = index;
-			_Handle[index] = 0;
-		}
-		return 1;
+	void String::Left(int index){
+		if (_Handle == NULL) return;
+		if (index < 0) index = _Length + index;
+		if (index < 0) index = 0;
+		if (index >(int)_Length) index = _Length;
+		_Length = index;
+		_Handle[_Length] = 0;
+	}
+	void String::Sub(int index, uint length){
+		if (_Handle == NULL) return;
+		if (index < 0) index = _Length + index;
+		if (index < 0) index = 0;
+		if (index >(int)_Length) index = _Length;
+		if (length > _Length - index) length = _Length - index;
+		MoveMemory(_Handle, _Handle + index, length * 2);
+		_Length = length;
+		_Handle[_Length] = 0;
 	}
 	void String::FromInt32(int v,int radix,bool sign){
 		if(_Cubage<32) SetCubage(32);
@@ -1153,20 +1148,20 @@ namespace ju{
 		uint i = 0;
 		for (; i < _Length; i++) {
 			if(_isSpaceChar(_Handle[i])) continue;
-			Tail(i);
+			Right(i);
 			return;
 		}
-		Tail(i);
+		Right(i);
 	}
 	void String::TrimRight(){
 		if(_Length==0) return;
 		int i = _Length - 1;
 		for (; i >= 0; i--) {
 			if(_isSpaceChar(_Handle[i])) continue;
-			Head(i+1);
+			Left(i+1);
 			return;
 		}
-		Head(i+1);
+		Left(i+1);
 	}
 
 	uint String::getUsedMemory(){

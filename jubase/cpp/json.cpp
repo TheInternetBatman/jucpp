@@ -401,7 +401,7 @@ namespace ju{
 					str += tab;
 					str += sub;
 				}
-				tab.Head(-1);
+				tab.Left(-1);
 				if(readStyle)
 					str += L"\r\n";
 			}
@@ -452,7 +452,7 @@ namespace ju{
 					_toString(dic->val,sub,tab,readStyle);
 					str += sub;
 				}
-				tab.Head(-1);
+				tab.Left(-1);
 				if(readStyle)
 					str += L"\r\n";
 			}

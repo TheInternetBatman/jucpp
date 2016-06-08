@@ -126,9 +126,10 @@ namespace ju{
 		//把指定位置的字串(从pos开始,长度为length)替换成ws,pos = -1表示从末尾置换(实际上是插入);length = -1表示从pos至末尾全部置换.返回插入字串的长度.
 		uint Replace(LPCWSTR ws,uint pos = -1,uint length =-1);
 		//截取字串的头部，index是截断的位置，如果为正数或0，则为通常的索引顺序，如果为负数，则末尾索引为0，向前依次为-1，-2，。。。
-		bool Head(int index);
+		void Left(int index);
 		//截取字串的尾部，index是截断的位置，如果为正数或0，则为通常的索引顺序，如果为负数，则末尾索引为0，向前依次为-1，-2，。。。
-		bool Tail(int index);
+		void Right(int index);
+		void Sub(int start, uint length);
 		void operator = (String& wstr);
 		void operator = (LPCWSTR wstr);
 		void operator = (LPCSTR str);

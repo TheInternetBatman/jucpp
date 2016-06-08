@@ -123,7 +123,7 @@ namespace ju{
 		if(WcsLength(name)==0){
 			String fp;
 			GetCurrentExeFileName(fp);
-			fp.Head(-4);
+			fp.Left(-4);
 			FPLinkExt(fp,L"dtf");
 			fileName = fp;
 		}else{

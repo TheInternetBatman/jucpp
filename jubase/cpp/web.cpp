@@ -49,7 +49,7 @@ namespace ju{
 			else
 			{
 				num.Format(L"%X",(uint)buf[i]);
-				num.Tail(-2);
+				num.Right(-2);
 				num.Upper();
 				num.Insert('%',0);
 				str.CopyFrom(num,3,j);
