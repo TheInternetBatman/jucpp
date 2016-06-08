@@ -2,8 +2,6 @@
 #pragma comment(lib,"Ws2_32.lib")
 #pragma comment(lib,"Urlmon.lib")
 
-#define _WINSOCK_DEPRECATED_NO_WARNINGS
-
 namespace ju {
 	//把字串处理成UTF8编码，的字串表示。
 	JUBASE_API void EncodeURI(String& str,DWORD codePage = CP_UTF8);
