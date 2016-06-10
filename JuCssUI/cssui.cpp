@@ -1,33 +1,32 @@
-
+#include "../juwnd.h"
 #include "cssui.h"
 
 namespace ju {
-
-	void DivParam::SetVertical() {
+	void CssLayoutParam::SetVertical() {
 		BitRemove(Style, (int)HORIZONTAL);
 	}
-	void DivParam::SetHorizontal() {
+	void CssLayoutParam::SetHorizontal() {
 		Style |= HORIZONTAL;
 	}
-	void DivParam::Reset() {
+	void CssLayoutParam::Reset() {
 		::ZeroMemory(this, sizeof(*this));
 		Weight = 1;
 	}
-	void DivParam::SetDimen(int length, float weight) {
+	void CssLayoutParam::SetDimen(int length, float weight) {
 		Length = length;
 		Weight = weight;
 	}
-	void DivParam::SetMargin(int left, int top, int right, int bottom) {
+	void CssLayoutParam::SetMargin(int left, int top, int right, int bottom) {
 		Margin.SetValue(left, top, right, bottom);
 	}
-	void DivParam::SetParam(int length, float weight, int left, int top, int right, int bottom, bool hor) {
+	void CssLayoutParam::SetParam(int length, float weight, int left, int top, int right, int bottom, bool hor) {
 		if(hor) Style |= HORIZONTAL;
 		else BitRemove(Style, (int)HORIZONTAL);
 		Length = length;
 		Weight = weight;
 		Margin.SetValue(left, top, right, bottom);
 	}
-	DivParam::DivParam() {
+	CssLayoutParam::CssLayoutParam() {
 		::ZeroMemory(this, sizeof(*this));
 		Weight = 1;
 	}
@@ -36,14 +35,14 @@ namespace ju {
 		return ((weight<0.0001f) && (weight>-0.0001f));
 	}
 	//
-	Div::Div() {
+	CssLayout::CssLayout() {
 	}
-	Div::~Div() {
+	CssLayout::~CssLayout() {
 	}
-	void Div::SetParam(int length, float weight, int left, int top, int right, int bottom, bool hor) {
+	void CssLayout::SetParam(int length, float weight, int left, int top, int right, int bottom, bool hor) {
 		Param.SetParam(length, weight, left, top, right, bottom, hor);
 	}
-	Twin Div::_calcMinSize(Div* lay, bool parentHor) {
+	Twin CssLayout::_calcMinSize(CssLayout* lay, bool parentHor) {
 		Twin sz(0, 0);
 		if(parentHor) {
 			sz.x = lay->Param.Length;
@@ -52,7 +51,7 @@ namespace ju {
 		}
 		Twin ms(0, 0);
 		for(uint i = 0; i<lay->_childs.Count(); i++) {
-			Div& child = lay->_childs[i];
+			CssLayout& child = lay->_childs[i];
 			Twin childSz = _calcMinSize(&child, lay->Param.IsHorizontal());
 			ms.x += childSz.x;
 			ms.y += childSz.y;
@@ -64,21 +63,30 @@ namespace ju {
 		sz.y += lay->Param.Margin.top + lay->Param.Margin.bottom;
 		return sz;
 	}
-	void Div::_setRect(int left, int top, int width, int height) {
+	void CssLayout::_setRect(int left, int top, int width, int height) {
 		_location.x = (short)left;
 		_location.y = (short)top;
 		_size.x = (short)width;
 		_size.y = (short)height;
-		if(Param.Style&DivParam::HORIZONTAL)
+		if(_wnd) {
+			_wnd.SetLocation(left, top);
+			_wnd.SetSize(width, height);
+		}
+		if(Param.Style&CssLayoutParam::HORIZONTAL)
 			_setChildHor(left, top, width, height);
 		else
 			_setChildVer(left, top, width, height);
 	}
-	bool Div::PtInDiv(int x, int y) {
+	void CssLayout::SetControl(HWND ctrl) {
+		_wnd = ctrl;
+		_wnd.SetLocation(_location.x, _location.y);
+		_wnd.SetSize(_size.x, _size.y);
+	}
+	bool CssLayout::PtInCssLayout(int x, int y) {
 		Rect rect(_location.x, _location.y, _location.x + _size.x, _location.y + _size.y);
 		return rect.PtInRect(x, y);
 	}
-	void Div::ToJson(Json* js) {
+	void CssLayout::ToJson(Json* js) {
 		js->SetPropertyStr(L"name", Name);
 		js->SetPropertyInt32(L"style", Param.Style);
 		js->SetPropertyDouble(L"weight", Param.Weight);
@@ -94,9 +102,9 @@ namespace ju {
 			}
 		}
 	}
-	bool Div::FromJson(Json* js) {
+	bool CssLayout::FromJson(Json* js) {
 		Clear();
-		DivParam param;
+		CssLayoutParam param;
 		if(!js->GetPropertyInt32(L"style", param.Style)) return false;
 		double v = 1.0;
 		if(!js->GetPropertyDouble(L"weight", v)) return false;
@@ -106,6 +114,7 @@ namespace ju {
 		if(!js->GetPropertyInt32(L"margin_top", param.Margin.top)) return false;
 		if(!js->GetPropertyInt32(L"margin_right", param.Margin.right)) return false;
 		if(!js->GetPropertyInt32(L"margin_bottom", param.Margin.bottom)) return false;
+		_wnd = 0;
 		Param = param;
 		Name = js->PropertyStr(L"name");
 		Json* childs = js->GetProperty(L"childs");
@@ -113,7 +122,7 @@ namespace ju {
 			for(uint i = 0; i<childs->Count(); i++) {
 				Json* child = childs->GetArrayElm(i);
 				if(child == 0) break;
-				Div* newLay = new Div();
+				CssLayout* newLay = new CssLayout();
 				if(!newLay->FromJson(child)) {
 					delete newLay;
 					continue;
@@ -123,24 +132,24 @@ namespace ju {
 		}
 		return true;
 	}
-	void Div::Reset() {
+	void CssLayout::Reset() {
 		Param.Reset();
 		Name = L"";
 		_childs.Clear();
 	}
-	int Div::_setChildHor(int left, int top, int width, int height) {
+	int CssLayout::_setChildHor(int left, int top, int width, int height) {
 		float sumWeight = 0;
 		int sumDim = 0;
 		for(uint i = 0; i<_childs.Count(); i++) {
-			DivParam& lp = _childs[i].Param;
+			CssLayoutParam& lp = _childs[i].Param;
 			sumWeight += lp.Weight;
 			sumDim += lp.Length + lp.Margin.left + lp.Margin.right;
 		}
 		int rest = width - sumDim;
 		float x = (float)left;
 		for(uint i = 0; i<_childs.Count(); i++) {
-			Div& lay = _childs[i];
-			DivParam& lp = lay.Param;
+			CssLayout& lay = _childs[i];
+			CssLayoutParam& lp = lay.Param;
 			float rationW;
 			if(weightIsZero(sumWeight))
 				rationW = (float)lp.Length;
@@ -152,19 +161,19 @@ namespace ju {
 		}
 		return sumDim;
 	}
-	int Div::_setChildVer(int left, int top, int width, int height) {
+	int CssLayout::_setChildVer(int left, int top, int width, int height) {
 		float sumWeight = 0;
 		int sumDim = 0;
 		for(uint i = 0; i<_childs.Count(); i++) {
-			DivParam& lp = _childs[i].Param;
+			CssLayoutParam& lp = _childs[i].Param;
 			sumWeight += lp.Weight;
 			sumDim += lp.Length + lp.Margin.top + lp.Margin.bottom;
 		}
 		int rest = height - sumDim;
 		float y = (float)top;
 		for(uint i = 0; i<_childs.Count(); i++) {
-			Div& lay = _childs[i];
-			DivParam& lp = lay.Param;
+			CssLayout& lay = _childs[i];
+			CssLayoutParam& lp = lay.Param;
 			float rationH;
 			if(weightIsZero(sumWeight))
 				rationH = (float)lp.Length;
@@ -176,12 +185,12 @@ namespace ju {
 		}
 		return sumDim;
 	}
-	void Div::_createControlTree(HWND parent) {
+	void CssLayout::_createControlTree(HWND parent) {
 		for(uint i = 0; i<_childs.Count(); i++) {
 			_childs[i]._createControlTree(parent);
 		}
 	}
-	void Div::Refresh(HWND parent) {
+	void CssLayout::Refresh(HWND parent) {
 		if(parent) _createControlTree(parent);
 		if(_parent) {
 			_parent->_setRect(_parent->_location.x, _parent->_location.y, _parent->_size.x, _parent->_size.y);
@@ -189,12 +198,12 @@ namespace ju {
 			_setRect(_location.x, _location.y, _size.x, _size.y);
 		}
 	}
-	bool Div::Save(LPCWSTR file, DWORD code) {
+	bool CssLayout::Save(LPCWSTR file, DWORD code) {
 		Json json;
 		ToJson(&json);
 		return json.SaveToFile(file, code);
 	}
-	bool Div::Load(LPCWSTR file, DWORD code) {
+	bool CssLayout::Load(LPCWSTR file, DWORD code) {
 		Json json;
 		if(!json.LoadFromFile(file, code)) return false;
 		Param.Reset();
@@ -202,7 +211,7 @@ namespace ju {
 		_childs.Clear();
 		return FromJson(&json);
 	}
-	bool Div::Load(ResID res, ResID rt, DWORD code) {
+	bool CssLayout::Load(ResID res, ResID rt, DWORD code) {
 		Param.Reset();
 		Name = L"";
 		_childs.Clear();
@@ -214,16 +223,16 @@ namespace ju {
 		if(!json.Parse(str)) return false;
 		return FromJson(&json);
 	}
-	int Div::Move(int pix) {
+	int CssLayout::Move(int pix) {
 		if(!_parent) return 0;
 		uint index = _parent->IndexOf(this);
 		if(index == 0 || index == (_parent->Count() - 1)) {
-			//最前面和最后面的 Div 无法调整位置。
+			//最前面和最后面的 CssLayout 无法调整位置。
 			return 0;
 		}
 
-		Div* preLay = _parent->Element(index - 1);
-		Div* nextLay = _parent->Element(index + 1);
+		CssLayout* preLay = _parent->Element(index - 1);
+		CssLayout* nextLay = _parent->Element(index + 1);
 		int dx1 = preLay->Param.Length + pix;
 		int dx2 = nextLay->Param.Length - pix;
 		int dx = Minimum(dx1, dx2);
@@ -238,15 +247,15 @@ namespace ju {
 		_parent->_setRect(_parent->_location.x, _parent->_location.y, _parent->_size.x, _parent->_size.y);
 		return pix;
 	}
-	Div* Div::GetElementByName(LPCWSTR name) {
+	CssLayout* CssLayout::GetElementByName(LPCWSTR name) {
 		if(Name == name) return this;
 		for(uint i = 0; i<_childs.Count(); i++) {
-			Div* lay = _childs[i].GetElementByName(name);
+			CssLayout* lay = _childs[i].GetElementByName(name);
 			if(lay) return lay;
 		}
 		return 0;
 	}
-	void TopDiv::_onSize(Message* msg, IWnd*) {
+	void TopCssLayout::_onSize(Message* msg, IWnd*) {
 		if(msg->wParam == SIZE_MINIMIZED) return;
 		Twin16 cs = *((Twin16*)&msg->lParam);
 		// Scroll 版本的
@@ -258,18 +267,18 @@ namespace ju {
 			h - Param.Margin.top - Param.Margin.bottom);
 		_container->Invalidate();
 	}
-	void TopDiv::Reset() {
-		Div::Reset();
+	void TopCssLayout::Reset() {
+		CssLayout::Reset();
 		Name = L"Root";
 		Param.Weight = 0;
 		Param.Margin.SetValue(10, 10, 10, 10);
 	}
-	TopDiv::TopDiv() :_container(0) {
+	TopCssLayout::TopCssLayout() :_container(0) {
 		Name = L"Root";
 		Param.Margin.SetValue(10, 10, 10, 10);
 		Param.Weight = 0;
 	}
-	void TopDiv::Refresh(HWND parent) {
+	void TopCssLayout::Refresh(HWND parent) {
 		Twin16 cs;
 		if(!_container->GetClientSize(cs)) return;
 		int w = Maximum(_container->MinSize().x, (int)cs.x);
@@ -278,19 +287,19 @@ namespace ju {
 			Param.Margin.top - _container->Scr().y);
 		_size.SetValue(w - Param.Margin.left - Param.Margin.right,
 			h - Param.Margin.top - Param.Margin.bottom);
-		Div::Refresh(*_container);
+		CssLayout::Refresh(*_container);
 	}
-	void TopDiv::SetContainer(IWnd* view) {
+	void TopCssLayout::SetContainer(IWnd* view) {
 		if(_container == view) return;
 		if(_container != NULL) {
-			_container->GetMsgHook(WM_SIZE)->Delete(this, &TopDiv::_onSize);
+			_container->GetMsgHook(WM_SIZE)->Delete(this, &TopCssLayout::_onSize);
 		}
 		_container = view;
 		if(!view) return;
-		view->GetMsgHook(WM_SIZE)->Add(this, &TopDiv::_onSize);
+		view->GetMsgHook(WM_SIZE)->Add(this, &TopCssLayout::_onSize);
 		Refresh();
 	}
-	void DivBinder::_onSize(Message* msg, IWnd*) {
+	void CssLayoutBinder::_onSize(Message* msg, IWnd*) {
 		if(msg->wParam == SIZE_MINIMIZED) return;
 		Twin16 cs = *((Twin16*)&msg->lParam);
 		// Scroll 版本的
@@ -302,22 +311,22 @@ namespace ju {
 			h - Lay.Param.Margin.top - Lay.Param.Margin.bottom);
 		_container->Invalidate();
 	}
-	void DivBinder::Reset() {
+	void CssLayoutBinder::Reset() {
 		Lay.Reset();
 		Lay.Name = L"Root";
 		Lay.Param.Weight = 0;
 		Lay.Param.Margin.SetValue(10, 10, 10, 10);
 		if(_container != NULL) {
-			_container->GetMsgHook(WM_SIZE)->Delete(this, &DivBinder::_onSize);
+			_container->GetMsgHook(WM_SIZE)->Delete(this, &CssLayoutBinder::_onSize);
 		}
 		_container = NULL;
 	}
-	DivBinder::DivBinder() :_container(0), _containerIsScrollView(0) {
+	CssLayoutBinder::CssLayoutBinder() :_container(0), _containerIsScrollView(0) {
 		Lay.Name = L"Root";
 		Lay.Param.Margin.SetValue(10, 10, 10, 10);
 		Lay.Param.Weight = 0;
 	}
-	void DivBinder::Refresh(HWND parent) {
+	void CssLayoutBinder::Refresh(HWND parent) {
 		Twin16 cs;
 		if(!_container->GetClientSize(cs)) return;
 		int w = Maximum(_container->MinSize().x, (int)cs.x);
@@ -332,15 +341,15 @@ namespace ju {
 			((ScrollView*)_container)->SetMinSize(ms.x, ms.y);
 		}
 	}
-	void DivBinder::Bind(IWnd* wnd, bool isScrollView) {
+	void CssLayoutBinder::Bind(IWnd* wnd, bool isScrollView) {
 		_containerIsScrollView = isScrollView;
 		if(_container == wnd) return;
 		if(_container != NULL) {
-			_container->GetMsgHook(WM_SIZE)->Delete(this, &DivBinder::_onSize);
+			_container->GetMsgHook(WM_SIZE)->Delete(this, &CssLayoutBinder::_onSize);
 		}
 		_container = wnd;
 		if(!wnd) return;
-		wnd->GetMsgHook(WM_SIZE)->Add(this, &DivBinder::_onSize);
+		wnd->GetMsgHook(WM_SIZE)->Add(this, &CssLayoutBinder::_onSize);
 		Refresh();
 	}
 }
