@@ -140,6 +140,8 @@ namespace ju{
 		void operator += (LPCSTR mbs);
 		void operator += (LPCWSTR wstr);
 		void operator += (String& wstr);
+		String operator + (LPCWSTR str);
+		String operator + (LPCSTR str);
 		void InsertNumber(INT_PTR number,int index = -1);
 		inline wchar_t& Element(uint index){
 			_ASSERT(index<_Length);
@@ -209,9 +211,9 @@ namespace ju{
 		//转换为小数，这个函数的反函数是 Format 函数。
 		bool ToFloat(double& v);
 		//返回容量
-		inline uint Cubage(){return _Cubage;}
+		inline uint Cubage() const {return _Cubage;}
 		//返回字串长度,不包含末尾的NULL字符.
-		inline uint Length(){return _Length;}
+		inline uint Length() const {return _Length;}
 		//字串为空串.
 		inline bool IsNull(){return (_Length==0);}
 		//字串非空串。

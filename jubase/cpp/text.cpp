@@ -669,7 +669,8 @@ namespace ju{
 		_Cubage = _Length;
 		if(_Length==0) return;
 		_Handle = (LPWSTR)MemoryAlloc(_Cubage*2+2);
-		memcpy(_Handle,wstr.Handle(),_Cubage*2+2);
+		LPWSTR h = wstr.Handle();
+		memcpy(_Handle,h,_Cubage*2+2);
 	}
 	String::String(LPCSTR mbs):_Length(0),_Cubage(0){
 		*this = mbs;
@@ -948,7 +949,17 @@ namespace ju{
 		if(str.Length()!=_Length) return true;
 		return memcmp(_Handle,str.Handle(),_Length)!=0;
 	}
-	void String::Insert(wchar_t wc,uint pos)
+	String String::operator+(LPCWSTR str) {
+		String ns = _Handle;
+		ns += str;
+		return ns;
+	}
+	String String::operator+(LPCSTR str) {
+		String ns = _Handle;
+		ns += str;
+		return ns;
+	}
+	void String::Insert(wchar_t wc, uint pos)
 	{
 		if(wc==0) return;
 		if((1+_Length)>_Cubage) SetCubage(1+_Length,1);
