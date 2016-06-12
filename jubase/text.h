@@ -73,8 +73,8 @@ namespace ju{
 		String();
 		//创建一个指定初始容量的字符串实例,cubage = 0, 则不预先分配内存, 直到给它赋值.
 		String(uint cubage);
-		//用一个字串来初始化实例.
-		String(LPCWSTR wstr);
+		//用一个字串来初始化实例, 如果len大于wstr的长度，会出错.
+		String(LPCWSTR wstr,uint len=-1);
 		//= 操作符使用的函数.
 		String(String& wstr);
 		String(LPCSTR mbs);
@@ -125,11 +125,15 @@ namespace ju{
 		void Insert(wchar_t wc,uint pos = -1);
 		//把指定位置的字串(从pos开始,长度为length)替换成ws,pos = -1表示从末尾置换(实际上是插入);length = -1表示从pos至末尾全部置换.返回插入字串的长度.
 		uint Replace(LPCWSTR ws,uint pos = -1,uint length =-1);
-		//截取字串的头部，index是截断的位置，如果为正数或0，则为通常的索引顺序，如果为负数，则末尾索引为0，向前依次为-1，-2，。。。
+		//截取字串的头部，index是截断的位置，如果为正数或0，则为通常的索引顺序，如果为负数，则截取其相反数长度的尾部数据，比如-2，截取尾部长度为2的字串
 		void Left(int index);
-		//截取字串的尾部，index是截断的位置，如果为正数或0，则为通常的索引顺序，如果为负数，则末尾索引为0，向前依次为-1，-2，。。。
+		String GetLeft(int index);
+		//截取字串的尾部，index是截断的位置，如果为正数或0，则为通常的索引顺序，如果为负数，则截掉尾部的相反数长度的字串，比如-2，则去掉尾部2个字符。
 		void Right(int index);
+		String GetRight(int index);
+		//截取指的位置和长度的字串。
 		void Sub(int start, uint length);
+		String GetSub(int start, uint length);
 		void operator = (String& wstr);
 		void operator = (LPCWSTR wstr);
 		void operator = (LPCSTR str);

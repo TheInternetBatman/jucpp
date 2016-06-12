@@ -121,6 +121,13 @@ namespace ju {
 		{
 			_Handle.sin_port = htons(port);
 		}
+		//设置使用的端口。不做转换，直接设置，和 SetPort 函数端口值是高低字节互换的。
+		inline void SetPort0(unsigned short port) {
+			_Handle.sin_port = port;
+		}
+		inline unsigned short GetPort0() {
+			return _Handle.sin_port;
+		}
 		//返回端口号,同样也需要进行一个转换。
 		inline unsigned short GetPort()
 		{

@@ -661,8 +661,15 @@ namespace ju{
 		_Cubage = capacity;
 		::ZeroMemory(_Handle,_Cubage*2+2);
 	}
-	String::String(LPCWSTR wstr):_Length(0),_Cubage(0){
-		*this = wstr;
+	String::String(LPCWSTR wstr,uint len):_Length(0),_Cubage(0){
+		if(len==-1) len = WcsLength(wstr);
+		if(len>_Cubage) SetCubage(len);
+		if(_Handle == 0) {
+			_Handle = (LPWSTR)MemoryAlloc(2);
+		}
+		::RtlMoveMemory(_Handle, wstr, len * 2);
+		_Length = len;
+		_Handle[len] = 0;
 	}
 	String::String(String& wstr){
 		_Length = wstr.Length();
@@ -1010,6 +1017,13 @@ namespace ju{
 		MoveMemory(_Handle, _Handle + index, _Length*2);
 		_Handle[_Length] = 0;
 	}
+	String String::GetRight(int index) {
+		if(_Handle == NULL) return String(L"",0);
+		if(index < 0) index = _Length + index;
+		if(index < 0) index = 0;
+		if(index >(int)_Length) index = _Length;
+		return String(_Handle+index,_Length-index);
+	}
 	void String::Left(int index){
 		if (_Handle == NULL) return;
 		if (index < 0) index = _Length + index;
@@ -1017,6 +1031,13 @@ namespace ju{
 		if (index >(int)_Length) index = _Length;
 		_Length = index;
 		_Handle[_Length] = 0;
+	}
+	String String::GetLeft(int index) {
+		if(_Handle == NULL) return String((uint)0);
+		if(index < 0) index = _Length + index;
+		if(index < 0) index = 0;
+		if(index >(int)_Length) index = _Length;
+		return String(_Handle, index);
 	}
 	void String::Sub(int index, uint length){
 		if (_Handle == NULL) return;
@@ -1027,6 +1048,14 @@ namespace ju{
 		MoveMemory(_Handle, _Handle + index, length * 2);
 		_Length = length;
 		_Handle[_Length] = 0;
+	}
+	String String::GetSub(int index, uint length) {
+		if(_Handle == NULL) return String((uint)0);
+		if(index < 0) index = _Length + index;
+		if(index < 0) index = 0;
+		if(index >(int)_Length) index = _Length;
+		if(length > _Length - index) length = _Length - index;
+		return String(_Handle + index, length);
 	}
 	void String::FromInt32(int v,int radix,bool sign){
 		if(_Cubage<32) SetCubage(32);
