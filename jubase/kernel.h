@@ -383,7 +383,7 @@ namespace ju{
 			P2 p2;
 			P3 p3;
 			P4 p4;
-			Function<R,P1,P2,P3> OnCall;
+			Function<R,P1,P2,P3,P4> OnCall;
 		};
 		PARAM* p = new PARAM;
 		p->p1 = p1;
@@ -514,7 +514,7 @@ namespace ju{
 				P2 p2;
 				P3 p3;
 				P4 p4;
-				Function<R,P1,P2,P3> OnCall;
+				Function<R,P1,P2,P3,P4> OnCall;
 			};
 			PARAM* p = new PARAM;
 			p->p1 = p1;
@@ -634,7 +634,7 @@ namespace ju{
 				P2 p2;
 				P3 p3;
 				P4 p4;
-				Function<R,P1,P2,P3> OnCall;
+				Function<R,P1,P2,P3,P4> OnCall;
 			};
 			PARAM* p = new PARAM;
 			p->p1 = p1;

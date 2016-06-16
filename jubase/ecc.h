@@ -47,4 +47,14 @@ namespace ju{
 		uint Encrypt(Memory<char>& out,const void* src,int len);
 		uint Decrypt(Memory<char>& out,const void* src,int len);
 	};
+	namespace ecc {
+		bool Sha160(const void* src, int len, void* digest20);
+		bool Sha224(const void* src, int len, void* digest28);
+		bool Sha256(const void* src, int len, void* digest32);
+		bool Sha384(const void* src, int len, void* digest48);
+		bool Sha512(const void* src, int len, void* digest64);
+		inline bool Sha1(const void* src, int len, void* digest) {
+			return Sha160(src, len, digest);
+		}
+	}
 }

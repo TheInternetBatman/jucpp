@@ -24,38 +24,42 @@ using namespace std;
 #include "../../jubase.h"
 
 namespace ju{
-	/*template<typename T> bool _sha(const void* src,int len,void* digest){
-		bool rt = true;
-		try{
-			T sha;
-			//计算哈希值并且存储在二进制块中
-			sha.CalculateDigest((uchar*)digest,(const uchar*)src,len);
-		}catch(exception e){
-			rt = false;
+	namespace ecc {
+		template<typename T> bool _sha(const void* src, int len, void* digest) {
+			bool rt = true;
+			try {
+				T sha;
+				//计算哈希值并且存储在二进制块中
+				sha.CalculateDigest((uchar*)digest, (const uchar*)src, len);
+			} catch(exception e) {
+				rt = false;
+			}
+			return rt;
 		}
-		return rt;
+		bool Sha160(const void* src, int len, void* digest) {
+			return _sha<CryptoPP::SHA>(src, len, digest);
+		}
+		bool Sha224(const void* src, int len, void* digest) {
+			return _sha<CryptoPP::SHA224>(src, len, digest);
+		}
+		bool Sha256(const void* src, int len, void* digest) {
+			return _sha<CryptoPP::SHA256>(src, len, digest);
+		}
+		bool Sha384(const void* src, int len, void* digest) {
+			return _sha<CryptoPP::SHA384>(src, len, digest);
+		}
+		bool Sha512(const void* src, int len, void* digest) {
+			return _sha<CryptoPP::SHA512>(src, len, digest);
+		}
 	}
+	/*
 	bool Sha(const void* src,int len,void* digest){
-		return _sha<CryptoPP::SHA>(src,len,digest);
-	}
-	bool Sha1(const void* src,int len,void* digest){
 		return _sha<CryptoPP::SHA>(src,len,digest);
 	}
 	bool Sha160(const void* src,int len,void* digest){
 		return _sha<CryptoPP::SHA>(src,len,digest);
 	}
-	bool Sha224(const void* src,int len,void* digest){
-		return _sha<CryptoPP::SHA224>(src,len,digest);
-	}
-	bool Sha256(const void* src,int len,void* digest){
-		return _sha<CryptoPP::SHA256>(src,len,digest);
-	}
-	bool Sha384(const void* src,int len,void* digest){
-		return _sha<CryptoPP::SHA384>(src,len,digest);
-	}
-	bool Sha512(const void* src,int len,void* digest){
-		return _sha<CryptoPP::SHA512>(src,len,digest);
-	}*/
+*/
 	int _getIntegerByte(CryptoPP::Integer p,uchar* buf){
 		CryptoPP::ByteQueue bq;
 		p.DEREncode(bq);
