@@ -96,6 +96,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "JuCssUI", "JuCssUI\JuCssUI.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "QREncode", "QREncode\QREncode.vcxproj", "{4AAB335D-1945-4D27-890D-C86E0A5EEBC6}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TinyJs", "TinyJs\TinyJs.vcxproj", "{7B859B78-B390-45C3-89A4-BE2A9621E027}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Pocket PC 2003 (ARMV4) = Debug|Pocket PC 2003 (ARMV4)
@@ -422,6 +424,24 @@ Global
 		{4AAB335D-1945-4D27-890D-C86E0A5EEBC6}.Release|Windows Mobile 6 Professional SDK (ARMV4I).ActiveCfg = Release|Win32
 		{4AAB335D-1945-4D27-890D-C86E0A5EEBC6}.Release|Windows Mobile 6 Standard SDK (ARMV4I).ActiveCfg = Release|Win32
 		{4AAB335D-1945-4D27-890D-C86E0A5EEBC6}.Release|x64.ActiveCfg = Release|Win32
+		{7B859B78-B390-45C3-89A4-BE2A9621E027}.Debug|Pocket PC 2003 (ARMV4).ActiveCfg = Debug|Win32
+		{7B859B78-B390-45C3-89A4-BE2A9621E027}.Debug|Smartphone 2003 (ARMV4).ActiveCfg = Debug|Win32
+		{7B859B78-B390-45C3-89A4-BE2A9621E027}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7B859B78-B390-45C3-89A4-BE2A9621E027}.Debug|Win32.Build.0 = Debug|Win32
+		{7B859B78-B390-45C3-89A4-BE2A9621E027}.Debug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I).ActiveCfg = Debug|Win32
+		{7B859B78-B390-45C3-89A4-BE2A9621E027}.Debug|Windows Mobile 5.0 Smartphone SDK (ARMV4I).ActiveCfg = Debug|Win32
+		{7B859B78-B390-45C3-89A4-BE2A9621E027}.Debug|Windows Mobile 6 Professional SDK (ARMV4I).ActiveCfg = Debug|Win32
+		{7B859B78-B390-45C3-89A4-BE2A9621E027}.Debug|Windows Mobile 6 Standard SDK (ARMV4I).ActiveCfg = Debug|Win32
+		{7B859B78-B390-45C3-89A4-BE2A9621E027}.Debug|x64.ActiveCfg = Debug|Win32
+		{7B859B78-B390-45C3-89A4-BE2A9621E027}.Release|Pocket PC 2003 (ARMV4).ActiveCfg = Release|Win32
+		{7B859B78-B390-45C3-89A4-BE2A9621E027}.Release|Smartphone 2003 (ARMV4).ActiveCfg = Release|Win32
+		{7B859B78-B390-45C3-89A4-BE2A9621E027}.Release|Win32.ActiveCfg = Release|Win32
+		{7B859B78-B390-45C3-89A4-BE2A9621E027}.Release|Win32.Build.0 = Release|Win32
+		{7B859B78-B390-45C3-89A4-BE2A9621E027}.Release|Windows Mobile 5.0 Pocket PC SDK (ARMV4I).ActiveCfg = Release|Win32
+		{7B859B78-B390-45C3-89A4-BE2A9621E027}.Release|Windows Mobile 5.0 Smartphone SDK (ARMV4I).ActiveCfg = Release|Win32
+		{7B859B78-B390-45C3-89A4-BE2A9621E027}.Release|Windows Mobile 6 Professional SDK (ARMV4I).ActiveCfg = Release|Win32
+		{7B859B78-B390-45C3-89A4-BE2A9621E027}.Release|Windows Mobile 6 Standard SDK (ARMV4I).ActiveCfg = Release|Win32
+		{7B859B78-B390-45C3-89A4-BE2A9621E027}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
