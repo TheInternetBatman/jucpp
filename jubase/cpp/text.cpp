@@ -891,14 +891,14 @@ namespace ju{
 		_Length = len;
 		_Handle[len] = 0;
 	}
-	void String::operator = (String& str)
-	{
+	void String::operator = (String& str){
 		uint len = str._Length;
-		if(len==0)
-		{
-			if(_Length)
-			{
+		if(len==0){
+			if(_Handle) {
 				_Length = 0;
+				_Handle[0] = 0;
+			} else {
+				_Handle = (LPWSTR)MemoryAlloc(2);
 				_Handle[0] = 0;
 			}
 			return;
