@@ -241,6 +241,14 @@ bool run_test(const char *filename) {
 	delete[] buffer;
 	return pass;
 }
+void replace2(std::string &str, char textFrom, const char *textTo) {
+	int sLen = strlen(textTo);
+	size_t p = str.find(textFrom);
+	while(p != std::string::npos) {
+		str = str.substr(0, p) + textTo + str.substr(p + 1);
+		p = str.find(textFrom, p + sLen);
+	}
+}
 int main(int argc, char* argv[]) {
 #ifdef MTRACE
 	mtrace();
@@ -248,6 +256,9 @@ int main(int argc, char* argv[]) {
 #ifdef INSANE_MEMORY_DEBUG
 	memtracing_init();
 #endif
+	std::string str = "replace(std::string &str, char textFrom, const char *textTo)";
+	std::string s = _strdup(str.c_str());
+	return 0;
 	printf("TinyJS test runner\n");
 	printf("USAGE:\n");
 	printf("   ./run_tests test.js       : run just one test\n");
