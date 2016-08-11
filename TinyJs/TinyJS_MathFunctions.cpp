@@ -54,7 +54,7 @@ using namespace std;
 #define scReturnDouble(a)   ( c->getReturnVar()->setDouble(a) )  
 
 #ifdef _MSC_VER
-namespace
+namespace mv
 {
     double asinh( const double &value )
     {
@@ -188,7 +188,7 @@ void scMathSinh(CScriptVar *c, void *userdata) {
 
 //Math.asinh(a) - returns trig. hyperbolic arcsine of given angle in radians
 void scMathASinh(CScriptVar *c, void *userdata) {
-    //scReturnDouble((double) asinh((double) scGetDouble("a") ) );
+    scReturnDouble( asinh( scGetDouble("a") ) );
 }
 
 //Math.cosh(a) - returns trig. hyperbolic cosine of given angle in radians

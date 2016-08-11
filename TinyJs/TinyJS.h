@@ -35,6 +35,7 @@
 #ifdef _WIN32
 #ifdef _DEBUG
 #define _CRTDBG_MAP_ALLOC
+#include "WString.h"
 #include <stdlib.h>
 #include <crtdbg.h>
 #endif

@@ -24,13 +24,19 @@
     <ClCompile Include="TinyJS_MathFunctions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Script.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="TinyJS.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="run_tests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="WString.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="temp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -42,6 +48,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="TinyJS.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WString.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

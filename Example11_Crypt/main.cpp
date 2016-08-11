@@ -2,12 +2,27 @@
 #pragma usexpstyle
 
 WINMAIN{
-	ju::File file;
-	file.Create(L"abc.txt");
-	ju::FileSystem fs;
-	fs.Initialize(L"abc.txt");
-	bool r = fs.Delete();
-	ju::Print(L"%d",r);
+	ju::FileStream fs;
+	fs.OpenExist(L"D:/Develop/Wamp/www/html/public/wifi.html");
+	ju::String str;
+	fs.ReadString(str, 0, CP_UTF8);
+	fs.Close();
+
+	ju::String ns;
+	int start = 0;
+	while(true) {
+		int pos = str.Find(L"\r\n",start);
+		if(pos == -1) {
+			ns += str.GetSub(start,-1);
+			break;
+		}
+		ns += str.GetSub(start, pos-start);
+		ns += L"\\r\\n\\\n";
+		start = pos + 2;
+	}
+	fs.Create(L"D:/Develop/Arduino/MCHardware/data/index2.html");
+	fs.SetLength(0);
+	fs.WriteString(ns, 0, 0, CP_UTF8);
 	return 1;
 
 	char buf[256];

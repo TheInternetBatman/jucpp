@@ -79,16 +79,19 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="run_tests.cpp" />
     <ClCompile Include="Script.cpp" />
+    <ClCompile Include="temp.cpp" />
     <ClCompile Include="TinyJS.cpp" />
     <ClCompile Include="TinyJS_Functions.cpp" />
     <ClCompile Include="TinyJS_MathFunctions.cpp" />
+    <ClCompile Include="WString.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TinyJS.h" />
     <ClInclude Include="TinyJS_Functions.h" />
     <ClInclude Include="TinyJS_MathFunctions.h" />
+    <ClInclude Include="WString.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
