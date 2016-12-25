@@ -448,7 +448,7 @@ namespace ju{
 	{
 		if(!_Handle.Create(IPPROTO_UDP,SOCK_DGRAM)) return 0;
 		BOOL fBroadcast = TRUE;
-		_Handle.SetSockOpt(SOL_SOCKET,SO_BROADCAST,(char*)&fBroadcast,sizeof(BOOL));
+		_Handle.SetSockOpt(SOL_SOCKET,SO_BROADCAST|SO_REUSEADDR,(char*)&fBroadcast,sizeof(BOOL));
 		return 1;
 	}
 	int UDPSender::SendTo(char* data,int dLen,ushort port,IP ip)
