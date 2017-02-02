@@ -14,6 +14,7 @@
     <ProjectGuid>{4B3E17EB-DDE5-4AD1-99A7-353A8724B2DC}</ProjectGuid>
     <RootNamespace>Example5_TaskPool</RootNamespace>
     <Keyword>Win32Proj</Keyword>
+    <ProjectName>Example05_TaskPool</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">

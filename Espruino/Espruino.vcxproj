@@ -1,0 +1,163 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{B668D87B-1ECC-4D81-A855-D2BA93A68BEA}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>Espruino</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>../lib</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>../lib</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="src\jsdevices.c" />
+    <ClCompile Include="src\jshardware_common.c" />
+    <ClCompile Include="src\jsi2c.c" />
+    <ClCompile Include="src\jsinteractive.c" />
+    <ClCompile Include="src\jslex.c" />
+    <ClCompile Include="src\jsnative.c" />
+    <ClCompile Include="src\jsparse.c" />
+    <ClCompile Include="src\jspin.c" />
+    <ClCompile Include="src\jsspi.c" />
+    <ClCompile Include="src\jstimer.c" />
+    <ClCompile Include="src\jsutils.c" />
+    <ClCompile Include="src\jsvar.c" />
+    <ClCompile Include="src\jsvariterator.c" />
+    <ClCompile Include="src\jswrap_array.c" />
+    <ClCompile Include="src\jswrap_arraybuffer.c" />
+    <ClCompile Include="src\jswrap_date.c" />
+    <ClCompile Include="src\jswrap_error.c" />
+    <ClCompile Include="src\jswrap_espruino.c" />
+    <ClCompile Include="src\jswrap_flash.c" />
+    <ClCompile Include="src\jswrap_functions.c" />
+    <ClCompile Include="src\jswrap_interactive.c" />
+    <ClCompile Include="src\jswrap_io.c" />
+    <ClCompile Include="src\jswrap_json.c" />
+    <ClCompile Include="src\jswrap_modules.c" />
+    <ClCompile Include="src\jswrap_number.c" />
+    <ClCompile Include="src\jswrap_object.c" />
+    <ClCompile Include="src\jswrap_onewire.c" />
+    <ClCompile Include="src\jswrap_pin.c" />
+    <ClCompile Include="src\jswrap_pipe.c" />
+    <ClCompile Include="src\jswrap_process.c" />
+    <ClCompile Include="src\jswrap_promise.c" />
+    <ClCompile Include="src\jswrap_serial.c" />
+    <ClCompile Include="src\jswrap_spi_i2c.c" />
+    <ClCompile Include="src\jswrap_stream.c" />
+    <ClCompile Include="src\jswrap_string.c" />
+    <ClCompile Include="src\jswrap_waveform.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\jsdevices.h" />
+    <ClInclude Include="src\jshardware.h" />
+    <ClInclude Include="src\jsi2c.h" />
+    <ClInclude Include="src\jsinteractive.h" />
+    <ClInclude Include="src\jslex.h" />
+    <ClInclude Include="src\jsnative.h" />
+    <ClInclude Include="src\jsparse.h" />
+    <ClInclude Include="src\jspin.h" />
+    <ClInclude Include="src\jsspi.h" />
+    <ClInclude Include="src\jstimer.h" />
+    <ClInclude Include="src\jsutils.h" />
+    <ClInclude Include="src\jsvar.h" />
+    <ClInclude Include="src\jsvariterator.h" />
+    <ClInclude Include="src\jswrapper.h" />
+    <ClInclude Include="src\jswrap_array.h" />
+    <ClInclude Include="src\jswrap_arraybuffer.h" />
+    <ClInclude Include="src\jswrap_date.h" />
+    <ClInclude Include="src\jswrap_error.h" />
+    <ClInclude Include="src\jswrap_espruino.h" />
+    <ClInclude Include="src\jswrap_flash.h" />
+    <ClInclude Include="src\jswrap_functions.h" />
+    <ClInclude Include="src\jswrap_interactive.h" />
+    <ClInclude Include="src\jswrap_io.h" />
+    <ClInclude Include="src\jswrap_json.h" />
+    <ClInclude Include="src\jswrap_modules.h" />
+    <ClInclude Include="src\jswrap_number.h" />
+    <ClInclude Include="src\jswrap_object.h" />
+    <ClInclude Include="src\jswrap_onewire.h" />
+    <ClInclude Include="src\jswrap_pin.h" />
+    <ClInclude Include="src\jswrap_pipe.h" />
+    <ClInclude Include="src\jswrap_process.h" />
+    <ClInclude Include="src\jswrap_promise.h" />
+    <ClInclude Include="src\jswrap_serial.h" />
+    <ClInclude Include="src\jswrap_spi_i2c.h" />
+    <ClInclude Include="src\jswrap_stream.h" />
+    <ClInclude Include="src\jswrap_string.h" />
+    <ClInclude Include="src\jswrap_waveform.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
