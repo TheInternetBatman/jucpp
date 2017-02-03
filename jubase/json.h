@@ -476,9 +476,14 @@ namespace ju{
 			}
 			return *GetProperty(key,true);
 		}
+		void Print(bool readStyle = true) {
+			String str;
+			ToString(str,readStyle);
+			ju::Print(L"%s", str.Handle());
+		}
 		//把 Json 对象序列化为二进制数据，序列化二进制数据比字串速度快得多，也略微节省内存。返回值是数据大小，和data的长度相同。
 		uint ToBytes(Memory<byte>& data);
-		//把二进制数据解析为 Json 对象，解析二进制数据比解析字串快，解析过程中出现错误，返回 false，但是可能部分解析。
+		//把二进制数据解析为 Json 对象，解析二进制数据比解析字串快(但是非常有限)，解析过程中出现错误，返回 false，但是可能部分解析。
 		bool FromBytes(Memory<byte>& data);
 		//保存为二进制文件
 		uint SaveBytes(LPCWSTR fn);

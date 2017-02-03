@@ -915,7 +915,7 @@ return_code:
 	}
 	//Class Frame
 	Frame::Frame(){
-		Param->Style = WS_OVERLAPPEDWINDOW|WS_CLIPSIBLINGS;
+		Param->Style = WS_OVERLAPPEDWINDOW | WS_CLIPSIBLINGS | WS_CLIPCHILDREN;
 		Param->ExStyle |= WS_EX_CONTROLPARENT;//启用子窗口的双缓冲//这个风格回让窗口系统按钮失去鼠标滑过效果
 	}
 	Frame::~Frame(){
