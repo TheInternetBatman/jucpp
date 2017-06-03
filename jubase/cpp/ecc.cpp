@@ -52,14 +52,6 @@ namespace ju{
 			return _sha<CryptoPP::SHA512>(src, len, digest);
 		}
 	}
-	/*
-	bool Sha(const void* src,int len,void* digest){
-		return _sha<CryptoPP::SHA>(src,len,digest);
-	}
-	bool Sha160(const void* src,int len,void* digest){
-		return _sha<CryptoPP::SHA>(src,len,digest);
-	}
-*/
 	int _getIntegerByte(CryptoPP::Integer p,uchar* buf){
 		CryptoPP::ByteQueue bq;
 		p.DEREncode(bq);
@@ -76,8 +68,8 @@ namespace ju{
 	}
 	class _Ecdsa : public _class{
 	public:
-		CryptoPP::ECDSA<CryptoPP::ECP,CryptoPP::SHA512>::PrivateKey _privkey;
-		CryptoPP::ECDSA<CryptoPP::ECP,CryptoPP::SHA512>::PublicKey _pubkey;
+		CryptoPP::ECDSA<CryptoPP::ECP, CryptoPP::SHA512>::PrivateKey _privkey;
+		CryptoPP::ECDSA<CryptoPP::ECP, CryptoPP::SHA512>::PublicKey _pubkey;
 	};
 #define hd ((_Ecdsa*)_handle)
 	Ecdsa::Ecdsa(){
@@ -86,12 +78,26 @@ namespace ju{
 	Ecdsa::~Ecdsa(){
 		delete (_Ecdsa*)_handle;
 	}
-	bool Ecdsa::CreateKey(){
+	bool Ecdsa::CreateKey(EccCurve curve) {
+		CryptoPP::OID oid;
+		if(curve == ecc_curve_192) {
+			oid = CryptoPP::ASN1::secp192r1();
+		} else if(curve == ecc_curve_224) {
+			oid = CryptoPP::ASN1::secp224r1();
+		} else if(curve == ecc_curve_256) {
+			oid = CryptoPP::ASN1::secp256r1();
+		} else if(curve == ecc_curve_384) {
+			oid = CryptoPP::ASN1::secp384r1();
+		} else if(curve == ecc_curve_521) {
+			oid = CryptoPP::ASN1::secp521r1();
+		} else {
+			return false;
+		}
 		_errinf = L"";
 		bool rt = true;
 		try{
 			CryptoPP::AutoSeededRandomPool rng;
-			hd->_privkey.Initialize(rng,CryptoPP::ASN1::secp521r1());
+			hd->_privkey.Initialize(rng,oid);
 			hd->_privkey.MakePublicKey(hd->_pubkey);
 		}catch(exception e){
 			_errinf = e.what();
@@ -225,12 +231,26 @@ namespace ju{
 	Ecies::~Ecies(){
 		delete (_Ecies*)_handle;
 	}
-	bool Ecies::CreateKey(){
+	bool Ecies::CreateKey(EccCurve curve) {
+		CryptoPP::OID oid;
+		if(curve == ecc_curve_192) {
+			oid = CryptoPP::ASN1::secp192r1();
+		} else if(curve == ecc_curve_224) {
+			oid = CryptoPP::ASN1::secp224r1();
+		} else if(curve == ecc_curve_256) {
+			oid = CryptoPP::ASN1::secp256r1();
+		} else if(curve == ecc_curve_384) {
+			oid = CryptoPP::ASN1::secp384r1();
+		} else if(curve == ecc_curve_521) {
+			oid = CryptoPP::ASN1::secp521r1();
+		} else {
+			return false;
+		}
 		_errinf = L"";
 		bool rt = true;
 		try{
 			CryptoPP::AutoSeededRandomPool rng;
-			he->_privkey.Initialize(rng,CryptoPP::ASN1::secp521r1());
+			he->_privkey.Initialize(rng,oid);
 			he->_privkey.MakePublicKey(he->_pubkey);
 			rt = he->_privkey.Validate(rng,3)&&he->_pubkey.Validate(rng,3);
 		}catch(exception e){

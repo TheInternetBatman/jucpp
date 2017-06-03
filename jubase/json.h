@@ -454,7 +454,7 @@ namespace ju{
 				if((int)_arrayValue->Count()>index){
 					return *_arrayValue->GetElement(index);
 				}else{
-					Json* a;
+					Json* a = NULL;
 					for(int i=_arrayValue->Count();i<=index;i++)
 						a = _arrayValue->Add();
 					return *a;
@@ -465,7 +465,7 @@ namespace ju{
 			}
 			_arrayValue = new ObjectList<Json>;
 			_type = json_array;
-			Json* a;
+			Json* a = NULL;
 			for(int i=0;i<=index;i++)
 				a = _arrayValue->Add();
 			return *a;

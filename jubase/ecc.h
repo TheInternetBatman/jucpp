@@ -4,6 +4,13 @@
 namespace ju{
 #define ECC_KEY_LEN		68
 #define ECC_SIGN_LEN	132
+	enum EccCurve{
+		ecc_curve_192,
+		ecc_curve_224,
+		ecc_curve_256,
+		ecc_curve_384,
+		ecc_curve_521
+	};
 	//«©√˚—È÷§
 	class JUBASE_API Ecdsa : public _class{
 	protected:
@@ -15,7 +22,7 @@ namespace ju{
 		LPCWSTR GetError(){return _errinf;}
 		static inline uint KeyLen(){return ECC_KEY_LEN;}
 		static inline uint SignLen(){return ECC_SIGN_LEN;}
-		bool CreateKey();
+		bool CreateKey(EccCurve curve = ecc_curve_256);
 		bool GetPrivateKey(void* pvk);
 		bool GetPublicKey(void* kx,void* ky);
 		bool GetPublicKey(void* puk);
@@ -36,7 +43,7 @@ namespace ju{
 		~Ecies();
 		LPCWSTR GetError(){return _errinf;}
 		static inline uint KeyLen(){return ECC_KEY_LEN;}
-		bool CreateKey();
+		bool CreateKey(EccCurve curve = ecc_curve_256);
 		bool GetPrivateKey(void* key);
 		bool GetPublicKey(void* kx,void* ky);
 		bool GetPublicKey(void* puk);
