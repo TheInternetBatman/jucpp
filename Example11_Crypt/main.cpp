@@ -1,7 +1,36 @@
 #include "../juwnd.h"
 #pragma usexpstyle
+#include <stdio.h>
 
+int _length = 0;
+char _buf[5120];
+void parseRecv() {
+	int offset = 0;
+	for(int i = 0; i<_length; i++) {
+		char ch = _buf[i];
+		if(ch == '\n') {
+			_buf[i - 1] = 0;
+			//_onRecvLine(_buf + offset);
+			offset = i + 1;
+		}
+	}
+	if(offset<_length) {
+		memcpy(_buf, _buf + offset, _length - offset);
+	}
+	_length -= offset;
+}
+void check_calc() {
+	ju::File fs;
+	fs.OpenExist(L"abc.txt");
+	ju::Memory<char> buf;
+	int len = fs.Read(&buf);
+	buf.CopyTo(_buf, len);
+	_length = len;
+	parseRecv();
+}
 WINMAIN{
+	check_calc();
+	return 0;
 	ju::File file;
 	file.Create(L"abc.txt");
 	ju::FileSystem fs;
