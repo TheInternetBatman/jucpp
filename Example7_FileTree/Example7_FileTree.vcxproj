@@ -14,6 +14,7 @@
     <ProjectGuid>{A2A9E5A3-DADB-4450-9E0E-80DAAFA05408}</ProjectGuid>
     <RootNamespace>Example7_FileTree</RootNamespace>
     <Keyword>Win32Proj</Keyword>
+    <ProjectName>Example07_FileTree</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">

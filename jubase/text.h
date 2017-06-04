@@ -132,8 +132,8 @@ namespace ju{
 		void Right(int index);
 		String GetRight(int index);
 		//截取指的位置和长度的字串。
-		void Sub(int start, uint length);
-		String GetSub(int start, uint length);
+		void Sub(int start, uint length = -1);
+		String GetSub(int start, uint length = -1);
 		void operator = (String& wstr);
 		void operator = (LPCWSTR wstr);
 		void operator = (LPCSTR str);

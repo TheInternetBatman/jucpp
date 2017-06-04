@@ -99,7 +99,7 @@ namespace ju {
 	//SOCKADDR结构集成sockeaddr_in结构的常用函数，它就是一个sockaddr_in结构。
 	class JUBASE_API  SOCKADDR : public _struct
 	{
-		sockaddr_in _Handle;
+		struct sockaddr_in _Handle;
 	public:
 		SOCKADDR()
 		{

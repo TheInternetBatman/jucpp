@@ -29,7 +29,6 @@
 /*
  * This is a simple program showing how to use TinyJS
  */
-
 #include "TinyJS.h"
 #include "TinyJS_Functions.h"
 #include <assert.h>

@@ -14,6 +14,7 @@
     <ProjectGuid>{2C43D046-6116-479B-A0F1-DBF6E6A3A46E}</ProjectGuid>
     <RootNamespace>Example9_ApkSignTool</RootNamespace>
     <Keyword>Win32Proj</Keyword>
+    <ProjectName>Example09_ApkSignTool</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
