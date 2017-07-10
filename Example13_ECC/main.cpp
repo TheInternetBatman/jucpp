@@ -23,11 +23,11 @@ void eccTest(ju::EccCurve curve) {
 	ju::Print(L"\n");
 
 	ju::Memory<char> enc, dec;
-	char* src = "3月中旬Intel公司宣布斥资153亿美元收购了以色列无人驾驶技术公司Mobileye，之前这家公司是特斯拉电动汽车的自动驾驶供应商之一。";
+	char* src = "3月中旬Intel";// 公司宣布斥资153亿美元收购了以色列无人驾驶技术公司Mobileye，之前这家公司是特斯拉电动汽车的自动驾驶供应商之一。";
 	int srclen = strlen(src);
 	int enclen = ies.Encrypt(enc, src, srclen);
 	int declen = ies.Decrypt(dec, enc.Handle(), enclen);
-	ju::Print(L"srclen: %d,declen: %d", srclen, declen);
+	ju::Print(L"srclen: %d,declen: %d,enclen: %d", srclen, declen,enclen);
 	dec.SetLength(declen + 1);
 	dec[declen] = 0;
 	ju::Print("dec: %s", dec.Handle());
