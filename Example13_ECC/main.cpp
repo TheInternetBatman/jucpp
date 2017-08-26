@@ -1,9 +1,10 @@
 
 #include "../juwnd.h"
 
-void printHex(void* data) {
+void printHex(void* data,int len = 0) {
 	ju::String hex;
-	hex.HexBinary(data, 256);
+	if(len == 0) len = 256;
+	hex.HexBinary(data, len);
 	ju::Print(L"%s", hex.Handle());
 }
 void eccTest(ju::EccCurve curve) {
@@ -12,14 +13,14 @@ void eccTest(ju::EccCurve curve) {
 	char key[256];
 	memset(key, 0, 256);
 	ies.GetPrivateKey(key);
-	printHex(key);
+	//printHex(key);
 	memset(key, 0, 256);
 	char pu1[256], pu2[256];
 	memset(pu1, 0, 256);
 	memset(pu2, 0, 256);
 	ies.GetPublicKey(pu1, pu2);
-	printHex(pu1);
-	printHex(pu2);
+	//printHex(pu1);
+	//printHex(pu2);
 	ju::Print(L"\n");
 
 	ju::Memory<char> enc, dec;
@@ -27,6 +28,7 @@ void eccTest(ju::EccCurve curve) {
 	int srclen = strlen(src);
 	int enclen = ies.Encrypt(enc, src, srclen);
 	int declen = ies.Decrypt(dec, enc.Handle(), enclen);
+	printHex(enc.Handle(),enclen);
 	ju::Print(L"srclen: %d,declen: %d,enclen: %d", srclen, declen,enclen);
 	dec.SetLength(declen + 1);
 	dec[declen] = 0;
