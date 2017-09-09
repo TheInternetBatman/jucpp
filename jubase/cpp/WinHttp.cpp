@@ -92,23 +92,45 @@ namespace ju{
 	}
 	bool HttpRequest::ParseUrl(LPCWSTR url){
 		String str = url;
+		//查找链接类型（https 或者 http）
 		if(WcsIncludeNoCase(url,L"https://")){
 			SetHttpsMode(true);
 			str.Right(8);
 		}else if(WcsIncludeNoCase(url,L"http://")){
-			SetHttpsMode(false);
 			str.Right(7);
-		}else return 0;
+		} else {
+			SetHttpsMode(false);
+		}
+		//分析HOST和端口
+		int pos0 = str.Find(':');
 		int pos = str.Find('/');
 		if(pos==-1){
-			Host = str;
-			return 1;
+			if(pos0 == -1) {
+				Host = str;
+			} else {
+				Host = L"";
+				Host.CopyFrom(str, pos0);
+				str.Right(pos0);
+				Port = str.ToInt32(10);
+			}
 		}else{
-			Host = L"";
-			Host.CopyFrom(str,pos);
-			str.Right(pos);
+			if(pos0 == -1) {
+				Host = L"";
+				Host.CopyFrom(str, pos);
+				str.Right(pos);
+			} else if(pos0<pos){
+				Host = L"";
+				Host.CopyFrom(str, pos0);
+				ju::String port = L"";
+				port.CopyFrom(str+pos0+1, pos-pos0-1);
+				Port = port.ToInt32(10);
+				str.Right(pos);
+			} else {
+				return 0;
+			}
+			//分析页面链接
+			Page = str;
 		}
-		Page = str;
 		return 1;
 	}
 	HttpRequest::HttpRequest(){
